@@ -9,13 +9,14 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.9'
 }
 
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
+
+version = '30L'
 
 dependencies {
     // Use JUnit Jupiter for testing.
@@ -27,12 +28,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'Jmail.App'
-}
-
-javafx {
-    version = "17"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
+    mainClass = 'Jmail.Server'
 }
 
 tasks.named('test') {

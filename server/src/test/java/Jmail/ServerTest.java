@@ -6,9 +6,9 @@ package Jmail;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class AppTest {
+class ServerTest {
     @Test void appHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
+        Server classUnderTest = new Server();
+        assertNotNull(classUnderTest.getGreeting(), "Server should have a greeting");
     }
 }

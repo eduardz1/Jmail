@@ -8,4 +8,9 @@
  */
 
 rootProject.name = 'Jmail'
-include('app')
+include 'client', 'server'
+
+// doesn´t seem necessary for now, maybe later we would need to specify which application to run
+
+// project(':client').projectDir = new File('client')
+// project(':server').projectDir = new File('server')
