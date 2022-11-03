@@ -31,7 +31,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'Jmail.Server'
+    mainClass = 'jmail.server.Server'
 }
 
 tasks.named('test') {

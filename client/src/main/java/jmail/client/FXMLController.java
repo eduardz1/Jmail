@@ -1,4 +1,4 @@
-package Jmail;
+package jmail.client;
 
 public class FXMLController {
     
