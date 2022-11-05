@@ -1,4 +1,4 @@
-package jmail.server.models;
+package jmail.models;
 
 import java.io.Serializable;
 import java.sql.Date;
