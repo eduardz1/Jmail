@@ -5,8 +5,8 @@ import lombok.NonNull;
 
 @Data
 public class User {
-    @NonNull private String Email;
-    @NonNull private String Name;
-    @NonNull private String Surname;
-    private String Avatar;
+  @NonNull private String Email;
+  @NonNull private String Name;
+  @NonNull private String Surname;
+  private String Avatar;
 }

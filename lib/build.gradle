@@ -3,7 +3,7 @@
 plugins {
     id 'java-library'
     id 'io.freefair.lombok' version '6.5.1'
-    // id 'checkstyle' // to enforce coding style
+    id "com.diffplug.spotless" version "6.11.0"
 }
 
 repositories {
@@ -29,3 +29,18 @@ tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
+
+spotless {
+  java {
+    // Use the default importOrder configuration
+    importOrder()
+
+    removeUnusedImports()
+
+    googleJavaFormat()
+
+    formatAnnotations()
+  }
+}
+
+build.dependsOn 'spotlessApply'

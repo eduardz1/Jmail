@@ -11,7 +11,7 @@ plugins {
     id 'application'
     id 'io.freefair.lombok' version '6.5.1'
     id 'org.openjfx.javafxplugin' version '0.0.7'
-    // id 'checkstyle' // to enforce coding style
+    id "com.diffplug.spotless" version "6.11.0"
 }
 
 repositories {
@@ -47,3 +47,18 @@ tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
+
+spotless {
+  java {
+    // Use the default importOrder configuration
+    importOrder()
+
+    removeUnusedImports()
+
+    googleJavaFormat()
+
+    formatAnnotations()
+  }
+}
+
+build.dependsOn 'spotlessApply'

@@ -1,5 +1,3 @@
 package jmail.client;
 
-public class FXMLController {
-    
-}
+public class FXMLController {}
