@@ -748,3 +748,141 @@
     -fx-border-radius: 0;
     border-radius: 0;
 }
+
+/* TextPane */
+.text-area{
+    -fx-background-color: #1A1A1A;
+    background-color: #1A1A1A;
+    -fx-background-radius: 0;
+    -fx-border-color: #222222;
+    border-color: #222222;
+    -fx-border-width: 1;
+    border-width: 1;
+    -fx-border-radius: 0;
+    border-radius: 0;
+    -fx-text-fill: #AFB1B3;
+}
+.text-area:focused{
+    -fx-border-color: #4e4e4e;
+    border-color: #4e4e4e;
+}
+
+/* StackPane */
+.stack-pane{
+    -fx-background-color: #1A1A1A;
+    background-color: #1A1A1A;
+    -fx-background-radius: 0;
+    -fx-border-color: #222222;
+    border-color: #222222;
+    -fx-border-width: 1;
+    border-width: 1;
+    -fx-border-radius: 0;
+    border-radius: 0;
+}
+
+/* VirtualizedScrollPane */
+.virtualized-scroll-pane{
+    -fx-background-color: #1A1A1A;
+    background-color: #1A1A1A;
+    -fx-background-radius: 0;
+    -fx-border-color: #222222;
+    border-color: #222222;
+    -fx-border-width: 1;
+    border-width: 1;
+    -fx-border-radius: 0;
+    border-radius: 0;
+}
+
+/* CodeArea */
+.code-area{
+    -fx-background-color: #1A1A1A;
+    background-color: #1A1A1A;
+    -fx-background-radius: 0;
+    -fx-border-color: #222222;
+    border-color: #222222;
+    -fx-border-width: 1;
+    border-width: 1;
+    -fx-border-radius: 0;
+    border-radius: 0;
+    -fx-text-fill: #AFB1B3;
+}
+.code-area:focused{
+    -fx-border-color: #4e4e4e;
+    border-color: #4e4e4e;
+}
+
+
+/*  ****************************************************
+    *                                                  *
+    *  Custom CSS for the Log Syntax Highlighting      *
+    *                                                  *
+    ****************************************************
+
+ All the colors here were handpicked by me pls dont change :) */
+
+.trace {
+    -fx-fill: #69ff94;
+}
+
+.debug {
+    -fx-fill: #bd93f9;
+    -fx-font-weight: bold;
+}
+
+.info {
+    -fx-fill: #8be9fd;
+}
+
+.warn {
+    -fx-fill: orange;
+    -fx-font-weight: bold;
+}
+
+.error {
+    -fx-fill: #ff5555;
+    -fx-font-weight: bold;
+}
+
+.isodates {
+    -fx-fill: #AFB1B3;
+}
+
+.time {
+    -fx-fill: #AFB1B3;
+}
+
+.guid {
+    -fx-fill: #ff79c6;
+}
+
+.constants {
+    -fx-fill: #AFB1B3;
+    -fx-font-weight: bold;
+}
+
+.hexconstants {
+    -fx-fill: #AFB1B3;
+    -fx-font-weight: bold;
+}
+
+.stringconstants {
+    -fx-fill: #AFB1B3;
+    -fx-font-weight: bold;
+}
+
+.exceptions {
+    -fx-fill: #ff5555;
+}
+
+.url {
+    -fx-fill:#a4ffff;
+}
+
+.namespaces {
+    -fx-fill: #AFB1B3;
+    -fx-font-weight: bold;
+}
+
+.other {
+    -fx-fill: #AFB1B3;
+}

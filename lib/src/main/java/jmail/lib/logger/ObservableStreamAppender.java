@@ -1,4 +1,4 @@
-package jmail.logger;
+package jmail.lib.logger;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;

@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<SplitPane dividerPositions="0.22395833333333334, 0.5" prefHeight="561.0" prefWidth="762.0" stylesheets="@../../styles/dark-mode.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jmail.client.Client">
+<SplitPane dividerPositions="0.22395833333333334, 0.5" prefHeight="561.0" prefWidth="762.0" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jmail.client.Client">
   <items>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="554.0" prefWidth="193.0" stylesheets="@../../styles/dark-mode.css">
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="554.0" prefWidth="193.0" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css">
          <children>
             <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="83.0" text="NEWMAIL" />
             <ScrollPane hbarPolicy="NEVER" layoutX="4.0" layoutY="67.0" prefHeight="489.0" prefWidth="163.0" vbarPolicy="ALWAYS" fitToHeight="true" fitToWidth="true">

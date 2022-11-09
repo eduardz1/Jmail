@@ -1,4 +1,4 @@
-package jmail.models;
+package jmail.lib.models;
 
 import lombok.Data;
 import lombok.NonNull;
