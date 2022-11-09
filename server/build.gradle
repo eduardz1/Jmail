@@ -36,6 +36,8 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.3.0-alpha13'
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.0-alpha7'
 
+    implementation 'org.fxmisc.richtext:richtextfx:0.10.9'
+
     implementation project(':lib')
 }
 
