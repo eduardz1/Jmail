@@ -10,19 +10,12 @@
 
 
 <BorderPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jmail.server.controllers.FXMLMainController">
-   <center>
-      <AnchorPane>
-              <children>
-                  <TextArea fx:id="delay" prefHeight="300.0" prefWidth="1080.0" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" />
-              </children>
-      </AnchorPane>
-   </center>
-    <bottom>
+    <center>
             <StackPane layoutX="317.0" layoutY="96.0" prefHeight="176.0" prefWidth="262.0" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
                   <VirtualizedScrollPane>
                       <content>
-                          <CodeArea fx:id="codeArea" prefHeight="300.0" prefWidth="1080.0" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
+                          <CodeArea fx:id="codeArea" prefHeight="300.0" prefWidth="700.0" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
                       </content>
                   </VirtualizedScrollPane>
-    </bottom>
+    </center>
 </BorderPane>
