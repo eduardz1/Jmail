@@ -822,67 +822,101 @@
 
 .trace {
     -fx-fill: #69ff94;
+    fill: #69ff94;
 }
 
 .debug {
     -fx-fill: #bd93f9;
+    fill: #bd93f9;
     -fx-font-weight: bold;
+    font-weight: bold;
 }
 
 .info {
     -fx-fill: #8be9fd;
+    fill: #8be9fd;
 }
 
 .warn {
     -fx-fill: orange;
+    fill: orange;
     -fx-font-weight: bold;
+    font-weight: bold;
 }
 
 .error {
     -fx-fill: #ff5555;
+    fill: #ff5555;
     -fx-font-weight: bold;
+    font-weight: bold;
 }
 
 .isodates {
-    -fx-fill: #AFB1B3;
+    -fx-fill: #39864f;
+    fill: #39864f;
+}
+
+.localdates {
+    -fx-fill: #39864f;
+    fill: #39864f;
 }
 
 .time {
-    -fx-fill: #AFB1B3;
+    -fx-fill: #39864f;
+    fill: #39864f;
 }
 
 .guid {
     -fx-fill: #ff79c6;
+    fill: #ff79c6;
+}
+
+.mac {
+    -fx-fill: #ff79c6;
+    fill: #ff79c6;
 }
 
 .constants {
-    -fx-fill: #AFB1B3;
+    -fx-fill: #b3b2af;
+    fill: #AFB1B3;
     -fx-font-weight: bold;
+    font-weight: bold;
 }
 
 .hexconstants {
     -fx-fill: #AFB1B3;
+    fill: #AFB1B3;
     -fx-font-weight: bold;
+    font-weight: bold;
 }
 
 .stringconstants {
     -fx-fill: #AFB1B3;
+    fill: #AFB1B3;
     -fx-font-weight: bold;
+    font-weight: bold;
 }
 
 .exceptions {
     -fx-fill: #ff5555;
+    fill: #ff5555;
 }
 
 .url {
     -fx-fill:#a4ffff;
+    fill:#a4ffff;
+    text-decoration-line: underline;
+    text-decoration-color: #a4ffff;
 }
 
 .namespaces {
     -fx-fill: #AFB1B3;
+    fill: #AFB1B3;
     -fx-font-weight: bold;
+    font-weight: bold;
 }
 
 .other {
     -fx-fill: #AFB1B3;
+    fill: #AFB1B3;
 }
