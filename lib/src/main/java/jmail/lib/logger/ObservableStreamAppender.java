@@ -11,7 +11,7 @@ import jmail.lib.layouts.LogLayout;
 public class ObservableStreamAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
   private final LayoutBase<ILoggingEvent> layout =
       new LogLayout(); // TODO would be nice if layouts could be injected via logback.xml
-  private static StringProperty internalLog = new SimpleStringProperty();
+  private static final StringProperty internalLog = new SimpleStringProperty();
 
   @Override
   protected void append(ILoggingEvent eventObject) {

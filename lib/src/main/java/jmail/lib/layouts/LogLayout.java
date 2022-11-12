@@ -8,16 +8,12 @@ public class LogLayout extends LayoutBase<ILoggingEvent> {
 
   @Override
   public String doLayout(ILoggingEvent event) {
-    StringBuilder builder = new StringBuilder();
-    builder.append(Instant.ofEpochMilli(event.getTimeStamp()) + "           ", 0, 21);
-
-    builder.append(" [");
-    builder.append(event.getThreadName());
-    builder.append("] ");
-
-    builder.append(event.getLevel().toString() + "    ", 0, 6);
-    builder.append(event.getLoggerName() + " - ");
-    builder.append(event.getFormattedMessage());
-    return builder.toString();
+    return String.format(
+        "%1$21s [%2$s] %3$6s %4$s - %5$s",
+        Instant.ofEpochMilli(event.getTimeStamp()),
+        event.getThreadName(),
+        event.getLevel(),
+        event.getLoggerName(),
+        event.getFormattedMessage());
   }
 }
