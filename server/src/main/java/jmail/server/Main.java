@@ -40,13 +40,11 @@ public class Main extends Application {
     Scene newScene = new Scene(root);
     Stage newStage = new Stage();
     newStage.setScene(newScene);
-    newStage.setOnShown(
-        e -> {
-          LOGGER.info("debug: ciaooooooo");
-          LOGGER.info("lurido");
-        });
     newStage.show();
-    mainController.setTopText("Trace: dioooooo nmaletto");
+    LOGGER.debug("oh oh errore di prova");
+    LOGGER.info("informazione importantissima");
+    LOGGER.warn("avvertimento! 123 \"ciao\"");
+    LOGGER.error("errore! https://ilpartitocomunista.it/");
   }
 
   @Override

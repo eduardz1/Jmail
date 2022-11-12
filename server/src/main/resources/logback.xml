@@ -15,9 +15,9 @@
   </appender>
 
   <appender name="streamAppender" class="jmail.lib.logger.ObservableStreamAppender">
-    <encoder>
-      <pattern>"%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"</pattern>
-    </encoder>
+    <!-- <layout>
+      <jmail class="server layout LogLayout"></jmail>
+    </layout> -->
   </appender>
 
   <root level="TRACE">

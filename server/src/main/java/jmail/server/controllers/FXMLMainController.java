@@ -14,11 +14,6 @@ import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 public class FXMLMainController implements Initializable {
-  private static final String sampleCode =
-          """
-                  Trace: 2019-01-01T00:00:00.0000000+00:00 [1] Microsoft.AspNetCore.Hosting.Internal.WebHost: Information: Request starting HTTP/1.1 GET http://localhost:5000/\s
-                  27.01.2018 19:38:28,982 [8988] [verbose] [Application]: Hello World!\s
-                  2018-01-27T10:38:24.593Z - error: It Crashed!""";
 
   private static final String TRACE_PATTERN = "\\b(Trace)\\b:";
   private static final String DEBUG_PATTERN = "\\b(DEBUG|Debug)\\b|(?i)\\b(debug):";
@@ -110,9 +105,6 @@ public class FXMLMainController implements Initializable {
         .richChanges()
         .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
         .subscribe(change -> codeArea.setStyleSpans(0, computeHighlighting(codeArea.getText())));
-
-    // TODO: remove
-    codeArea.replaceText(0, 0, sampleCode);
   }
 
   private StyleSpans<Collection<String>> computeHighlighting(String text) {

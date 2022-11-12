@@ -7,7 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class Client extends Application {
+public class Main extends Application {
 
   public String getGreeting() {
     return "Hello World!";
