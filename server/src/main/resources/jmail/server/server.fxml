@@ -9,7 +9,7 @@
 <?import org.fxmisc.richtext.CodeArea?>
 
 
-<BorderPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jmail.server.controllers.FXMLMainController">
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jmail.server.controllers.FXMLMainController">
     <center>
             <StackPane layoutX="317.0" layoutY="96.0" prefHeight="176.0" prefWidth="262.0" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
                   <VirtualizedScrollPane>
