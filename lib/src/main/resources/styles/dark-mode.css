@@ -806,10 +806,10 @@
     border-radius: 0;
     -fx-text-fill: #AFB1B3;
 }
-.code-area:focused{
+/* .code-area:focused{
     -fx-border-color: #4e4e4e;
     border-color: #4e4e4e;
-}
+} */
 
 
 /*  ****************************************************

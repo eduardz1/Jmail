@@ -17,6 +17,9 @@ plugins {
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+
+    // allows compilation of non published github repos
+    maven { url "https://jitpack.io" }
 }
 
 version = '30L'
@@ -37,6 +40,9 @@ dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.0-alpha7'
 
     implementation 'org.fxmisc.richtext:richtextfx:0.10.9'
+
+    // Used to customize application's window on Windows 11 (does not affect other OS')
+    implementation 'com.github.eduardz1:custom_window:181a04351f'
 
     implementation project(':lib')
 }

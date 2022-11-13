@@ -17,6 +17,9 @@ plugins {
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+
+    // allows compilation of non published github repos
+    maven { url "https://jitpack.io" }
 }
 
 version = '30L'
@@ -29,6 +32,9 @@ dependencies {
 
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:30.1.1-jre'
+
+    // Used to customize application's window on Windows 11 (does not affect other OS')
+    implementation 'com.github.eduardz1:custom_window:181a04351f'
 
     implementation project(':lib')
 }

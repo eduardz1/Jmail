@@ -14,7 +14,7 @@
             <StackPane layoutX="317.0" layoutY="96.0" prefHeight="176.0" prefWidth="262.0" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
                   <VirtualizedScrollPane>
                       <content>
-                          <CodeArea fx:id="codeArea" prefHeight="300.0" prefWidth="700.0" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
+                          <CodeArea fx:id="codeArea" prefHeight="300.0" prefWidth="900.0" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
                       </content>
                   </VirtualizedScrollPane>
     </center>
