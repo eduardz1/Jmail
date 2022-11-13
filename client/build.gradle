@@ -36,6 +36,7 @@ dependencies {
     // Used to customize application's window on Windows 11 (does not affect other OS')
     implementation 'com.github.eduardz1:custom_window:181a04351f'
 
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.0'
     implementation project(':lib')
 }
 

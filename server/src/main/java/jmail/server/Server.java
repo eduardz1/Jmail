@@ -21,12 +21,14 @@ public class Server extends Thread {
     threadPool = new ThreadPoolExecutor(10, 10, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
     threadPool.allowCoreThreadTimeOut(true);
     internalServerSocket = new ServerSocket(port);
+    System.out.println(internalServerSocket.getLocalSocketAddress().toString());
   }
 
   @Override
   public void run() {
     try {
       internalServerSocket.setReuseAddress(true);
+
 
       while (!Thread.interrupted()) {
         Socket clientSocket = internalServerSocket.accept();
