@@ -1,14 +1,14 @@
 package jmail.lib.models;
 
-import jmail.lib.enums.ServerResponseStatuses;
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 
-@Data
+@Setter @Getter
+@AllArgsConstructor
 public class ServerResponse {
 
-    @NonNull private ServerResponseStatuses status;
-
+    public ServerResponse() {
+    }
+    private String status;
     private String errorMessage;
 
 }

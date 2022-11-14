@@ -2,9 +2,11 @@ package jmail.lib.models.commands;
 
 
 import jmail.lib.constants.CommandActions;
+import lombok.Getter;
+import lombok.Setter;
 
 public class CommandDeleteEmail extends Command {
-    private final CommandDeleteEmailParameter parameter;
+    @Getter @Setter private CommandDeleteEmailParameter parameter;
 
     public CommandDeleteEmail(CommandDeleteEmailParameter parameter) {
         super(CommandActions.DELETE);
@@ -12,6 +14,6 @@ public class CommandDeleteEmail extends Command {
     }
 
     public static class CommandDeleteEmailParameter extends CommandParameters {
-        public String id;
+        @Getter @Setter private String id;
     }
 }

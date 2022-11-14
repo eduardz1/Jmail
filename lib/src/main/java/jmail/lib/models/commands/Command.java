@@ -5,6 +5,6 @@ import lombok.NonNull;
 
 @Data
 public class Command {
-// facciamolo così https://dzone.com/articles/command-design-pattern-in-java :)
     @NonNull private String action;
+    private String userID; // TODO: Capire se mettere qui per averlo in ogni messaggio, o se usare un logincommand
 }

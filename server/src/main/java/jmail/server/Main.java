@@ -28,6 +28,7 @@ public class Main extends Application {
             Main.class.getClassLoader().getResourceAsStream("server.properties")));
 
     Server server = new Server(Integer.parseInt(properties.getProperty("port")));
+    server.start();
     launch(args);
   }
 
@@ -65,12 +66,10 @@ public class Main extends Application {
         });
 
     newStage.show();
-    LOGGER.debug("oh oh errore di prova");
-    LOGGER.info("informazione importantissima");
-    LOGGER.warn("avvertimento! 123 \"ciao\"");
-    LOGGER.error("errore! https://ilpartitocomunista.it/");
   }
 
   @Override
-  public void stop() {}
+  public void stop() {
+
+  }
 }

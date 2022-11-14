@@ -54,15 +54,13 @@ public class Main extends Application {
                         // This is the "old" way:
                         StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_MICA_EFFECT, true);
                     }
-                    System.out.println("oooooooh baby");
 
                     var cmdPar = new CommandDeleteEmail.CommandDeleteEmailParameter();
-                    cmdPar.id = "ok";
+                    cmdPar.setId("ok");
                     var cmd = new CommandDeleteEmail(cmdPar);
                     setTimeout(() -> client.sendCommand(cmd), 1000);
                 });
         primaryStage.show();
-        System.out.println("eeeeeeeeeht baby");
     }
 
     public static void setTimeout(Runnable runnable, int delay) {

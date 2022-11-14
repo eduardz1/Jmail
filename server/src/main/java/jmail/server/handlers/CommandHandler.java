@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jmail.lib.constants.CommandActions;
-import jmail.lib.enums.ServerResponseStatuses;
+import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.Command;
@@ -58,7 +58,8 @@ public class CommandHandler {
     // TODO: Fare qualcosa di effettivo
 
     try {
-      var resp = new ServerResponse(ServerResponseStatuses.OK);
+      var resp = new ServerResponse(ServerResponseStatuses.OK, "");
+
       writer.println(JsonHelper.toJson(resp));
     } catch (JsonProcessingException ex) {
       LOGGER.error(ex.getMessage());
