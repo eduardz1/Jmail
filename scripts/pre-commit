@@ -1,0 +1,7 @@
+#!/bin/sh
+
+echo "*** Enforcing Code Style ***"
+
+./gradlew spotlessApply && git add .
+
+exit 0

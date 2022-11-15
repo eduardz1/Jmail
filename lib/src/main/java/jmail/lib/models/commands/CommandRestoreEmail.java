@@ -5,15 +5,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class CommandRestoreEmail extends Command {
-    private final CommandRestoreEmailParameter parameter;
+  private final CommandRestoreEmailParameter parameter;
 
-    public CommandRestoreEmail(CommandRestoreEmailParameter parameter) {
-        super(CommandActions.RESTORE);
-        this.parameter = parameter;
-    }
+  public CommandRestoreEmail(CommandRestoreEmailParameter parameter) {
+    super(CommandActions.RESTORE);
+    this.parameter = parameter;
+  }
 
-    @Getter @Setter
-    public static class CommandRestoreEmailParameter extends CommandParameters {
-        private String id = "";
-    }
+  @Getter
+  @Setter
+  public static class CommandRestoreEmailParameter extends CommandParameters {
+    private String id = "";
+  }
 }

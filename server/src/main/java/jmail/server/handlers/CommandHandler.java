@@ -1,10 +1,9 @@
 package jmail.server.handlers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.PrintWriter;
 import java.util.Map;
 import java.util.function.Supplier;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jmail.lib.constants.CommandActions;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.JsonHelper;
@@ -17,7 +16,9 @@ public class CommandHandler {
   private final Command internalCommand;
   private static final Logger LOGGER = LoggerFactory.getLogger(CommandHandler.class.getName());
 
-  private final PrintWriter writer; // TODO Cambiare assolutamente con qualcosa di meno specifico per gestire le risposte da inviare al client
+  private final PrintWriter
+      writer; // TODO Cambiare assolutamente con qualcosa di meno specifico per gestire le risposte
+  // da inviare al client
 
   /* For reference, in case we need to change signature of the methods:
    *

@@ -6,17 +6,17 @@ import lombok.Setter;
 
 public class CommandReadEmail extends Command {
 
-    private CommandReadEmailParameter parameter;
+  private CommandReadEmailParameter parameter;
 
-    public CommandReadEmail(CommandReadEmailParameter parameter) {
-        super(CommandActions.READ);
-        this.parameter = parameter;
-    }
+  public CommandReadEmail(CommandReadEmailParameter parameter) {
+    super(CommandActions.READ);
+    this.parameter = parameter;
+  }
 
-    @Getter @Setter
-    public static class CommandReadEmailParameter extends CommandParameters {
-        private String id;
-        private Boolean setRead;
-    }
-
+  @Getter
+  @Setter
+  public static class CommandReadEmailParameter extends CommandParameters {
+    private String id;
+    private Boolean setRead;
+  }
 }

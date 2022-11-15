@@ -63,7 +63,6 @@ public class Server extends Thread {
       }
       LOGGER.info("Server stopped!");
     }
-
   }
 
   @Override
