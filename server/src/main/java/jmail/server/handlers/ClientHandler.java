@@ -23,7 +23,7 @@ public class ClientHandler implements Runnable {
   }
 
   @Override
-  public void run() {
+        public void run() {
     try {
 
       reader = new BufferedReader(new InputStreamReader(internalSocket.getInputStream()));
