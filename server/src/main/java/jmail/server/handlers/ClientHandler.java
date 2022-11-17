@@ -5,7 +5,8 @@ import java.io.*;
 import java.net.Socket;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.exceptions.CommandNotFoundException;
-import jmail.lib.helpers.CommandHelper;
+import jmail.lib.exceptions.NotAuthorizedException;
+import jmail.lib.factory.CommandFactory;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.models.ServerResponse;
 import org.slf4j.Logger;
@@ -23,28 +24,27 @@ public class ClientHandler implements Runnable {
   }
 
   @Override
-        public void run() {
+  public void run() {
     try {
-
       reader = new BufferedReader(new InputStreamReader(internalSocket.getInputStream()));
       writer = new PrintWriter(internalSocket.getOutputStream(), true);
       String request = reader.readLine();
       LOGGER.info("Message received from client: " + request);
 
-      // TODO: Implementare autenticazione
-      // Non so ancora se dovrà essere inviato un comando di login, e registrare la sessione sul
-      // socket temporaneamente
-      // o se inviare l'id dell'utente come parametro di command
+      var cmd = CommandFactory.getCommand(request);
+      if (!cmd.hasUser())
+        throw new NotAuthorizedException("User not provided");
 
-      var cmd = CommandHelper.getCommandImplementation(request);
       var commandHandler = new CommandHandler(cmd, writer);
       commandHandler.executeAction();
 
     } catch (CommandNotFoundException | JsonProcessingException e) {
       LOGGER.error("Message received not valid");
       sendResponse(ServerResponseStatuses.ERROR, "Message invalid");
+    } catch (NotAuthorizedException e) {
+      LOGGER.error(e.getLocalizedMessage());
+      sendResponse(ServerResponseStatuses.ERROR, e.getLocalizedMessage());
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
