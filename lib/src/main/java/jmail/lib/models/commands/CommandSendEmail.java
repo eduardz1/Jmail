@@ -9,7 +9,7 @@ public class CommandSendEmail extends Command {
   private final CommandSendEmailParameter parameter;
 
   public CommandSendEmail(CommandSendEmailParameter parameter) {
-    super(CommandActions.RESTORE);
+    super(CommandActions.SEND);
     this.parameter = parameter;
   }
 
