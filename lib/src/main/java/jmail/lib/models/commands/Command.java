@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NonNull;
 
 @Data
-
 public class Command {
   @NonNull private String action;
   private String userEmail;

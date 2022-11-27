@@ -3,7 +3,6 @@ package jmail.client;
 import io.github.mimoguz.custom_window.DwmAttribute;
 import io.github.mimoguz.custom_window.StageOps;
 import java.io.IOException;
-import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
@@ -15,7 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import jmail.lib.models.Email;
-import jmail.lib.models.commands.CommandDeleteEmail;
 import jmail.lib.models.commands.CommandSendEmail;
 
 public class Main extends Application {
@@ -41,44 +39,36 @@ public class Main extends Application {
     primaryStage.setTitle("JMAIL");
     primaryStage.getIcons().add(new Image("logo.png"));
 
+    // Forces Dark Mode on Windows11 windows and enables mica effect on transaprent surfaces
     Platform.runLater(
         () -> {
           final var handle = StageOps.findWindowHandle(primaryStage);
-          // Optionally enable the dark mode:
           StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
-          // Enable the mica material
-          // DWMWA_SYSTEMBACKDROP_TYPE method is the newer way:
-          if (!StageOps.dwmSetIntValue(
-              handle,
-              DwmAttribute.DWMWA_SYSTEMBACKDROP_TYPE,
-              // There is also DWMSBT_TABBEDWINDOW option, which gives a more translucent look.
-              DwmAttribute.DWMSBT_MAINWINDOW.value)) {
-            // This is the "old" way:
-            StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_MICA_EFFECT, true);
-          }
+          StageOps.dwmSetIntValue(
+              handle, DwmAttribute.DWMWA_SYSTEMBACKDROP_TYPE, DwmAttribute.DWMSBT_MAINWINDOW.value);
 
-           var cmdPar = new CommandSendEmail.CommandSendEmailParameter();
+          var cmdPar = new CommandSendEmail.CommandSendEmailParameter();
 
-            Calendar today = Calendar.getInstance();
-            today.set(Calendar.HOUR_OF_DAY, 0);
+          Calendar today = Calendar.getInstance();
+          today.set(Calendar.HOUR_OF_DAY, 0);
 
-          var email = new Email("",
-                   "Bella raga",
-                   "Bella raga sono un cazzo di gesù cristo ariano",
-                   "emmedeveloper@gmail.com",
-                   List.of("eduocchi@gmail.com", "marcofratta@gmail.com"),
-                   today.getTime()
-                   );
+          var email =
+              new Email(
+                  "",
+                  "Bella raga",
+                  "Bella raga sono un cazzo di gesù cristo ariano",
+                  "emmedeveloper@gmail.com",
+                  List.of("eduocchi@gmail.com", "marcofratta@gmail.com"),
+                  today.getTime());
           cmdPar.setEmail(email);
 
           var cmd = new CommandSendEmail(cmdPar);
           cmd.setUserEmail("emmedeveloper@gmail.com");
 
-
-//          var cmdPar = new CommandDeleteEmail.CommandDeleteEmailParameter();
-//          cmdPar.setEmailID("1");
-//          var cmd = new CommandDeleteEmail(cmdPar);
-//          cmd.setUserEmail("emmedeveloper@gmail.com");
+          //          var cmdPar = new CommandDeleteEmail.CommandDeleteEmailParameter();
+          //          cmdPar.setEmailID("1");
+          //          var cmd = new CommandDeleteEmail(cmdPar);
+          //          cmd.setUserEmail("emmedeveloper@gmail.com");
           setTimeout(() -> client.sendCommand(cmd), 1000);
         });
     primaryStage.show();
