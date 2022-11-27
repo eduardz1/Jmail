@@ -65,8 +65,12 @@ public class SystemIOHelper {
         Files.move(from, to, StandardCopyOption.ATOMIC_MOVE);
     }
 
+    public static void copyFile(Path from, Path to) throws IOException {
+        Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
+    }
+
     public static Boolean userExists(String userEmail) {
-        Path user = Paths.get(userpath);
+        Path user = Paths.get(emailpath);
         File f = new File(Paths.get(String.format("%s\\%s.dat", user, userEmail)).toUri());
         return f.exists() && !f.isDirectory();
     }

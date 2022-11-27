@@ -1,7 +1,6 @@
 package jmail.lib.models;
 
-import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import javafx.util.Pair;
@@ -21,6 +20,7 @@ import lombok.NonNull;
 //    implements Serializable {}
 
 public record Email(
+        String id,
         String subject,
         String body,
         @NonNull String sender,

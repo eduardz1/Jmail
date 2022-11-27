@@ -6,7 +6,7 @@ import lombok.Setter;
 
 // @Data
 public class CommandListEmail extends Command {
-  @Getter @Setter private final CommandListEmailParameter parameter;
+  @Getter @Setter private CommandListEmailParameter parameter;
 
   public CommandListEmail(CommandListEmailParameter parameter) {
     super(CommandActions.LIST);

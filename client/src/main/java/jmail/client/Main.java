@@ -3,6 +3,9 @@ package jmail.client;
 import io.github.mimoguz.custom_window.DwmAttribute;
 import io.github.mimoguz.custom_window.StageOps;
 import java.io.IOException;
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -11,7 +14,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import jmail.lib.models.Email;
 import jmail.lib.models.commands.CommandDeleteEmail;
+import jmail.lib.models.commands.CommandSendEmail;
 
 public class Main extends Application {
 
@@ -52,10 +57,28 @@ public class Main extends Application {
             StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_MICA_EFFECT, true);
           }
 
-          var cmdPar = new CommandDeleteEmail.CommandDeleteEmailParameter();
-          cmdPar.setEmailID("1");
-          var cmd = new CommandDeleteEmail(cmdPar);
+           var cmdPar = new CommandSendEmail.CommandSendEmailParameter();
+
+            Calendar today = Calendar.getInstance();
+            today.set(Calendar.HOUR_OF_DAY, 0);
+
+          var email = new Email("",
+                   "Bella raga",
+                   "Bella raga sono un cazzo di gesù cristo ariano",
+                   "emmedeveloper@gmail.com",
+                   List.of("eduocchi@gmail.com", "marcofratta@gmail.com"),
+                   today.getTime()
+                   );
+          cmdPar.setEmail(email);
+
+          var cmd = new CommandSendEmail(cmdPar);
           cmd.setUserEmail("emmedeveloper@gmail.com");
+
+
+//          var cmdPar = new CommandDeleteEmail.CommandDeleteEmailParameter();
+//          cmdPar.setEmailID("1");
+//          var cmd = new CommandDeleteEmail(cmdPar);
+//          cmd.setUserEmail("emmedeveloper@gmail.com");
           setTimeout(() -> client.sendCommand(cmd), 1000);
         });
     primaryStage.show();
