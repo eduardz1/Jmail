@@ -6,9 +6,9 @@ import lombok.NonNull;
 @Data
 public class Command {
   @NonNull private String action;
-  private String userID;
+  private String userEmail;
 
-  public boolean hasUser() {
-    return userID != null && !userID.isEmpty();
+  public boolean hasEmail() {
+    return userEmail != null && !userEmail.isEmpty();
   }
 }

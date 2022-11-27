@@ -4,11 +4,11 @@ import jmail.lib.models.commands.Command;
 import jmail.server.exceptions.ActionExecutionException;
 
 public abstract class ActionCommand {
-    final Command command;
+  final Command command;
 
-    public ActionCommand(Command command) {
-        this.command = command;
-    }
+  public ActionCommand(Command command) {
+    this.command = command;
+  }
 
-    abstract void Execute() throws ActionExecutionException;
+  public abstract void execute() throws ActionExecutionException;
 }

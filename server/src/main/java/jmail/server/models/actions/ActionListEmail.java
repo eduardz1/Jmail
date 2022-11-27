@@ -5,12 +5,10 @@ import jmail.server.exceptions.ActionExecutionException;
 
 public class ActionListEmail extends ActionCommand {
 
-    public ActionListEmail(CommandListEmail cmd) {
-        super(cmd);
-    }
+  public ActionListEmail(CommandListEmail cmd) {
+    super(cmd);
+  }
 
-    @Override
-    void Execute() throws ActionExecutionException {
-
-    }
+  @Override
+  public void execute() throws ActionExecutionException {}
 }

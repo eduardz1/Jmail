@@ -32,8 +32,7 @@ public class ClientHandler implements Runnable {
       LOGGER.info("Message received from client: " + request);
 
       var cmd = CommandFactory.getCommand(request);
-      if (!cmd.hasUser())
-        throw new NotAuthorizedException("User not provided");
+      if (!cmd.hasEmail()) throw new NotAuthorizedException("User not provided");
 
       var commandHandler = new CommandHandler(cmd, writer);
       commandHandler.executeAction();
