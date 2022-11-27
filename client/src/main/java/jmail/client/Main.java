@@ -53,8 +53,9 @@ public class Main extends Application {
           }
 
           var cmdPar = new CommandDeleteEmail.CommandDeleteEmailParameter();
-          cmdPar.setId("ok");
+          cmdPar.setId("1");
           var cmd = new CommandDeleteEmail(cmdPar);
+          cmd.setUserEmail("emmedeveloper@gmail.com");
           setTimeout(() -> client.sendCommand(cmd), 1000);
         });
     primaryStage.show();

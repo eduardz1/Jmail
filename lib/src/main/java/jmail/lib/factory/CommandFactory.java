@@ -11,9 +11,10 @@ public class CommandFactory {
       throws CommandNotFoundException, JsonProcessingException {
     var node = JsonHelper.toJsonNode(jsonCommand);
     var action = node.get("action").asText();
-    var parameters = node.get("parameters");
+    var parameters = node.get("parameter");
+    var user = node.get("userEmail").asText();
 
-    return switch (action) {
+    var command = switch (action) {
       case DELETE -> new CommandDeleteEmail(
           JsonHelper.fromJsonNode(
               parameters, CommandDeleteEmail.CommandDeleteEmailParameter.class));
@@ -28,5 +29,10 @@ public class CommandFactory {
               parameters, CommandRestoreEmail.CommandRestoreEmailParameter.class));
       default -> throw new CommandNotFoundException("Command type not recognized");
     };
+
+    command.setUserEmail(user);
+    return command;
   }
+
+
 }

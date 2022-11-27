@@ -9,6 +9,7 @@ import jmail.lib.exceptions.NotAuthorizedException;
 import jmail.lib.factory.CommandFactory;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.models.ServerResponse;
+import jmail.server.helpers.SystemIOHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,11 @@ public class ClientHandler implements Runnable {
 
       var cmd = CommandFactory.getCommand(request);
       if (!cmd.hasEmail()) throw new NotAuthorizedException("User not provided");
+
+      var userEmail = cmd.getUserEmail();
+      if (SystemIOHelper.userExists(userEmail)) {
+        SystemIOHelper.createUserFolderIfNotExists(userEmail);
+      }
 
       var commandHandler = new CommandHandler(cmd, writer);
       commandHandler.executeAction();

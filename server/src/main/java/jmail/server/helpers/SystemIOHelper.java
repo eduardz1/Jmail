@@ -19,8 +19,8 @@ public class SystemIOHelper {
         Files.createDirectories(email);
     }
 
-    public static void createUserFolderIfNotExists(String userID) throws IOException {
-        Path user = getUserDirectoryPath(userID);
+    public static void createUserFolderIfNotExists(String userEmail) throws IOException {
+        Path user = getUserDirectoryPath(userEmail);
         Files.createDirectories(user);
 
         Path sent = Paths.get(String.format("%s\\%s", user, "sent"));
@@ -31,20 +31,20 @@ public class SystemIOHelper {
         Files.createDirectories(deleted);
     }
 
-    public static Path getUserDirectoryPath(String userID) {
-        return Paths.get(userpath + "\\" + userID);
+    public static Path getUserDirectoryPath(String userEmail) {
+        return Paths.get(userpath + "\\" + userEmail);
     }
 
-    public static Path getUserDeletedDirectoryPath(String userID) {
-        return getUserSpecificPath(userID, "deleted");
+    public static Path getUserDeletedDirectoryPath(String userEmail) {
+        return getUserSpecificPath(userEmail, "deleted");
     }
 
-    public static Path getUserSentDirectoryPath(String userID) {
-        return getUserSpecificPath(userID, "sent");
+    public static Path getUserSentDirectoryPath(String userEmail) {
+        return getUserSpecificPath(userEmail, "sent");
     }
 
-    public static Path getUserInboxDirectoryPath(String userID) {
-        return getUserSpecificPath(userID, "inbox");
+    public static Path getUserInboxDirectoryPath(String userEmail) {
+        return getUserSpecificPath(userEmail, "inbox");
     }
 
     public static void writeJSONFile(Path path, String name, String jsonObject) throws IOException {
@@ -57,12 +57,18 @@ public class SystemIOHelper {
         return Files.readString(Path.of(path + "\\" + name));
     }
 
-    private static Path getUserSpecificPath(String userdID, String folder) {
-        return Paths.get(String.format("%s\\%s", getUserDeletedDirectoryPath(userdID), folder));
+    private static Path getUserSpecificPath(String userEmail, String folder) {
+        return Paths.get(String.format("%s\\%s", getUserDirectoryPath(userEmail), folder));
     }
 
     public static void moveFile(Path from, Path to) throws IOException {
         Files.move(from, to, StandardCopyOption.ATOMIC_MOVE);
+    }
+
+    public static Boolean userExists(String userEmail) {
+        Path user = Paths.get(userpath);
+        File f = new File(Paths.get(String.format("%s\\%s.dat", user, userEmail)).toUri());
+        return f.exists() && !f.isDirectory();
     }
 
 }
