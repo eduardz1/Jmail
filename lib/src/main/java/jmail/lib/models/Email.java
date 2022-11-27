@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.util.List;
 
+import javafx.util.Pair;
 import lombok.NonNull;
 
 
@@ -26,4 +27,21 @@ public record Email(
         @NonNull List<String> recipients,
         @NonNull Date date
 ) {
+
+    public Pair<Boolean, String> isValid() {
+        if (sender == null || sender.isEmpty())
+            return new Pair<>(false, "Email sender null or empty");
+
+        if (
+                recipients == null ||
+                recipients.isEmpty() ||
+                recipients.stream().anyMatch(rec -> rec == null || rec.isEmpty())
+        )
+            return new Pair<>(false, "Email recipients null, empty o some invalids");
+
+        if (date == null)
+            return new Pair<>(false, "Email creationdate null");
+
+        return new Pair<>(true, "");
+    }
 }

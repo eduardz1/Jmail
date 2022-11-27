@@ -13,6 +13,6 @@ public class CommandDeleteEmail extends Command {
   }
 
   public static class CommandDeleteEmailParameter extends CommandParameters {
-    @Getter @Setter private String id;
+    @Getter @Setter private String emailID;
   }
 }

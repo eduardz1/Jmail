@@ -6,7 +6,7 @@ import lombok.Setter;
 
 // @Data
 public class CommandListEmail extends Command {
-  private final CommandListEmailParameter parameter;
+  @Getter @Setter private final CommandListEmailParameter parameter;
 
   public CommandListEmail(CommandListEmailParameter parameter) {
     super(CommandActions.LIST);
@@ -14,6 +14,6 @@ public class CommandListEmail extends Command {
   }
 
   public static class CommandListEmailParameter extends CommandParameters {
-    @Getter @Setter private String lastLoadedID = "";
+    @Getter @Setter private String lastUnixTimeCheck = "";
   }
 }

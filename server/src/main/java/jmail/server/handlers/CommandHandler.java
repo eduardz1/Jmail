@@ -4,20 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.PrintWriter;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
 import java.util.function.Supplier;
 
 import jmail.lib.constants.CommandActions;
-import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.models.ServerResponse;
-import jmail.lib.models.commands.Command;
-import jmail.lib.models.commands.CommandDeleteEmail;
+import jmail.lib.models.commands.*;
 import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.factory.ActionCommandFactory;
-import jmail.server.models.actions.ActionCommand;
-import jmail.server.models.actions.ActionDeleteMail;
-import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,14 +46,71 @@ public class CommandHandler {
     }
 
     private Void sendEmail() {
+
+        var sendCmd = (CommandSendEmail)internalCommand;
+        var param = sendCmd.getParameter();
+
+        try {
+            if (param == null || param.getEmail() == null) {
+                throw new IllegalArgumentException("Command send: email cannot be null");
+            };
+
+            var email = param.getEmail();
+            var emailValid = email.isValid();
+            if (!emailValid.getKey()) { // Invalid email
+                throw new IllegalArgumentException("Command send: " + emailValid.getValue()); // retrieve message
+            };
+            var action = ActionCommandFactory.getActionCommand(internalCommand);
+            action.execute();
+            sendOk("");
+
+        } catch (ActionExecutionException ex) {
+            System.out.println(ex.getInnerMessage());
+            var msg = "Cannot execute send mail action: " + ex.getMessage();
+            LOGGER.error(msg);
+            sendError(msg);
+        }
+
         return null;
     }
 
     private Void listEmails() {
+        var listCmd = (CommandListEmail)internalCommand;
+        var param = listCmd.getParameter();
+
+        try {
+            var action = ActionCommandFactory.getActionCommand(internalCommand);
+            action.execute();
+            sendOk("");
+
+        } catch (ActionExecutionException ex) {
+            System.out.println(ex.getInnerMessage());
+            var msg = "Cannot execute list mail action: " + ex.getMessage();
+            LOGGER.error(msg);
+            sendError(msg);
+        }
         return null;
     }
 
     private Void markEmailAsRead() {
+        var readCmd = (CommandReadEmail)internalCommand;
+        var param = readCmd.getParameter();
+
+        try {
+            if (param == null || param.getEmailID() == null || param.getEmailID().isEmpty()) {
+                throw new IllegalArgumentException("Command read: email id cannot be null");
+            };
+
+            var action = ActionCommandFactory.getActionCommand(internalCommand);
+            action.execute();
+            sendOk("");
+
+        } catch (ActionExecutionException ex) {
+            System.out.println(ex.getInnerMessage());
+            var msg = "Cannot execute read mail action: " + ex.getMessage();
+            LOGGER.error(msg);
+            sendError(msg);
+        }
         return null;
     }
 
@@ -69,7 +120,7 @@ public class CommandHandler {
         var param = delCmd.getParameter();
 
         try {
-            if (param == null || param.getId() == null || param.getId().isEmpty()) {
+            if (param == null || param.getEmailID() == null || param.getEmailID().isEmpty()) {
                 throw new IllegalArgumentException("Command delete: email id cannot be null or empty");
             }
             var action = ActionCommandFactory.getActionCommand(internalCommand);

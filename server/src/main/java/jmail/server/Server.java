@@ -3,6 +3,8 @@ package jmail.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.Instant;
+import java.util.Date;
 import java.util.concurrent.*;
 
 import jmail.server.handlers.ClientHandler;
@@ -36,7 +38,14 @@ public class Server extends Thread {
             SystemIOHelper.createBaseFoldersIfNotExists();
             LOGGER.info("Folders created with success");
 
-            SystemIOHelper.createUserFolderIfNotExists("emme");
+            long time = Instant.now().getEpochSecond();
+            System.out.println(time);
+
+            System.out.println((new Date(time * 1000)).toInstant().getEpochSecond());
+
+
+
+
 
         } catch (IOException e) {
             LOGGER.error("SocketServer exception on starting: " + e.getLocalizedMessage());

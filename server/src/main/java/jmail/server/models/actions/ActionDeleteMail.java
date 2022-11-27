@@ -21,7 +21,7 @@ public class ActionDeleteMail extends ActionCommand {
     var cmd = (CommandDeleteEmail)this.command;
     var params = cmd.getParameter();
     var userEmail = cmd.getUserEmail();
-    var emailID = params.getId();
+    var emailID = params.getEmailID();
 
     if (userEmail == null || userEmail.isEmpty()) {
       throw new ActionExecutionException("Cannot delete mail: user invalid");

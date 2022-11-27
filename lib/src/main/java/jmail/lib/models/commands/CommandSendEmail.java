@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class CommandSendEmail extends Command {
-  private final CommandSendEmailParameter parameter;
+  @Getter @Setter private final CommandSendEmailParameter parameter;
 
   public CommandSendEmail(CommandSendEmailParameter parameter) {
     super(CommandActions.SEND);
