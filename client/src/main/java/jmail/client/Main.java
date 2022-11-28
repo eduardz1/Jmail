@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import jmail.client.controllers.FXMLController;
 import jmail.lib.models.Email;
 import jmail.lib.models.commands.CommandSendEmail;
 
@@ -32,9 +33,14 @@ public class Main extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("client.fxml")));
-    Scene scene = new Scene(root);
-    primaryStage.setScene(scene);
+    //Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("client.fxml")));
+
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("client.fxml"));
+      Parent root = loader.load();
+      Scene scene = new Scene(root);
+      primaryStage.setScene(scene);
+      FXMLController mainController = loader.getController();
+      mainController.setTopText("Ciao");
 
     primaryStage.setTitle("JMAIL");
     primaryStage.getIcons().add(new Image("logo.png"));
