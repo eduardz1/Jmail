@@ -5,6 +5,7 @@ import jmail.lib.models.Email;
 import jmail.lib.models.commands.CommandListEmail;
 import jmail.lib.models.commands.CommandSendEmail;
 import jmail.server.exceptions.ActionExecutionException;
+import jmail.server.handlers.LockHandler;
 import jmail.server.helpers.SystemIOHelper;
 import lombok.Data;
 import lombok.Getter;
@@ -16,10 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class ActionListEmail extends ActionCommand {
@@ -30,6 +28,10 @@ public class ActionListEmail extends ActionCommand {
 
     @Override
     public void execute() throws ActionExecutionException {
+    }
+
+    @Override
+    public ActionListEmailResponse executeAndGetResult() throws ActionExecutionException {
 
         var cmd = (CommandListEmail) this.command;
         var params = cmd.getParameter();
@@ -40,9 +42,13 @@ public class ActionListEmail extends ActionCommand {
         }
 
         boolean shouldCheckUnixTime = params != null && params.getLastUnixTimeCheck() != null;
-
-        var inbox = SystemIOHelper.getUserInboxDirectoryPath(userEmail);
         // If shouldCheckUnixTime is false means that user needs to load all emails
+
+        var handler = LockHandler.getInstance();
+        handler.createLock(userEmail);
+        handler.getReadLock(userEmail);
+
+        var inbox = SystemIOHelper.getUserInbox(userEmail);
 
         var mails = new ArrayList<Email>();
         File[] files = (new File(inbox.toUri())).listFiles();
@@ -59,19 +65,19 @@ public class ActionListEmail extends ActionCommand {
         }
         Collections.sort(mails, Comparator.comparing(Email::date));
 
-
-
-
+        handler.removeLock(userEmail);
+        return new ActionListEmailResponse(mails);
     }
 
-    private Long getUnixTimeFromFilename(File file ) {
+    private Long getUnixTimeFromFilename(File file) {
         var name = file.getName();
         var last_ = name.lastIndexOf("_");
         return Long.getLong(name.substring(last_ + 1));
     }
-@Data
-public class ActionListEmailResponse {
-    @NonNull
-    public ArrayList<Email> Emails;
-}
+
+    @Data
+    public class ActionListEmailResponse {
+        @NonNull
+        public ArrayList<Email> Emails;
+    }
 }

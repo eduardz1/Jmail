@@ -44,11 +44,6 @@ public class Server extends Thread {
 
       LOGGER.info("Folders created with success");
 
-      long time = Instant.now().getEpochSecond();
-      System.out.println(time);
-
-      System.out.println((new Date(time * 1000)).toInstant().getEpochSecond());
-
     } catch (IOException e) {
       LOGGER.error("SocketServer exception on starting: " + e.getLocalizedMessage());
       e.printStackTrace();

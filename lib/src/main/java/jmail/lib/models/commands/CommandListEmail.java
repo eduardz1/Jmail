@@ -8,6 +8,10 @@ import lombok.Setter;
 public class CommandListEmail extends Command {
   @Getter @Setter private CommandListEmailParameter parameter;
 
+
+  public CommandListEmail() {
+    super(CommandActions.LIST);
+  }
   public CommandListEmail(CommandListEmailParameter parameter) {
     super(CommandActions.LIST);
     this.parameter = parameter;
