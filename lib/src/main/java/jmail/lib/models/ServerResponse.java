@@ -6,6 +6,9 @@ import lombok.*;
 @Setter
 @Getter
 public class ServerResponse {
+  private String status;
+  private String errorMessage;
+  private String responseMessage;
 
   public ServerResponse() {}
 
@@ -27,11 +30,4 @@ public class ServerResponse {
   public static ServerResponse CreateErrorResponse(String message) {
     return new ServerResponse(ServerResponseStatuses.ERROR, message);
   }
-
-
-  private String status;
-  private String errorMessage;
-  private String responseMessage;
 }
-
-

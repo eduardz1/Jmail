@@ -4,6 +4,7 @@ import javax.swing.*;
 
 public class ActionExecutionException extends Exception {
   private Exception innerExceptions = null;
+
   public ActionExecutionException(String message) {
     super(message);
   }
@@ -17,6 +18,4 @@ public class ActionExecutionException extends Exception {
     if (innerExceptions == null) return "";
     return innerExceptions.getLocalizedMessage();
   }
-
-
 }

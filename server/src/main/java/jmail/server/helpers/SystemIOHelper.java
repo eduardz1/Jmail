@@ -5,65 +5,60 @@ import java.nio.file.*;
 
 public class SystemIOHelper {
 
-    // TODO : Path si legge da configurazione
-    private static final String basepath = "C:\\Unito\\Terzo anno\\server";
-    private static final String emailpath = basepath + "\\email";
-    private static final String userpath = basepath + "\\users";
+  private static final String emailpath = "email";
+  private static final String userpath = "users";
 
-    public static void createBaseFoldersIfNotExists() throws IOException {
-        Path base = Paths.get(basepath);
-        Files.createDirectories(base);
-        Path user = Paths.get(userpath);
-        Files.createDirectories(user);
-        Path email = Paths.get(emailpath);
-        Files.createDirectories(email);
-    }
+  public static void createBaseFoldersIfNotExists() throws IOException {
+    Files.createDirectories(Paths.get(userpath));
+    Files.createDirectories(Paths.get(emailpath));
+  }
 
-    public static void createUserFolderIfNotExists(String userEmail) throws IOException {
-        Path user = getUserDirectoryPath(userEmail);
-        Files.createDirectories(user);
+  public static void createUserFolderIfNotExists(String userEmail) throws IOException {
+    Path user = getUserDirectory(userEmail);
+    Files.createDirectories(user);
 
-        Path sent = Paths.get(String.format("%s\\%s", user, "sent"));
-        Path inbox = Paths.get(String.format("%s\\%s", user, "inbox"));
-        Path deleted = Paths.get(String.format("%s\\%s", user, "deleted"));
-        Files.createDirectories(sent);
-        Files.createDirectories(inbox);
-        Files.createDirectories(deleted);
-    }
+    Files.createDirectories(Paths.get(user + "/" + "sent"));
+    Files.createDirectories(Paths.get(user + "/" + "inbox"));
+    Files.createDirectories(Paths.get(user + "/" + "deleted"));
+  }
 
-    public static Path getUserDirectoryPath(String userEmail) {
-        return Paths.get(userpath + "\\" + userEmail);
-    }
+  public static Path getUserDirectory(String userEmail) {
+    String[] s = userEmail.split("@");
+    return Paths.get(userpath + "/" + s[1] + "/" + s[0]);
+  }
 
-    public static Path getUserDeletedDirectoryPath(String userEmail) {
-        return getUserSpecificPath(userEmail, "deleted");
-    }
+  public static Path getUserDeleted(String userEmail) {
+    return getUserSpecificPath(userEmail, "deleted");
+  }
 
-    public static Path getUserSentDirectoryPath(String userEmail) {
-        return getUserSpecificPath(userEmail, "sent");
-    }
+  public static Path getUserSent(String userEmail) {
+    return getUserSpecificPath(userEmail, "sent");
+  }
 
-    public static Path getUserInboxDirectoryPath(String userEmail) {
-        return getUserSpecificPath(userEmail, "inbox");
-    }
+  public static Path getUserInbox(String userEmail) {
+    return getUserSpecificPath(userEmail, "inbox");
+  }
 
-    public static void writeJSONFile(Path path, String name, String jsonObject) throws IOException {
-        var writer = new FileWriter(path + "\\" + name);
-        writer.write(jsonObject);
-        writer.close();
-    }
+  private static Path getUserSpecificPath(String userEmail, String folder) {
+    return Paths.get(getUserDirectory(userEmail) + "/" + folder);
+  }
+
+  public static void writeJSONFile(Path path, String name, String jsonObject) throws IOException {
+    var writer = new FileWriter(path + "/" + name);
+    writer.write(jsonObject);
+    writer.close();
+  }
 
     public static String readJSONFile(Path path) throws IOException {
         return Files.readString(path);
     }
 
-    public static String readJSONFile(Path path, String name) throws IOException {
-        return Files.readString(Path.of(path + "\\" + name));
-    }
+     public static String readJSONFile(Path path, String name) throws IOException {
+    return Files.readString(Path.of(path + "/" + name));
+  }
 
-    private static Path getUserSpecificPath(String userEmail, String folder) {
-        return Paths.get(String.format("%s\\%s", getUserDirectoryPath(userEmail), folder));
-    }
+  // FIXME: non penso che dovremmo tenere due funzioni che come unica cosa
+  // mascherano la option utilizzata che tra l'altro può avere solo due valori
 
     public static void moveFile(Path from, Path to) throws IOException {
         Files.move(from, to, StandardCopyOption.ATOMIC_MOVE);
@@ -73,10 +68,10 @@ public class SystemIOHelper {
         Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    public static Boolean userExists(String userEmail) {
-        Path user = Paths.get(emailpath);
-        File f = new File(Paths.get(String.format("%s\\%s.dat", user, userEmail)).toUri());
-        return f.exists() && !f.isDirectory();
-    }
-
+  // TODO: take a look at this method later
+  public static Boolean userExists(String userEmail) {
+    Path user = Paths.get(emailpath);
+    File f = new File(Paths.get(String.format("%s\\%s.dat", user, userEmail)).toUri());
+    return f.exists() && !f.isDirectory();
+  }
 }

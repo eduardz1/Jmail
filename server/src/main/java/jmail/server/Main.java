@@ -48,21 +48,14 @@ public class Main extends Application {
 
     newStage.setTitle("SERVER");
     newStage.getIcons().add(new Image("logo.png"));
+
+    // Forces Dark Mode on Windows11 windows and enables mica effect on transaprent surfaces
     Platform.runLater(
         () -> {
           final var handle = StageOps.findWindowHandle(newStage);
-          // Optionally enable the dark mode:
           StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
-          // Enable the mica material
-          // DWMWA_SYSTEMBACKDROP_TYPE method is the newer way:
-          if (!StageOps.dwmSetIntValue(
-              handle,
-              DwmAttribute.DWMWA_SYSTEMBACKDROP_TYPE,
-              // There is also DWMSBT_TABBEDWINDOW option, which gives a more translucent look.
-              DwmAttribute.DWMSBT_MAINWINDOW.value)) {
-            // This is the "old" way:
-            StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_MICA_EFFECT, true);
-          }
+          StageOps.dwmSetIntValue(
+              handle, DwmAttribute.DWMWA_SYSTEMBACKDROP_TYPE, DwmAttribute.DWMSBT_MAINWINDOW.value);
         });
 
     newStage.show();
