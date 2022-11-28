@@ -53,6 +53,10 @@ public class SystemIOHelper {
         writer.close();
     }
 
+    public static String readJSONFile(Path path) throws IOException {
+        return Files.readString(path);
+    }
+
     public static String readJSONFile(Path path, String name) throws IOException {
         return Files.readString(Path.of(path + "\\" + name));
     }
