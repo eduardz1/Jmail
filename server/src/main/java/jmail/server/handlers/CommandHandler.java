@@ -9,6 +9,7 @@ import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.*;
 import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.factory.ActionCommandFactory;
+import jmail.server.models.actions.ActionListEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,10 +58,6 @@ public class CommandHandler {
     }
   }
 
-  private void sendError() {
-    this.sendError("");
-  }
-
   private void sendError(String msg) {
     try {
       var resp = ServerResponse.CreateErrorResponse(msg);
@@ -91,16 +88,20 @@ public class CommandHandler {
   }
 
   private void listEmails() {
-    var listCmd = (CommandListEmail) internalCommand;
-    var param = listCmd.getParameter();
-
     try {
       var action = ActionCommandFactory.getActionCommand(internalCommand);
-      action.execute();
-      sendOk();
+      ActionListEmail.ActionListEmailResponse response = action.executeAndGetResult();
+
+      var serverResp = new ServerResponse<>(response);
+      writer.println(JsonHelper.toJson(serverResp));
+
     } catch (ActionExecutionException ex) {
       System.out.println(ex.getInnerMessage());
       var msg = "Cannot execute list mail action: " + ex.getMessage();
+      LOGGER.error(msg);
+      sendError(msg);
+    } catch (JsonProcessingException e) {
+      var msg = "Cannot serialize response";
       LOGGER.error(msg);
       sendError(msg);
     }

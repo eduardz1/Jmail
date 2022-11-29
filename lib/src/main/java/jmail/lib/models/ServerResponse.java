@@ -1,16 +1,24 @@
 package jmail.lib.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jmail.lib.constants.ServerResponseStatuses;
 import lombok.*;
 
 @Setter
 @Getter
-public class ServerResponse {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ServerResponse<T> {
   private String status;
   private String errorMessage;
   private String responseMessage;
+  private T body;
 
   public ServerResponse() {}
+
+  public ServerResponse(T body) {
+    this.status = ServerResponseStatuses.OK;
+    this.body = body;
+  }
 
   public ServerResponse(String status, String errorMessage) {
     this.status = status;

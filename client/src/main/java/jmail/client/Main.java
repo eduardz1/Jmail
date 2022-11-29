@@ -4,8 +4,6 @@ import io.github.mimoguz.custom_window.DwmAttribute;
 import io.github.mimoguz.custom_window.StageOps;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Objects;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +11,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import jmail.lib.models.Email;
+import jmail.client.controllers.FXMLController;
+import jmail.lib.models.commands.CommandListEmail;
 import jmail.lib.models.commands.CommandSendEmail;
 
 public class Main extends Application {
@@ -32,9 +31,14 @@ public class Main extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("client.fxml")));
+    // Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("client.fxml")));
+
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("client.fxml"));
+    Parent root = loader.load();
     Scene scene = new Scene(root);
     primaryStage.setScene(scene);
+    FXMLController mainController = loader.getController();
+    mainController.setTopText("Ciao");
 
     primaryStage.setTitle("JMAIL");
     primaryStage.getIcons().add(new Image("logo.png"));
@@ -52,18 +56,22 @@ public class Main extends Application {
           Calendar today = Calendar.getInstance();
           today.set(Calendar.HOUR_OF_DAY, 0);
 
-          var email =
-              new Email(
-                  "",
-                  "Bella raga",
-                  "Bella raga sono un cazzo di gesù cristo ariano",
-                  "emmedeveloper@gmail.com",
-                  List.of("eduocchi@gmail.com", "marcofratta@gmail.com"),
-                  today.getTime());
-          cmdPar.setEmail(email);
+          var cmd = new CommandListEmail();
+          cmd.setUserEmail("eduard.occhipinti@edu.unito.it");
 
-          var cmd = new CommandSendEmail(cmdPar);
-          cmd.setUserEmail("emmedeveloper@gmail.com");
+          //          var email =
+          //              new Email(
+          //                  "",
+          //                  "Bella raga",
+          //                  "Bella raga sono un cazzo di gesù cristo ariano",
+          //                  "emmedeveloper@gmail.com",
+          //                  List.of("eduard.occhipinti@edu.unito.it",
+          // "marcofrattarola@gmail.com"),
+          //                  today.getTime());
+          //          cmdPar.setEmail(email);
+          //
+          //          var cmd = new CommandSendEmail(cmdPar);
+          //          cmd.setUserEmail("emmedeveloper@gmail.com");
 
           //          var cmdPar = new CommandDeleteEmail.CommandDeleteEmailParameter();
           //          cmdPar.setEmailID("1");

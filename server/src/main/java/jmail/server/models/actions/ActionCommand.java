@@ -11,4 +11,8 @@ public abstract class ActionCommand {
   }
 
   public abstract void execute() throws ActionExecutionException;
+
+  public <T> T executeAndGetResult() throws ActionExecutionException {
+    throw new ActionExecutionException("Method not implemented");
+  }
 }
