@@ -14,7 +14,7 @@
          <children>
             <ButtonBar layoutX="6.0" layoutY="-1.0" prefHeight="66.0" prefWidth="163.0">
                <buttons>
-                  <Button fx:id="NewMailButton" minWidth="21.0" mnemonicParsing="false" onAction="#buttonOnAction" prefHeight="21.0" prefWidth="90.0" style="-fx-border-radius: 15; -fx-background-radius: 15;" text="pi" translateX="-60.0" translateY="-5.0">
+                  <Button fx:id="NewMailButton" minWidth="21.0" mnemonicParsing="false" onAction="#buttonNewMail" prefHeight="21.0" prefWidth="90.0" style="-fx-border-radius: 15; -fx-background-radius: 15;" text="pi" translateX="-60.0" translateY="-5.0">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -33,7 +33,7 @@
             <ButtonBar layoutY="1.0" prefHeight="66.0" prefWidth="209.0">
                <buttons>
                   <Label prefHeight="25.0" prefWidth="122.0" text="Entrata - Jmail" translateY="-5.0" />
-                  <Button minWidth="21.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="64.0" style="-fx-background-radius: 15; -fx-border-radius: 15;" text="SEARCH" translateX="-10.0" translateY="-5.0" />
+                  <Button fx:id="SearchButton" minWidth="21.0" mnemonicParsing="false" onAction="#buttonSearch" prefHeight="21.0" prefWidth="64.0" style="-fx-background-radius: 15; -fx-border-radius: 15;" text="SEARCH" translateX="-10.0" translateY="-5.0" />
                </buttons>
             </ButtonBar>
             <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="5.0" layoutY="66.0" prefHeight="489.0" prefWidth="200.0" vbarPolicy="ALWAYS">
@@ -47,14 +47,14 @@
          <children>
             <ButtonBar layoutX="278.0" layoutY="-1.0" prefHeight="66.0" prefWidth="100.0">
                <buttons>
-                  <Button minHeight="21.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="64.0" style="-fx-background-radius: 15; -fx-border-radius: 15;" text="TRASH" translateX="-5.0" translateY="-5.0" />
+                  <Button fx:id="TrashButton" minHeight="21.0" mnemonicParsing="false" onAction="#buttonTrash" prefHeight="21.0" prefWidth="64.0" style="-fx-background-radius: 15; -fx-border-radius: 15;" text="TRASH" translateX="-5.0" translateY="-5.0" />
                </buttons>
             </ButtonBar>
             <ButtonBar prefHeight="66.0" prefWidth="274.0">
               <buttons>
-                  <Button layoutY="14.0" minWidth="21.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="64.0" style="-fx-background-radius: 15; -fx-border-radius: 15;" text="REPLY" translateX="-5.0" translateY="-5.0" />
-                  <Button layoutY="14.0" minWidth="21.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="64.0" style="-fx-background-radius: 15; -fx-border-radius: 15;" text="FWD" translateX="-5.0" translateY="-5.0" />
-                  <Button layoutY="14.0" minWidth="21.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="64.0" style="-fx-background-radius: 15; -fx-border-radius: 15;" text="FWDALL" translateX="-5.0" translateY="-5.0" />
+                  <Button fx:id="ReplyButton" layoutY="14.0" minWidth="21.0" mnemonicParsing="false" onAction="#buttonReply" prefHeight="21.0" prefWidth="64.0" style="-fx-background-radius: 15; -fx-border-radius: 15;" text="REPLY" translateX="-5.0" translateY="-5.0" />
+                  <Button fx:id="FwdButton" layoutY="14.0" minWidth="21.0" mnemonicParsing="false" onAction="#buttonFwd" prefHeight="21.0" prefWidth="64.0" style="-fx-background-radius: 15; -fx-border-radius: 15;" text="FWD" translateX="-5.0" translateY="-5.0" />
+                  <Button fx:id="FwdallButton" layoutY="14.0" minWidth="21.0" mnemonicParsing="false" onAction="#buttonFwdall" prefHeight="21.0" prefWidth="64.0" style="-fx-background-radius: 15; -fx-border-radius: 15;" text="FWDALL" translateX="-5.0" translateY="-5.0" />
               </buttons>
             </ButtonBar>
             <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="5.0" layoutY="66.0" prefHeight="489.0" prefWidth="365.0" vbarPolicy="ALWAYS">
