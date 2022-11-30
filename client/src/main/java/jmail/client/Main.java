@@ -5,7 +5,6 @@ import io.github.mimoguz.custom_window.StageOps;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Objects;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -33,15 +32,16 @@ public class Main extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    //Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("client.fxml")));
+    // Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("client.fxml")));
 
-      FXMLLoader loader = new FXMLLoader(getClass().getResource("client.fxml"));
-      Parent root = loader.load();
-      Scene scene = new Scene(root);
-      primaryStage.setScene(scene);
-      FXMLController mainController = loader.getController();
-      mainController.setTopText("Ciao");
-
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("client.fxml"));
+    Parent root = loader.load();
+    Scene scene = new Scene(root);
+    primaryStage.setScene(scene);
+    FXMLController mainController = loader.getController();
+    //mainController.setTopText("Ciao");
+    primaryStage.setMinWidth(780);
+    primaryStage.setMinHeight(400);
     primaryStage.setTitle("JMAIL");
     primaryStage.getIcons().add(new Image("logo.png"));
 
