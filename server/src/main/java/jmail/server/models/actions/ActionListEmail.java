@@ -10,7 +10,6 @@ import jmail.lib.models.commands.CommandListEmail;
 import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.handlers.LockHandler;
 import jmail.server.helpers.SystemIOHelper;
-import lombok.Data;
 import lombok.NonNull;
 
 public class ActionListEmail extends ActionCommand {
@@ -67,8 +66,5 @@ public class ActionListEmail extends ActionCommand {
     return Long.getLong(name.substring(last_ + 1));
   }
 
-  @Data
-  public class ActionListEmailResponse {
-    @NonNull public ArrayList<Email> Emails;
-  }
+  public record ActionListEmailResponse(@NonNull ArrayList<Email> emails) implements Response {}
 }
