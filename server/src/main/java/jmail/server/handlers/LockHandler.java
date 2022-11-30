@@ -9,7 +9,7 @@ public class LockHandler {
   /** La chiave del lock è l'uuid del'utente TODO: Documentare */
   private final ConcurrentHashMap<String, NuclearPowerPlant> lockMap;
 
-  private static LockHandler instance = null;
+  private static volatile LockHandler instance = null;
 
   private LockHandler() {
     lockMap = new ConcurrentHashMap<>();
@@ -41,8 +41,8 @@ public class LockHandler {
   }
 
   public void removeLock(String key) {
-    var lockClass = getLock(key);
-    if (lockClass.russianOccurences.decrementAndGet() == 0) {
+    getLock(key);
+    if (NuclearPowerPlant.russianOccurences.decrementAndGet() == 0) {
       lockMap.remove(key);
     }
   }

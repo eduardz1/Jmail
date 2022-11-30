@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.models.Email;
 import jmail.lib.models.commands.CommandListEmail;
@@ -23,7 +24,6 @@ public class ActionListEmail extends ActionCommand {
 
   @Override
   public ActionListEmailResponse executeAndGetResult() throws ActionExecutionException {
-
     var cmd = (CommandListEmail) this.command;
     var params = cmd.getParameter();
     var userEmail = cmd.getUserEmail();
@@ -32,32 +32,41 @@ public class ActionListEmail extends ActionCommand {
       throw new ActionExecutionException("Cannot send mail: user invalid");
     }
 
-    boolean shouldCheckUnixTime = params != null && params.getLastUnixTimeCheck() != null;
-    // If shouldCheckUnixTime is false means that user needs to load all emails
-
     var handler = LockHandler.getInstance();
-    handler.createLock(userEmail);
+    handler.createLock(userEmail); // FIXME:ok ma ci serve davvero un lock per una read?
     handler.getReadLock(userEmail);
 
     var inbox = SystemIOHelper.getUserInbox(userEmail);
 
-    var mails = new ArrayList<Email>();
-    File[] files = (new File(inbox.toUri())).listFiles();
-    for (File file : files) {
-      if (!shouldCheckUnixTime || getUnixTimeFromFilename(file) > params.getLastUnixTimeCheck()) {
-        try {
-          var json = SystemIOHelper.readJSONFile(Path.of(file.getPath()));
-          var mail = JsonHelper.fromJson(json, Email.class);
-          mails.add(mail);
-        } catch (IOException e) {
-          throw new ActionExecutionException(e, "Cannot get emails: internal error");
-        }
-      }
+    var files = (new File(inbox.toUri())).listFiles();
+    if (files == null) {
+      handler.removeLock(userEmail);
+      return new ActionListEmailResponse(new ArrayList<Email>());
     }
-    Collections.sort(mails, Comparator.comparing(Email::date));
+
+    var mails =
+        Arrays.stream(files)
+            .parallel()
+            .filter(
+                f ->
+                    params == null
+                        || params.getLastUnixTimeCheck() == null
+                        || getUnixTimeFromFilename(f) > params.getLastUnixTimeCheck())
+            .map(this::getEmailFromFile)
+            .sorted(Comparator.comparing(Email::date))
+            .collect(Collectors.toList());
 
     handler.removeLock(userEmail);
     return new ActionListEmailResponse(mails);
+  }
+
+  private Email getEmailFromFile(File f) {
+    try {
+      return JsonHelper.fromJson(SystemIOHelper.readJSONFile(Path.of(f.getPath())), Email.class);
+    } catch (IOException e) {
+      throw new RuntimeException(
+          "Cannot get emails: internal error"); // FIXME: logic behind excpetions here
+    }
   }
 
   private Long getUnixTimeFromFilename(File file) {
@@ -66,5 +75,5 @@ public class ActionListEmail extends ActionCommand {
     return Long.getLong(name.substring(last_ + 1));
   }
 
-  public record ActionListEmailResponse(@NonNull ArrayList<Email> emails) implements Response {}
+  public record ActionListEmailResponse(@NonNull List<Email> emails) implements Response {}
 }

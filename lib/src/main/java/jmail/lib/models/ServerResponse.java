@@ -32,10 +32,10 @@ public class ServerResponse<T> {
   }
 
   public static <T> ServerResponse<T> createOkResponse(String message) {
-    return new ServerResponse<T>(ServerResponseStatuses.OK, message, "");
+    return new ServerResponse<>(ServerResponseStatuses.OK, message, "");
   }
 
   public static <T> ServerResponse<T> createErrorResponse(String message) {
-    return new ServerResponse<T>(ServerResponseStatuses.ERROR, message);
+    return new ServerResponse<>(ServerResponseStatuses.ERROR, message);
   }
 }
