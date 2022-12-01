@@ -20,7 +20,6 @@ public class Server extends Thread {
    * Creates a new server instance.
    *
    * @param port The port to listen on.
-   * @throws IOException If an I/O error occurs when opening the socket.
    */
   public Server(int port) {
     threadPool = new ThreadPoolExecutor(10, 10, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>());

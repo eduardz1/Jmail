@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.models.Email;
 import jmail.lib.models.commands.CommandListEmail;
@@ -21,7 +22,6 @@ public class ActionListEmail extends ActionCommand {
 
   @Override
   public ActionListEmailResponse executeAndGetResult() throws ActionExecutionException {
-
     var cmd = (CommandListEmail) this.command;
     var params = cmd.getParameter();
     var userEmail = cmd.getUserEmail();
@@ -56,6 +56,29 @@ public class ActionListEmail extends ActionCommand {
     }
     mails.sort(Comparator.comparing(Email::date));
 
+    // FIXME: Non mi piace per niente questo metodo qua
+    // è poco leggibile per chi non conosce bene gli stream
+    // controllare params e lastunixtime di params ogni volta è meno performante del check di una variabile
+    // Usare il map con una lambda in questo caso non mi piace,
+    //  la lambda nasconde l'eccezione corretta, e la logica di rimozione del lock
+    // Lo trovo poco utile in generale complicarci la vita per usare gli stream, non ci porta vantaggio
+    // lascio commentato ma andrà rimosso
+
+    // NB: il lock in lettura ha senso, se tagghi una mail come letta mentre in parallelo
+    // viene mandata una richiesta di cancellazione va in conflitto
+
+    //     var mails =
+    //        Arrays.stream(files)
+    //            .parallel()
+    //            .filter(
+    //                f ->
+    //                    params == null
+    //                        || params.getLastUnixTimeCheck() == null
+    //                        || getUnixTimeFromFilename(f) > params.getLastUnixTimeCheck())
+    //            .map(this::getEmailFromFile)
+    //            .sorted(Comparator.comparing(Email::date))
+    //            .collect(Collectors.toList());
+
     userLock.unlock();
     handler.removeLock(userEmail);
     return new ActionListEmailResponse(mails);
@@ -67,8 +90,5 @@ public class ActionListEmail extends ActionCommand {
     return Long.getLong(name.substring(last_ + 1));
   }
 
-  @Data
-  public static class ActionListEmailResponse {
-    @NonNull public ArrayList<Email> Emails;
-  }
+  public record ActionListEmailResponse(@NonNull List<Email> emails) implements Response {}
 }

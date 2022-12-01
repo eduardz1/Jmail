@@ -31,11 +31,11 @@ public class ServerResponse<T> {
     this.responseMessage = responseMessage;
   }
 
-  public static ServerResponse CreateOkResponse(String message) {
-    return new ServerResponse(ServerResponseStatuses.OK, message, "");
+  public static <T> ServerResponse<T> createOkResponse(String message) {
+    return new ServerResponse<>(ServerResponseStatuses.OK, message, "");
   }
 
-  public static ServerResponse CreateErrorResponse(String message) {
-    return new ServerResponse(ServerResponseStatuses.ERROR, message);
+  public static <T> ServerResponse<T> createErrorResponse(String message) {
+    return new ServerResponse<>(ServerResponseStatuses.ERROR, message);
   }
 }

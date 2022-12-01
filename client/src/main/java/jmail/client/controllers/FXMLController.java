@@ -1,6 +1,5 @@
 package jmail.client.controllers;
 
-import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -52,8 +51,8 @@ public class FXMLController implements Initializable {
     // TODO TrashButton function
   }
 
-  public void setTopText(String text) {
+  /*public void setTopText(String text) {
     // set text from another class
     NewMailButton.setText("\n" + text);
-  }
+  }*/
 }
