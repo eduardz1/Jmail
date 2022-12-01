@@ -51,8 +51,8 @@ public class FXMLController implements Initializable {
     // TODO TrashButton function
   }
 
-  public void setTopText(String text) {
+  /*public void setTopText(String text) {
     // set text from another class
     NewMailButton.setText("\n" + text);
-  }
+  }*/
 }

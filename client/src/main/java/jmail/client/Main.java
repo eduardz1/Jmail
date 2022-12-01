@@ -38,8 +38,9 @@ public class Main extends Application {
     Scene scene = new Scene(root);
     primaryStage.setScene(scene);
     FXMLController mainController = loader.getController();
-    mainController.setTopText("Ciao");
-
+    //mainController.setTopText("Ciao");
+    primaryStage.setMinWidth(780);
+    primaryStage.setMinHeight(400);
     primaryStage.setTitle("JMAIL");
     primaryStage.getIcons().add(new Image("logo.png"));
 
