@@ -6,9 +6,9 @@ import java.net.Socket;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.exceptions.CommandNotFoundException;
 import jmail.lib.exceptions.NotAuthorizedException;
-import jmail.lib.factory.CommandFactory;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.models.ServerResponse;
+import jmail.lib.models.commands.Command;
 import jmail.server.helpers.SystemIOHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,8 @@ public class ClientHandler implements Runnable {
       String request = reader.readLine();
       LOGGER.info("Message received from client: " + request);
 
-      var cmd = CommandFactory.getCommand(request);
+      var cmd = JsonHelper.fromJson(request, Command.class);
+      if (cmd == null) throw new CommandNotFoundException("");
       if (!cmd.hasEmail()) throw new NotAuthorizedException("User not provided");
 
       var userEmail = cmd.getUserEmail();

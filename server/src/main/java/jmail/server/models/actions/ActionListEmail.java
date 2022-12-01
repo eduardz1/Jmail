@@ -20,9 +20,6 @@ public class ActionListEmail extends ActionCommand {
   }
 
   @Override
-  public void execute() throws ActionExecutionException {}
-
-  @Override
   public ActionListEmailResponse executeAndGetResult() throws ActionExecutionException {
 
     var cmd = (CommandListEmail) this.command;
@@ -37,26 +34,29 @@ public class ActionListEmail extends ActionCommand {
     // If shouldCheckUnixTime is false means that user needs to load all emails
 
     var handler = LockHandler.getInstance();
-    handler.createLock(userEmail);
-    handler.getReadLock(userEmail);
+    var userLock = handler.getReadLock(userEmail);
 
     var inbox = SystemIOHelper.getUserInbox(userEmail);
 
     var mails = new ArrayList<Email>();
     File[] files = (new File(inbox.toUri())).listFiles();
-    for (File file : files) {
+    files = files == null ? new File[]{} : files;
+    for (File file : files ) {
       if (!shouldCheckUnixTime || getUnixTimeFromFilename(file) > params.getLastUnixTimeCheck()) {
         try {
           var json = SystemIOHelper.readJSONFile(Path.of(file.getPath()));
           var mail = JsonHelper.fromJson(json, Email.class);
           mails.add(mail);
         } catch (IOException e) {
+          userLock.unlock();
+          handler.removeLock(userEmail); // Release lock before throwing exception
           throw new ActionExecutionException(e, "Cannot get emails: internal error");
         }
       }
     }
-    Collections.sort(mails, Comparator.comparing(Email::date));
+    mails.sort(Comparator.comparing(Email::date));
 
+    userLock.unlock();
     handler.removeLock(userEmail);
     return new ActionListEmailResponse(mails);
   }
@@ -68,7 +68,7 @@ public class ActionListEmail extends ActionCommand {
   }
 
   @Data
-  public class ActionListEmailResponse {
+  public static class ActionListEmailResponse {
     @NonNull public ArrayList<Email> Emails;
   }
 }

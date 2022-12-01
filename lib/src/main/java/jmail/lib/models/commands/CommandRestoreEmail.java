@@ -15,6 +15,6 @@ public class CommandRestoreEmail extends Command {
   @Getter
   @Setter
   public static class CommandRestoreEmailParameter extends CommandParameters {
-    private String id = "";
+    private String emailID = "";
   }
 }

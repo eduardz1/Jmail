@@ -53,10 +53,6 @@ public class SystemIOHelper {
     return Files.readString(path);
   }
 
-  public static String readJSONFile(Path path, String name) throws IOException {
-    return Files.readString(Path.of(path + "/" + name));
-  }
-
   // FIXME: non penso che dovremmo tenere due funzioni che come unica cosa
   // mascherano la option utilizzata che tra l'altro può avere solo due valori
 
@@ -66,6 +62,19 @@ public class SystemIOHelper {
 
   public static void copyFile(Path from, Path to) throws IOException {
     Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
+  }
+
+  public static Path getInboxEmailPath(String userEmail, String emailID) {
+
+    return Path.of(getUserInbox(userEmail) + "/" + emailID);
+  }
+
+  public static Path getDeletedEmailPath(String userEmail, String emailID) {
+    return Path.of(getUserDeleted(userEmail) + "/" + emailID);
+  }
+
+  public static Path getSentEmailPath(String userEmail, String emailID) {
+    return Path.of(getUserSent(userEmail) + "/" + emailID);
   }
 
   // TODO: take a look at this method later

@@ -1,17 +1,12 @@
 package jmail.server.models.actions;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import jmail.lib.models.commands.CommandDeleteEmail;
 import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.handlers.LockHandler;
 import jmail.server.helpers.SystemIOHelper;
 
 public class ActionDeleteMail extends ActionCommand {
-
-  private static final String EMAIL_EXTENSION = ".dat";
 
   public ActionDeleteMail(CommandDeleteEmail cmd) {
     super(cmd);
@@ -27,31 +22,19 @@ public class ActionDeleteMail extends ActionCommand {
     if (userEmail == null || userEmail.isEmpty()) {
       throw new ActionExecutionException("Cannot delete mail: user invalid");
     }
-
-    // TODO: Far vedere a edu
-    // Maybe non la migliore idea usare i lock in questo modo? Alternativie
-    // https://www.baeldung.com/java-lock-files
-    // https://blog.adamgamboa.dev/lock-mechanism-using-files-on-java/
-
-    // TODO: Si può ottimizzare per non passare dalla crazione del lock usando createLock, ma
-    // crearlo
-    // quando si usa il get write/read
     var handler = LockHandler.getInstance();
-    handler.createLock(userEmail);
-    handler.getWriteLock(userEmail);
-
-    var inbox = SystemIOHelper.getUserInbox(userEmail);
-    var deleted = SystemIOHelper.getUserDeleted(userEmail);
-
-    var from = Path.of(inbox + "/" + emailID + EMAIL_EXTENSION);
-    var to = Path.of(deleted + "/" + emailID + EMAIL_EXTENSION);
-
+    var lock = handler.getWriteLock(userEmail);
     try {
-      Files.move(from, to, StandardCopyOption.ATOMIC_MOVE);
+      lock.lock();
+      SystemIOHelper.moveFile(
+              SystemIOHelper.getInboxEmailPath(userEmail, emailID),
+              SystemIOHelper.getDeletedEmailPath(userEmail, emailID)
+      );
     } catch (IOException e) {
       throw new ActionExecutionException(e, "Cannot delete email: internal error");
+    } finally {
+      lock.unlock();
+      handler.removeLock(userEmail);
     }
-
-    handler.removeLock(userEmail);
   }
 }

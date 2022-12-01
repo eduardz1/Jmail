@@ -10,7 +10,9 @@ public abstract class ActionCommand {
     this.command = command;
   }
 
-  public abstract void execute() throws ActionExecutionException;
+  public void execute() throws ActionExecutionException {
+    throw new ActionExecutionException("Method not implemented");
+  }
 
   public <T> T executeAndGetResult() throws ActionExecutionException {
     throw new ActionExecutionException("Method not implemented");
