@@ -49,6 +49,10 @@ public class SystemIOHelper {
     writer.close();
   }
 
+  public static String readJSONFile(Path path) throws IOException {
+    return Files.readString(path);
+  }
+
   public static String readJSONFile(Path path, String name) throws IOException {
     return Files.readString(Path.of(path + "/" + name));
   }
@@ -56,18 +60,23 @@ public class SystemIOHelper {
   // FIXME: non penso che dovremmo tenere due funzioni che come unica cosa
   // mascherano la option utilizzata che tra l'altro può avere solo due valori
 
-  // public static void moveFile(Path from, Path to) throws IOException {
-  //   Files.move(from, to, StandardCopyOption.ATOMIC_MOVE);
-  // }
+  public static void moveFile(Path from, Path to) throws IOException {
+    Files.move(from, to, StandardCopyOption.ATOMIC_MOVE);
+  }
 
-  // public static void copyFile(Path from, Path to) throws IOException {
-  //   Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
-  // }
+  public static void copyFile(Path from, Path to) throws IOException {
+    Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
+  }
 
   // TODO: take a look at this method later
+  //    public static Boolean userExists(String userEmail) {
+  //        Path user = Paths.get(emailpath);
+  //        File f = new File(Paths.get(String.format("%s\\%s.dat", user, userEmail)).toUri());
+  //        return f.exists() && !f.isDirectory();
+  //    }
+
   public static Boolean userExists(String userEmail) {
-    Path user = Paths.get(emailpath);
-    File f = new File(Paths.get(String.format("%s\\%s.dat", user, userEmail)).toUri());
-    return f.exists() && !f.isDirectory();
+    File f = new File(getUserDirectory(userEmail).toUri());
+    return f.exists() && f.isDirectory();
   }
 }

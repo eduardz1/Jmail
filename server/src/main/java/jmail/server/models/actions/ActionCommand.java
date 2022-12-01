@@ -11,4 +11,11 @@ public abstract class ActionCommand {
   }
 
   public abstract void execute() throws ActionExecutionException;
+
+  /** Marker interface */
+  public interface Response {}
+
+  public Response executeAndGetResult() throws ActionExecutionException {
+    throw new ActionExecutionException("Method not implemented");
+  }
 }

@@ -37,7 +37,7 @@ public class ActionSendEmail extends ActionCommand {
             .allMatch(
                 user -> {
                   if (!SystemIOHelper.userExists(user)) {
-                    errorMessage.append("User not found with email: " + user + "\n");
+                    errorMessage.append("User not found with email: ").append(user).append("\n");
                     return false;
                   }
                   return true;

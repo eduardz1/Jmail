@@ -49,7 +49,7 @@ public class CommandHandler {
 
   private void sendOk(String msg) {
     try {
-      var resp = ServerResponse.CreateOkResponse(msg);
+      var resp = ServerResponse.createOkResponse(msg);
       writer.println(JsonHelper.toJson(resp));
     } catch (JsonProcessingException ex) {
       LOGGER.error("Cannot serialize server response: " + ex.getLocalizedMessage());
@@ -57,13 +57,9 @@ public class CommandHandler {
     }
   }
 
-  private void sendError() {
-    this.sendError("");
-  }
-
   private void sendError(String msg) {
     try {
-      var resp = ServerResponse.CreateErrorResponse(msg);
+      var resp = ServerResponse.createErrorResponse(msg);
       writer.println(JsonHelper.toJson(resp));
     } catch (JsonProcessingException ex) {
       LOGGER.error("Cannot serialize server response: " + ex.getLocalizedMessage());
@@ -91,16 +87,20 @@ public class CommandHandler {
   }
 
   private void listEmails() {
-    var listCmd = (CommandListEmail) internalCommand;
-    var param = listCmd.getParameter();
-
     try {
       var action = ActionCommandFactory.getActionCommand(internalCommand);
-      action.execute();
-      sendOk();
+      var response = action.executeAndGetResult();
+
+      var serverResp = new ServerResponse<>(response);
+      writer.println(JsonHelper.toJson(serverResp));
+
     } catch (ActionExecutionException ex) {
       System.out.println(ex.getInnerMessage());
       var msg = "Cannot execute list mail action: " + ex.getMessage();
+      LOGGER.error(msg);
+      sendError(msg);
+    } catch (JsonProcessingException e) {
+      var msg = "Cannot serialize response";
       LOGGER.error(msg);
       sendError(msg);
     }

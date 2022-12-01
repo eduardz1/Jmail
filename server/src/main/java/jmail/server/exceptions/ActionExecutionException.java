@@ -1,7 +1,5 @@
 package jmail.server.exceptions;
 
-import javax.swing.*;
-
 public class ActionExecutionException extends Exception {
   private Exception innerExceptions = null;
 

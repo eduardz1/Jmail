@@ -39,7 +39,7 @@ public class MailClient {
             // Await for response
             String response = reader.readLine();
             try {
-              ServerResponse resp = JsonHelper.fromJson(response, ServerResponse.class);
+              var resp = JsonHelper.fromJson(response, ServerResponse.class);
               System.out.println(JsonHelper.toJson(resp));
             } catch (JsonProcessingException ex) {
               System.out.println(
