@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import jmail.client.controllers.FXMLController;
+import jmail.client.models.client.MailClient;
 import jmail.lib.models.commands.CommandDeleteEmail;
 
 public class Main extends Application {
@@ -19,7 +20,7 @@ public class Main extends Application {
     return "Hello World!";
   }
 
-  private static MailClient client;
+  private static jmail.client.models.client.MailClient client;
 
   public static void main(String[] args) throws IOException {
 
@@ -70,26 +71,14 @@ public class Main extends Application {
           //
           //          var cmd = new CommandSendEmail(cmdPar);
           //          cmd.setUserEmail("emmedeveloper@gmail.com");
-
-                    var cmdPar = new CommandDeleteEmail.CommandDeleteEmailParameter();
-                    cmdPar.setEmailID("1");
-                    var cmd = new CommandDeleteEmail(cmdPar);
-                    cmd.setUserEmail("emmedeveloper@gmail.com");
-          setTimeout(() -> client.sendCommand(cmd), 1000);
+//
+//                    var cmdPar = new CommandDeleteEmail.CommandDeleteEmailParameter();
+//                    cmdPar.setEmailID("1");
+//                    var cmd = new CommandDeleteEmail(cmdPar);
+//                    cmd.setUserEmail("emmedeveloper@gmail.com");
+//          setTimeout(() -> client.sendCommand(cmd), 1000);
         });
     primaryStage.show();
   }
 
-  public static void setTimeout(Runnable runnable, int delay) {
-    new Thread(
-            () -> {
-              try {
-                Thread.sleep(delay);
-                runnable.run();
-              } catch (Exception e) {
-                System.err.println(e);
-              }
-            })
-        .start();
-  }
 }
