@@ -72,7 +72,7 @@ public class CommandHandler {
     var param = sendCmd.getParameter();
 
     try {
-      if (param == null || param.getEmail() == null) {
+      if (param == null || param.email() == null) {
         throw new IllegalArgumentException("Command send: email cannot be null");
       }
       var action = ActionCommandFactory.getActionCommand(internalCommand);
@@ -111,7 +111,7 @@ public class CommandHandler {
     var param = readCmd.getParameter();
 
     try {
-      if (param == null || param.getEmailID() == null || param.getEmailID().isEmpty()) {
+      if (param == null || param.emailID() == null || param.emailID().isEmpty()) {
         throw new IllegalArgumentException("Command read: email id cannot be null");
       }
       var action = ActionCommandFactory.getActionCommand(internalCommand);
@@ -131,7 +131,7 @@ public class CommandHandler {
     var param = delCmd.getParameter();
 
     try {
-      if (param == null || param.getEmailID() == null || param.getEmailID().isEmpty()) {
+      if (param == null || param.emailID() == null || param.emailID().isEmpty()) {
         throw new IllegalArgumentException("Command delete: email id cannot be null or empty");
       }
       var action = ActionCommandFactory.getActionCommand(internalCommand);

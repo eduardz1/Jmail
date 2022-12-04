@@ -3,7 +3,6 @@ package jmail.lib.models;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
 import lombok.NonNull;
 
 public record Email(
@@ -13,8 +12,7 @@ public record Email(
     @NonNull String sender,
     @NonNull List<String> recipients,
     @NonNull Date date,
-    @NonNull Boolean read
-    ) {
+    @NonNull Boolean read) {
   public Email {
     if (sender.isEmpty()) {
       throw new IllegalArgumentException("Sender cannot be empty");
@@ -25,9 +23,8 @@ public record Email(
   }
 
   public String getFileID() {
-    return String.format("%s_%s",
-            id == null || id.isEmpty() ? UUID.randomUUID() : id,
-            date.toInstant().getEpochSecond()
-    );
+    return String.format(
+        "%s_%s",
+        id == null || id.isEmpty() ? UUID.randomUUID() : id, date.toInstant().getEpochSecond());
   }
 }

@@ -8,9 +8,11 @@ import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.handlers.LockHandler;
 import jmail.server.helpers.SystemIOHelper;
 
-public class ActionSendEmail extends ActionCommand {
+public class ActionSendEmail implements ActionCommand {
+  private final CommandSendEmail command;
+
   public ActionSendEmail(CommandSendEmail cmd) {
-    super(cmd);
+    this.command = cmd;
   }
 
   @Override
@@ -27,7 +29,7 @@ public class ActionSendEmail extends ActionCommand {
     // Check recipients and compose errorMessage, if some error will occure
     StringBuilder errorMessage = new StringBuilder();
     errorMessage.append("Cannot send email: \n");
-    var email = params.getEmail();
+    var email = params.email();
 
     var areAllRecipientsValid =
         email.recipients().stream()
@@ -68,10 +70,7 @@ public class ActionSendEmail extends ActionCommand {
       var receiverLock = handler.getWriteLock(receiver);
       try {
         receiverLock.lock();
-        SystemIOHelper.copyFile(
-                sentPath,
-                SystemIOHelper.getInboxEmailPath(receiver, fileName)
-        );
+        SystemIOHelper.copyFile(sentPath, SystemIOHelper.getInboxEmailPath(receiver, fileName));
       } catch (IOException e) {
         throw new ActionExecutionException(e, "Cannot send email: internal error");
       } finally {

@@ -1,23 +1,16 @@
 package jmail.server.models.actions;
 
-import jmail.lib.models.commands.Command;
 import jmail.server.exceptions.ActionExecutionException;
 
-public abstract class ActionCommand {
-  final Command command;
-
-  public ActionCommand(Command command) {
-    this.command = command;
+public interface ActionCommand {
+  default void execute() throws ActionExecutionException {
+    throw new ActionExecutionException("Method not implemented");
   }
 
-  public void execute() throws ActionExecutionException {
+  default Response executeAndGetResult() throws ActionExecutionException {
     throw new ActionExecutionException("Method not implemented");
   }
 
   /** Marker interface */
   public interface Response {}
-
-  public Response executeAndGetResult() throws ActionExecutionException {
-    throw new ActionExecutionException("Method not implemented");
-  }
 }

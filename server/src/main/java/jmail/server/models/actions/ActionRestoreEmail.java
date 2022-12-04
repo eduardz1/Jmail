@@ -1,16 +1,16 @@
 package jmail.server.models.actions;
 
+import java.io.IOException;
 import jmail.lib.models.commands.CommandRestoreEmail;
 import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.handlers.LockHandler;
 import jmail.server.helpers.SystemIOHelper;
 
-import java.io.IOException;
-
-public class ActionRestoreEmail extends ActionCommand {
+public class ActionRestoreEmail implements ActionCommand {
+  private final CommandRestoreEmail command;
 
   public ActionRestoreEmail(CommandRestoreEmail cmd) {
-    super(cmd);
+    this.command = cmd;
   }
 
   @Override
@@ -19,7 +19,7 @@ public class ActionRestoreEmail extends ActionCommand {
     var cmd = (CommandRestoreEmail) this.command;
     var params = cmd.getParameter();
     var userEmail = cmd.getUserEmail();
-    var emailID = params.getEmailID();
+    var emailID = params.emailID();
 
     if (userEmail == null || userEmail.isEmpty()) {
       throw new ActionExecutionException("Cannot restore mail: user invalid");
@@ -30,16 +30,13 @@ public class ActionRestoreEmail extends ActionCommand {
     try {
       lock.lock();
       SystemIOHelper.moveFile(
-              SystemIOHelper.getDeletedEmailPath(userEmail, emailID),
-              SystemIOHelper.getInboxEmailPath(userEmail, emailID)
-      );
+          SystemIOHelper.getDeletedEmailPath(userEmail, emailID),
+          SystemIOHelper.getInboxEmailPath(userEmail, emailID));
     } catch (IOException e) {
       throw new ActionExecutionException(e, "Cannot restore email: internal error");
     } finally {
       lock.unlock();
       handler.removeLock(userEmail);
     }
-
-
   }
 }

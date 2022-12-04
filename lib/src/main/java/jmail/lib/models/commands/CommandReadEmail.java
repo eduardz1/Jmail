@@ -13,10 +13,6 @@ public class CommandReadEmail extends Command {
     this.parameter = parameter;
   }
 
-  @Getter
-  @Setter
-  public static class CommandReadEmailParameter extends CommandParameters {
-    private String emailID;
-    private Boolean setAsRead;
-  }
+  public static record CommandReadEmailParameter(String emailID, Boolean setAsRead)
+      implements CommandParameters {}
 }

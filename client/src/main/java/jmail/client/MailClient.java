@@ -15,8 +15,10 @@ public class MailClient {
   private final Socket internalServerSocket;
   private final ThreadPoolExecutor threadPool;
 
+  // TODO: PENSO sia meglio farla come singleton
+
   /**
-   * Creates a new server instance.
+   * Creates a new client instance.
    *
    * @param address The address to listen on.
    * @param port The port to listen on.

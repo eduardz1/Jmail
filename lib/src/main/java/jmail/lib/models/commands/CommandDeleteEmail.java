@@ -12,7 +12,5 @@ public class CommandDeleteEmail extends Command {
     this.parameter = parameter;
   }
 
-  public static class CommandDeleteEmailParameter extends CommandParameters {
-    @Getter @Setter private String emailID;
-  }
+  public static record CommandDeleteEmailParameter(String emailID) implements CommandParameters {}
 }

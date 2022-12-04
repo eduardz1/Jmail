@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 @Data
-@JsonDeserialize( using = CommandDeserializer.class )
+@JsonDeserialize(using = CommandDeserializer.class)
 public class Command {
   @NonNull private String action;
   private String userEmail;

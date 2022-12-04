@@ -36,28 +36,28 @@ public class Main extends Application {
     Scene scene = new Scene(root);
     primaryStage.setScene(scene);
     FXMLController mainController = loader.getController();
-    //mainController.setTopText("Ciao");
+    // mainController.setTopText("Ciao");
     primaryStage.setMinWidth(780);
     primaryStage.setMinHeight(400);
     primaryStage.setTitle("JMAIL");
     primaryStage.getIcons().add(new Image("logo.png"));
 
-    // Forces Dark Mode on Windows11 windows and enables mica effect on transaprent surfaces
     Platform.runLater(
         () -> {
+          // Forces Dark Mode on Windows11 windows and enables mica effect on transaprent surfaces
           final var handle = StageOps.findWindowHandle(primaryStage);
           StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
           StageOps.dwmSetIntValue(
               handle, DwmAttribute.DWMWA_SYSTEMBACKDROP_TYPE, DwmAttribute.DWMSBT_MAINWINDOW.value);
 
-//          var cmdPar = new CommandSendEmail.CommandSendEmailParameter();
-//          var cmd = new CommandListEmail();
-//          cmd.setUserEmail("eduard.occhipinti@edu.unito.it");
+          //          var cmdPar = new CommandSendEmail.CommandSendEmailParameter();
+          //          var cmd = new CommandListEmail();
+          //          cmd.setUserEmail("eduard.occhipinti@edu.unito.it");
 
-//            Calendar today = Calendar.getInstance();
-//            today.set(Calendar.HOUR_OF_DAY, 0);
+          //            Calendar today = Calendar.getInstance();
+          //            today.set(Calendar.HOUR_OF_DAY, 0);
 
-            //          var email =
+          //          var email =
           //              new Email(
           //                  "",
           //                  "Bella raga",
@@ -71,10 +71,9 @@ public class Main extends Application {
           //          var cmd = new CommandSendEmail(cmdPar);
           //          cmd.setUserEmail("emmedeveloper@gmail.com");
 
-                    var cmdPar = new CommandDeleteEmail.CommandDeleteEmailParameter();
-                    cmdPar.setEmailID("1");
-                    var cmd = new CommandDeleteEmail(cmdPar);
-                    cmd.setUserEmail("emmedeveloper@gmail.com");
+          var cmdPar = new CommandDeleteEmail.CommandDeleteEmailParameter("1");
+          var cmd = new CommandDeleteEmail(cmdPar);
+          cmd.setUserEmail("emmedeveloper@gmail.com");
           setTimeout(() -> client.sendCommand(cmd), 1000);
         });
     primaryStage.show();
@@ -91,5 +90,9 @@ public class Main extends Application {
               }
             })
         .start();
+  }
+
+  public static MailClient getClient() {
+    return client;
   }
 }
