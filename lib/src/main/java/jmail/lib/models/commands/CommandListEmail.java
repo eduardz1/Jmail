@@ -17,7 +17,6 @@ public class CommandListEmail extends Command {
     this.parameter = parameter;
   }
 
-  public static class CommandListEmailParameter extends CommandParameters {
-    @Getter @Setter private Long lastUnixTimeCheck;
-  }
+  public static record CommandListEmailParameter(Long lastUnixTimeCheck)
+      implements CommandParameters {}
 }

@@ -16,21 +16,20 @@ public class LockHandler {
   }
 
   public static LockHandler getInstance() {
-      // https://errorprone.info/bugpattern/DoubleCheckedLocking
-      // https://www.infoworld.com/article/2075306/can-double-checked-locking-be-fixed-.html
-      //    if (instance == null) {
-      //      synchronized (LockHandler.class) {
-      //        if (instance == null) {
-      //          instance = new LockHandler();
-      //        }
-      //      }
-      //    }
+    // https://errorprone.info/bugpattern/DoubleCheckedLocking
+    // https://www.infoworld.com/article/2075306/can-double-checked-locking-be-fixed-.html
+    //    if (instance == null) {
+    //      synchronized (LockHandler.class) {
+    //        if (instance == null) {
+    //          instance = new LockHandler();
+    //        }
+    //      }
+    //    }
     return instance;
   }
 
-
   private CountableLock getLock(String key) {
-   return lockMap.getOrDefault(key, new CountableLock());
+    return lockMap.getOrDefault(key, new CountableLock());
   }
 
   public Lock getWriteLock(String key) {

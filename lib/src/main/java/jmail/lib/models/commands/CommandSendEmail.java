@@ -13,9 +13,5 @@ public class CommandSendEmail extends Command {
     this.parameter = parameter;
   }
 
-  @Getter
-  @Setter
-  public static class CommandSendEmailParameter extends CommandParameters {
-    private Email email;
-  }
+  public static record CommandSendEmailParameter(Email email) implements CommandParameters {}
 }

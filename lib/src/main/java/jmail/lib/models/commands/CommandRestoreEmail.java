@@ -12,9 +12,6 @@ public class CommandRestoreEmail extends Command {
     this.parameter = parameter;
   }
 
-  @Getter
-  @Setter
-  public static class CommandRestoreEmailParameter extends CommandParameters {
-    private String emailID = "";
-  }
+  // FIXME: emailID settato inizialmente a "", non so se era necessario
+  public static record CommandRestoreEmailParameter(String emailID) implements CommandParameters {}
 }
