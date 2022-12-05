@@ -6,7 +6,10 @@ import java.util.Map;
 import jmail.lib.constants.CommandActions;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.models.ServerResponse;
-import jmail.lib.models.commands.*;
+import jmail.lib.models.commands.Command;
+import jmail.lib.models.commands.CommandDeleteEmail;
+import jmail.lib.models.commands.CommandReadEmail;
+import jmail.lib.models.commands.CommandSendEmail;
 import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.factory.ActionCommandFactory;
 import org.slf4j.Logger;
@@ -14,9 +17,8 @@ import org.slf4j.LoggerFactory;
 
 public class CommandHandler {
 
-  private final Command internalCommand;
   private static final Logger LOGGER = LoggerFactory.getLogger(CommandHandler.class.getName());
-
+  private final Command internalCommand;
   private final PrintWriter
       writer; // TODO Cambiare assolutamente con qualcosa di meno specifico per gestire le risposte
   // da inviare al client
@@ -91,7 +93,7 @@ public class CommandHandler {
       var action = ActionCommandFactory.getActionCommand(internalCommand);
       var response = action.executeAndGetResult();
 
-      var serverResp = new ServerResponse<>(response);
+      var serverResp = new ServerResponse(response);
       writer.println(JsonHelper.toJson(serverResp));
 
     } catch (ActionExecutionException ex) {

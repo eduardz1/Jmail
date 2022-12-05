@@ -3,18 +3,19 @@ package jmail.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import jmail.server.handlers.ClientHandler;
 import jmail.server.helpers.SystemIOHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Server extends Thread {
-  private ServerSocket internalServerSocket;
-  private final ThreadPoolExecutor threadPool;
-
   private static final Logger LOGGER = LoggerFactory.getLogger(Server.class.getName());
+  private final ThreadPoolExecutor threadPool;
   private final int port;
+  private ServerSocket internalServerSocket;
 
   /**
    * Creates a new server instance.

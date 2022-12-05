@@ -1,33 +1,60 @@
 package jmail.client.models.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.common.hash.Hashing;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import jmail.client.Main;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.Command;
+import jmail.lib.models.commands.CommandLogin;
 
 public class MailClient implements IMailClient {
-  private final Socket internalServerSocket;
+  private static final MailClient instance = new MailClient();
   private final ThreadPoolExecutor threadPool;
+  private Socket internalServerSocket;
 
-  /**
-   * Creates a new server instance.
-   *
-   * @param address The address to listen on.
-   * @param port The port to listen on.
-   * @throws IOException If an I/O error occurs when opening the socket.
-   */
-  public MailClient(String address, int port) throws IOException {
+  //  /** FIXME: thinking about making it static and calling a "connect" method
+  //   * Creates a new server instance.
+  //   *
+  //   * @param address The address to listen on.
+  //   * @param port The port to listen on.
+  //   * @throws IOException If an I/O error occurs when opening the socket.
+  //   */
+  //  public MailClient(String address, int port) throws IOException {
+  //    threadPool = new ThreadPoolExecutor(10, 10, 60L, TimeUnit.SECONDS, new
+  // LinkedBlockingQueue<>());
+  //    threadPool.allowCoreThreadTimeOut(true);
+  //    internalServerSocket = new Socket(address, port);
+  //  }
+
+  private MailClient() {
     threadPool = new ThreadPoolExecutor(10, 10, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
     threadPool.allowCoreThreadTimeOut(true);
+  }
+
+  public static MailClient getInstance() {
+    return instance;
+  }
+
+  public void connect(String address, int port) throws IOException {
     internalServerSocket = new Socket(address, port);
+  }
+
+  public void disconnect() throws IOException {
+    internalServerSocket.close();
+  }
+
+  public boolean isConnected() {
+    return internalServerSocket != null && internalServerSocket.isConnected();
   }
 
   public void sendCommand(Command cmd, ResponseFunction responseFunc) {
@@ -59,4 +86,25 @@ public class MailClient implements IMailClient {
 
   @Override
   public void close() {}
+
+  public void login(String username, String password) {
+    var hashed = Hashing.sha256().hashString(password, StandardCharsets.UTF_8).toString();
+    Main.changeScene("client.fxml");
+
+    // TODO: implement everything below, atm the server does not respond
+    if (false) {
+      sendCommand(
+          new CommandLogin(new CommandLogin.CommandLoginParameter(username, hashed)),
+          response -> {
+            if (response
+                .getStatus()
+                .equals("OK")) { // TODO: status can be an enum? does the response belong in the
+              // ServerResponse.body? Is it translated to the other fields?
+              System.out.println("Login successful"); // TODO: use LOGGER here
+            } else {
+              System.out.println("Login failed");
+            }
+          });
+    }
+  }
 }

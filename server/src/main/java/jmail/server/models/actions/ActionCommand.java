@@ -1,5 +1,6 @@
 package jmail.server.models.actions;
 
+import jmail.lib.models.Response;
 import jmail.server.exceptions.ActionExecutionException;
 
 public interface ActionCommand {
@@ -11,6 +12,6 @@ public interface ActionCommand {
     throw new ActionExecutionException("Method not implemented");
   }
 
-  /** Marker interface */
-  public interface Response {}
+  // TODO: Response was here before but can't be accessed by client if left here, instead I placed
+  // it in lib.models
 }

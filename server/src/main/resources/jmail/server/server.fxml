@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import org.fxmisc.flowless.VirtualizedScrollPane?>
 <?import org.fxmisc.richtext.CodeArea?>
-
-
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jmail.server.controllers.FXMLMainController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17"
+            fx:controller="jmail.server.controllers.FXMLMainController">
     <center>
-            <StackPane layoutX="317.0" layoutY="96.0" prefHeight="176.0" prefWidth="262.0" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
-                  <VirtualizedScrollPane>
-                      <content>
-                          <CodeArea fx:id="codeArea" prefHeight="300.0" prefWidth="900.0" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
-                      </content>
-                  </VirtualizedScrollPane>
+        <StackPane layoutX="317.0" layoutY="96.0" prefHeight="176.0" prefWidth="262.0"
+                   stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css"/>
+        <VirtualizedScrollPane>
+            <content>
+                <CodeArea fx:id="codeArea" prefHeight="300.0" prefWidth="900.0"
+                          stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css"/>
+            </content>
+        </VirtualizedScrollPane>
     </center>
 </BorderPane>

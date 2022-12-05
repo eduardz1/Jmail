@@ -1,7 +1,10 @@
 package jmail.server.handlers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.exceptions.CommandNotFoundException;
@@ -14,11 +17,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ClientHandler implements Runnable {
+  private static final Logger LOGGER = LoggerFactory.getLogger(ClientHandler.class.getName());
+  private final Socket internalSocket;
   private BufferedReader reader;
   private PrintWriter writer;
-  private final Socket internalSocket;
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(ClientHandler.class.getName());
 
   public ClientHandler(Socket clientSocket) throws IOException {
     internalSocket = clientSocket;
@@ -56,7 +58,7 @@ public class ClientHandler implements Runnable {
   }
 
   private void sendResponse(String status, String errorMessage) {
-    var resp = new ServerResponse<>(status, errorMessage);
+    var resp = new ServerResponse(status, errorMessage);
     try {
       writer.println(JsonHelper.toJson(resp));
     } catch (JsonProcessingException e) {

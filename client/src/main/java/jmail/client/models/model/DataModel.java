@@ -15,21 +15,17 @@ import jmail.lib.models.User;
 
 public class DataModel {
 
+  private static final DataModel instance = new DataModel();
   private static ObservableList<User> loggedUsers;
   private final ObjectProperty<User> currentUser;
   private final SimpleStringProperty currentFolder; // Enum: inbox, sent, trash
-
   private final ObservableList<Email> inbox;
   private final ObservableList<Email> sent;
   private final ObservableList<Email> trash;
-
   private final ObjectProperty<Email> currentEmail;
 
-  private final SimpleBooleanProperty serverStatusConnected;
-
   // TODO: Preferiti, bozze, etichette
-
-  private static final DataModel instance = new DataModel();
+  private final SimpleBooleanProperty serverStatusConnected;
 
   private DataModel() {
     loggedUsers = FXCollections.emptyObservableList();
@@ -42,6 +38,11 @@ public class DataModel {
 
     currentEmail = new SimpleObjectProperty<>();
     serverStatusConnected = new SimpleBooleanProperty();
+  }
+
+  // get instance
+  public static DataModel getInstance() {
+    return instance;
   }
 
   // get logged users list
@@ -122,10 +123,5 @@ public class DataModel {
   // set server status connected
   public void setServerStatusConnected(boolean connected) {
     serverStatusConnected.set(connected);
-  }
-
-  // get instance
-  public static DataModel getInstance() {
-    return instance;
   }
 }
