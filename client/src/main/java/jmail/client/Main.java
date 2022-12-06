@@ -33,7 +33,7 @@ public class Main extends Application {
     } catch (IOException e) {
       throw new RuntimeException(e); // TODO: handle exception
     }
-    pane.setStyle("-fx-background-color: transparent");
+    if (enableConditionalJavaFXFeatures) pane.setStyle("-fx-background-color: transparent");
     primaryStage.getScene().setRoot(pane);
     primaryStage.sizeToScene();
   }
