@@ -32,6 +32,8 @@ public class CommandDeserializer extends JsonDeserializer<Command> {
           case RESTORE -> new CommandRestoreEmail(
               mapper.treeToValue(
                   parameters, CommandRestoreEmail.CommandRestoreEmailParameter.class));
+          case LOGIN -> new CommandLogin(
+              mapper.treeToValue(parameters, CommandLogin.CommandLoginParameter.class));
           default -> null;
         };
     if (command != null) command.setUserEmail(user);

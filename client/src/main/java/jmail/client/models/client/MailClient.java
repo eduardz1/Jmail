@@ -12,6 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import jmail.client.Main;
+import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.Command;
@@ -88,22 +89,23 @@ public class MailClient {
 
   public void login(String username, String password) {
     var hashed = Hashing.sha256().hashString(password, StandardCharsets.UTF_8).toString();
-    Main.changeScene("client.fxml");
+    var command = new CommandLogin(new CommandLogin.CommandLoginParameter(username, hashed));
+    command.setUserEmail(username);
 
-    // TODO: implement everything below, atm the server does not respond
-    if (false) {
-      sendCommand(
-          new CommandLogin(new CommandLogin.CommandLoginParameter(username, hashed)),
-          response -> {
-            if (response
-                .getStatus()
-                .equals("OK")) { // TODO: status can be an enum? does the response belong in the
-              // ServerResponse.body? Is it translated to the other fields?
-              System.out.println("Login successful"); // TODO: use LOGGER here
-            } else {
-              System.out.println("Login failed");
-            }
-          });
-    }
+    sendCommand(
+        command,
+        response -> {
+          if (response
+              .getStatus()
+              .equals(
+                  ServerResponseStatuses
+                      .OK)) { // TODO: does the response belong in the ServerResponse.body? Is it
+            // translated to the other fields?
+            System.out.println("Login successful"); // TODO: use LOGGER here
+            Main.changeScene("client.fxml");
+          } else {
+            System.out.println("Login failed");
+          }
+        });
   }
 }
