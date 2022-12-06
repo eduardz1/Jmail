@@ -1,6 +1,6 @@
 package jmail.server.models.actions;
 
-import jmail.lib.models.ServerResponseBody;
+import jmail.lib.models.ServerResponse;
 import jmail.server.exceptions.ActionExecutionException;
 
 public interface ActionCommand {
@@ -8,7 +8,7 @@ public interface ActionCommand {
     throw new ActionExecutionException("Method not implemented");
   }
 
-  default ServerResponseBody executeAndGetResult() throws ActionExecutionException {
+  default ServerResponse executeAndGetResult() throws ActionExecutionException {
     throw new ActionExecutionException("Method not implemented");
   }
 }

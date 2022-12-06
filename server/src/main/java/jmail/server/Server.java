@@ -6,8 +6,8 @@ import java.net.Socket;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import jmail.lib.helpers.SystemIOHelper;
 import jmail.server.handlers.ClientHandler;
-import jmail.server.helpers.SystemIOHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

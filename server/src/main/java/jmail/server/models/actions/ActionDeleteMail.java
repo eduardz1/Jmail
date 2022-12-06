@@ -1,10 +1,10 @@
 package jmail.server.models.actions;
 
 import java.io.IOException;
+import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.commands.CommandDeleteEmail;
 import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.handlers.LockHandler;
-import jmail.server.helpers.SystemIOHelper;
 
 public class ActionDeleteMail implements ActionCommand {
   private final CommandDeleteEmail command;
@@ -15,10 +15,8 @@ public class ActionDeleteMail implements ActionCommand {
 
   @Override
   public void execute() throws ActionExecutionException {
-    var cmd = (CommandDeleteEmail) this.command;
-    var params = cmd.getParameter();
-    var userEmail = cmd.getUserEmail();
-    var emailID = params.emailID();
+    var userEmail = command.getUserEmail();
+    var emailID = command.getParameter().emailID();
 
     if (userEmail == null || userEmail.isEmpty()) {
       throw new ActionExecutionException("Cannot delete mail: user invalid");

@@ -1,16 +1,18 @@
 package jmail.lib.models.commands;
 
 import jmail.lib.constants.CommandActions;
-import lombok.Getter;
-import lombok.Setter;
 
 public class CommandLogin extends Command {
 
-  @Getter @Setter private CommandLoginParameter parameter;
-
   public CommandLogin(CommandLoginParameter parameter) {
     super(CommandActions.LOGIN);
-    this.parameter = parameter;
+    super.setUserEmail(getUserEmail());
+    super.setParameter(parameter);
+  }
+
+  @Override
+  public CommandLoginParameter getParameter() {
+    return (CommandLoginParameter) super.getParameter();
   }
 
   public static record CommandLoginParameter(String email, String hashedPassword)

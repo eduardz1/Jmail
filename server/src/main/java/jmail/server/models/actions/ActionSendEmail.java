@@ -3,10 +3,10 @@ package jmail.server.models.actions;
 import java.io.IOException;
 import java.nio.file.Path;
 import jmail.lib.helpers.JsonHelper;
+import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.commands.CommandSendEmail;
 import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.handlers.LockHandler;
-import jmail.server.helpers.SystemIOHelper;
 
 public class ActionSendEmail implements ActionCommand {
   private final CommandSendEmail command;
@@ -18,9 +18,8 @@ public class ActionSendEmail implements ActionCommand {
   @Override
   public void execute() throws ActionExecutionException {
 
-    var cmd = (CommandSendEmail) this.command;
-    var params = cmd.getParameter();
-    var userEmail = cmd.getUserEmail();
+    var params = command.getParameter();
+    var userEmail = command.getUserEmail();
 
     if (userEmail == null || userEmail.isEmpty()) {
       throw new ActionExecutionException("Cannot send mail: user invalid");

@@ -8,6 +8,7 @@ import lombok.NonNull;
 @Data
 @JsonDeserialize(using = CommandDeserializer.class)
 public class Command {
+  private CommandParameters parameter;
   @NonNull private String action;
   private String userEmail;
 

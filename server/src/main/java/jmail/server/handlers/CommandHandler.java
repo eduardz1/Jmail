@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.PrintWriter;
 import java.util.Map;
 import jmail.lib.constants.CommandActions;
+import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.Command;
@@ -34,7 +35,8 @@ public class CommandHandler {
           CommandActions.SEND, this::sendEmail,
           CommandActions.LIST, this::listEmails,
           CommandActions.READ, this::markEmailAsRead,
-          CommandActions.DELETE, this::deleteEmail);
+          CommandActions.DELETE, this::deleteEmail,
+          CommandActions.LOGIN, this::login);
 
   public CommandHandler(Command cmd, PrintWriter writer) {
     internalCommand = cmd;
@@ -93,9 +95,7 @@ public class CommandHandler {
       var action = ActionCommandFactory.getActionCommand(internalCommand);
       var response = action.executeAndGetResult();
 
-      var serverResp = new ServerResponse(response);
-      writer.println(JsonHelper.toJson(serverResp));
-
+      writer.println(JsonHelper.toJson(response));
     } catch (ActionExecutionException ex) {
       System.out.println(ex.getInnerMessage());
       var msg = "Cannot execute list mail action: " + ex.getMessage();
@@ -142,6 +142,27 @@ public class CommandHandler {
     } catch (ActionExecutionException ex) {
       System.out.println(ex.getInnerMessage());
       var msg = "Cannot execute delete mail action: " + ex.getMessage();
+      LOGGER.error(msg);
+      sendError(msg);
+    }
+  }
+
+  private void login() {
+    try {
+      var action = ActionCommandFactory.getActionCommand(internalCommand);
+      var res = action.executeAndGetResult();
+
+      if (res.getStatus() == ServerResponseStatuses.ERROR) {
+        System.out.println(res.getErrorMessage()); // FIXME: remove
+        sendError(res.getErrorMessage());
+        return;
+      } else {
+        System.out.println("Login successful"); // FIXME: remove
+        sendOk();
+      }
+    } catch (ActionExecutionException ex) {
+      System.out.println(ex.getInnerMessage());
+      var msg = "Cannot execute login action: " + ex.getMessage();
       LOGGER.error(msg);
       sendError(msg);
     }
