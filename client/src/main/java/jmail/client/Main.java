@@ -10,7 +10,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import jmail.client.models.client.MailClient;
 
 public class Main extends Application {
@@ -29,6 +31,7 @@ public class Main extends Application {
     } catch (IOException e) {
       throw new RuntimeException(e); // TODO: handle exception
     }
+    pane.setStyle("-fx-background-color: transparent");
     primaryStage.getScene().setRoot(pane);
     primaryStage.sizeToScene();
   }
@@ -44,12 +47,15 @@ public class Main extends Application {
     // opens the login window
     FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
     Parent root = loader.load();
+    root.setStyle("-fx-background-color: transparent");
 
     Scene scene = new Scene(root);
+    scene.setFill(Color.TRANSPARENT);
 
     primaryStage.setTitle("JMAIL");
     primaryStage.getIcons().add(new Image("logo.png"));
     primaryStage.setScene(scene);
+    primaryStage.initStyle(StageStyle.UNIFIED);
 
     Platform.runLater(
         () -> {

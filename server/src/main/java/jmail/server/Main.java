@@ -11,7 +11,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import jmail.lib.logger.ObservableStreamAppender;
 import jmail.server.controllers.FXMLMainController;
 import org.slf4j.Logger;
@@ -38,28 +40,31 @@ public class Main extends Application {
 
     FXMLLoader loader = new FXMLLoader(getClass().getResource("server.fxml"));
     Parent root = loader.load();
+    root.setStyle("-fx-background-color: transparent");
 
     FXMLMainController mainController = loader.getController();
 
     ObservableStreamAppender.getObservable()
         .addListener((observable, oldValue, newValue) -> mainController.setTopText(newValue));
     Scene newScene = new Scene(root);
-    Stage newStage = new Stage();
-    newStage.setScene(newScene);
+    newScene.setFill(Color.TRANSPARENT);
 
-    newStage.setTitle("SERVER");
-    newStage.getIcons().add(new Image("logo.png"));
+    primaryStage.setScene(newScene);
+
+    primaryStage.setTitle("SERVER");
+    primaryStage.getIcons().add(new Image("logo.png"));
+    primaryStage.initStyle(StageStyle.UNIFIED);
 
     // Forces Dark Mode on Windows11 windows and enables mica effect on transaprent surfaces
     Platform.runLater(
         () -> {
-          final var handle = StageOps.findWindowHandle(newStage);
+          final var handle = StageOps.findWindowHandle(primaryStage);
           StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
           StageOps.dwmSetIntValue(
               handle, DwmAttribute.DWMWA_SYSTEMBACKDROP_TYPE, DwmAttribute.DWMSBT_MAINWINDOW.value);
         });
 
-    newStage.show();
+    primaryStage.show();
   }
 
   @Override

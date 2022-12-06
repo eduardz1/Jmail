@@ -77,3 +77,7 @@ tasks.register('installLocalGitHook', Copy) {
 }
 
 build.dependsOn = ['spotlessApply', 'installLocalGitHook']
+
+run {
+    jvmArgs "-Dprism.forceUploadingPainter=true"
+}
