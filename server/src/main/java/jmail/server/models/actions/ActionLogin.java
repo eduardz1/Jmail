@@ -1,6 +1,6 @@
 package jmail.server.models.actions;
 
-import jmail.lib.models.Response;
+import jmail.lib.models.ServerResponseBody;
 import jmail.lib.models.commands.CommandLogin;
 
 public class ActionLogin implements ActionCommand {
@@ -15,6 +15,6 @@ public class ActionLogin implements ActionCommand {
     // TODO: implement
   }
 
-  public record ActionLoginResponse(String token)
-      implements Response {} // Token should allow or disallow login maybe
+  public record ActionLoginServerResponseBody(String token)
+      implements ServerResponseBody {} // Token should allow or disallow login maybe
 }

@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.models.Email;
-import jmail.lib.models.Response;
+import jmail.lib.models.ServerResponseBody;
 import jmail.lib.models.commands.CommandListEmail;
 import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.handlers.LockHandler;
@@ -23,7 +23,7 @@ public class ActionListEmail implements ActionCommand {
   }
 
   @Override
-  public ActionListEmailResponse executeAndGetResult() throws ActionExecutionException {
+  public ActionListEmailServerResponseBody executeAndGetResult() throws ActionExecutionException {
     var cmd = (CommandListEmail) this.command;
     var params = cmd.getParameter();
     var userEmail = cmd.getUserEmail();
@@ -85,7 +85,7 @@ public class ActionListEmail implements ActionCommand {
 
     userLock.unlock();
     handler.removeLock(userEmail);
-    return new ActionListEmailResponse(mails);
+    return new ActionListEmailServerResponseBody(mails);
   }
 
   private Long getUnixTimeFromFilename(File file) {
@@ -94,5 +94,5 @@ public class ActionListEmail implements ActionCommand {
     return Long.getLong(name.substring(last_ + 1));
   }
 
-  public record ActionListEmailResponse(@NonNull List<Email> emails) implements Response {}
+  public record ActionListEmailServerResponseBody(@NonNull List<Email> emails) implements ServerResponseBody {}
 }

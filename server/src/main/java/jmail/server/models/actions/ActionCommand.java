@@ -1,6 +1,6 @@
 package jmail.server.models.actions;
 
-import jmail.lib.models.Response;
+import jmail.lib.models.ServerResponseBody;
 import jmail.server.exceptions.ActionExecutionException;
 
 public interface ActionCommand {
@@ -8,10 +8,7 @@ public interface ActionCommand {
     throw new ActionExecutionException("Method not implemented");
   }
 
-  default Response executeAndGetResult() throws ActionExecutionException {
+  default ServerResponseBody executeAndGetResult() throws ActionExecutionException {
     throw new ActionExecutionException("Method not implemented");
   }
-
-  // TODO: Response was here before but can't be accessed by client if left here, instead I placed
-  // it in lib.models
 }

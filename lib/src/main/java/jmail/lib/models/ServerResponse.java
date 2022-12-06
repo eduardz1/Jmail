@@ -12,11 +12,11 @@ public class ServerResponse {
   private String status;
   private String errorMessage;
   private String responseMessage;
-  private Response body;
+  private ServerResponseBody body;
 
   public ServerResponse() {}
 
-  public ServerResponse(Response body) {
+  public ServerResponse(ServerResponseBody body) {
     this.status = ServerResponseStatuses.OK;
     this.body = body;
   }
