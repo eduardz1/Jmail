@@ -11,9 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import jmail.lib.logger.ObservableStreamAppender;
 import jmail.server.controllers.FXMLMainController;
 import org.slf4j.Logger;
@@ -40,20 +38,17 @@ public class Main extends Application {
 
     FXMLLoader loader = new FXMLLoader(getClass().getResource("server.fxml"));
     Parent root = loader.load();
-    root.setStyle("-fx-background-color: transparent");
 
     FXMLMainController mainController = loader.getController();
 
     ObservableStreamAppender.getObservable()
         .addListener((observable, oldValue, newValue) -> mainController.setTopText(newValue));
     Scene newScene = new Scene(root);
-    newScene.setFill(Color.TRANSPARENT);
 
     primaryStage.setScene(newScene);
 
     primaryStage.setTitle("SERVER");
     primaryStage.getIcons().add(new Image("logo.png"));
-    primaryStage.initStyle(StageStyle.UNIFIED);
 
     // Forces Dark Mode on Windows11 windows and enables mica effect on transaprent surfaces
     Platform.runLater(
