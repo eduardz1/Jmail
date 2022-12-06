@@ -13,5 +13,5 @@ public class CommandRestoreEmail extends Command {
   }
 
   // FIXME: emailID settato inizialmente a "", non so se era necessario
-  public static record CommandRestoreEmailParameter(String emailID) implements CommandParameters {}
+  public record CommandRestoreEmailParameter(String emailID) implements CommandParameters {}
 }

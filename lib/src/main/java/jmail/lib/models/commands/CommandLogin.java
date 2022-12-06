@@ -13,6 +13,6 @@ public class CommandLogin extends Command {
     this.parameter = parameter;
   }
 
-  public static record CommandLoginParameter(String email, String hashedPassword)
+  public record CommandLoginParameter(String email, String hashedPassword)
       implements CommandParameters {}
 }
