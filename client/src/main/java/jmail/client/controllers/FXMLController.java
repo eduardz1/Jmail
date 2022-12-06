@@ -8,8 +8,7 @@ import java.util.UUID;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import jmail.client.MailClient;
-import jmail.client.Main;
+import jmail.client.models.client.MailClient;
 import jmail.lib.models.Email;
 import jmail.lib.models.commands.CommandDeleteEmail;
 import jmail.lib.models.commands.CommandDeleteEmail.CommandDeleteEmailParameter;
@@ -85,7 +84,7 @@ public class FXMLController implements Initializable {
             false);
 
     var params = new CommandSendEmailParameter(em);
-    client.sendCommand(new CommandSendEmail(params));
+    client.sendCommand(new CommandSendEmail(params), null);
   }
 
   @FXML
@@ -96,6 +95,6 @@ public class FXMLController implements Initializable {
   @FXML // FIXME: non so se si può passare un parametro alla funzione
   public void buttonTrash(javafx.event.ActionEvent e, String emailID) {
     var params = new CommandDeleteEmailParameter(emailID);
-    client.sendCommand(new CommandDeleteEmail(params));
+    client.sendCommand(new CommandDeleteEmail(params), null);
   }
 }
