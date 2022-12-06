@@ -94,5 +94,6 @@ public class ActionListEmail implements ActionCommand {
     return Long.getLong(name.substring(last_ + 1));
   }
 
-  public record ActionListEmailServerResponseBody(@NonNull List<Email> emails) implements ServerResponseBody {}
+  public record ActionListEmailServerResponseBody(@NonNull List<Email> emails)
+      implements ServerResponseBody {}
 }

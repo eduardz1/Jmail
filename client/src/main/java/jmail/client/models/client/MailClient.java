@@ -17,7 +17,7 @@ import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.Command;
 import jmail.lib.models.commands.CommandLogin;
 
-public class MailClient implements IMailClient {
+public class MailClient {
   private static final MailClient instance = new MailClient();
   private final ThreadPoolExecutor threadPool;
   private Socket internalServerSocket;
@@ -84,7 +84,6 @@ public class MailClient implements IMailClient {
         });
   }
 
-  @Override
   public void close() {}
 
   public void login(String username, String password) {
