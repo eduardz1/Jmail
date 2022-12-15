@@ -1,3 +1,11 @@
+pluginManagement {
+    plugins {
+        id 'io.freefair.lombok' version '6.5.1'
+        id 'com.diffplug.spotless' version '6.11.0'
+        id 'org.openjfx.javafxplugin' version '0.0.9'
+    }
+}
+
 rootProject.name = 'Jmail'
 include 'client', 'server', 'lib'
 

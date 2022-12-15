@@ -1,9 +1,9 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
-    id 'io.freefair.lombok' version '6.5.1'
-    id 'org.openjfx.javafxplugin' version '0.0.7'
-    id "com.diffplug.spotless" version "6.11.0"
+    id 'io.freefair.lombok'
+    id 'org.openjfx.javafxplugin'
+    id "com.diffplug.spotless"
 }
 
 version = '30L'
@@ -52,6 +52,8 @@ tasks.named('test') {
 }
 
 spotless {
+    ratchetFrom 'origin/main'
+
     java {
         importOrder() // Use the default importOrder configuration
         removeUnusedImports()
@@ -72,7 +74,8 @@ spotless {
 
     format 'xml', {
         target 'src/**/*.xml', 'src/**/*.fxml'
-        prettier(['prettier': '2.8.1', '@prettier/plugin-xml': '2.2.0']).config(['parser': 'xml', 'tabWidth': 4])
+        eclipseWtp('xml')
+        indentWithSpaces()
     }
 }
 
