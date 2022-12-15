@@ -27,7 +27,10 @@ dependencies {
 
 javafx {
     version = "17"
-    modules = ['javafx.controls', 'javafx.fxml']
+    modules = [
+        'javafx.controls',
+        'javafx.fxml'
+    ]
 }
 
 tasks.named('test') {
@@ -36,11 +39,26 @@ tasks.named('test') {
 
 spotless {
     java {
-        // Use the default importOrder configuration
-        importOrder()
+        importOrder() // Use the default importOrder configuration
         removeUnusedImports()
         googleJavaFormat()
         formatAnnotations()
+    }
+
+    groovyGradle {
+        target '*.gradle', 'gradle/**/*.gradle'
+        greclipse()
+        indentWithSpaces()
+    }
+
+    format 'css', {
+        target 'src/**/*.css'
+        prettier()
+    }
+
+    format 'xml', {
+        target 'src/**/*.xml', 'src/**/*.fxml'
+        prettier(['prettier': '2.8.1', '@prettier/plugin-xml': '2.2.0']).config(['parser': 'xml', 'tabWidth': 4])
     }
 }
 
@@ -55,4 +73,7 @@ tasks.register('installLocalGitHook', Copy) {
     fileMode 0775
 }
 
-build.dependsOn = ['spotlessApply', 'installLocalGitHook']
+build.dependsOn = [
+    'spotlessApply',
+    'installLocalGitHook'
+]
