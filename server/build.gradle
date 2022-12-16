@@ -78,18 +78,3 @@ spotless {
         indentWithSpaces()
     }
 }
-
-tasks.register('installLocalGitHook', Copy) {
-    from rootProject.file('scripts/pre-commit')
-    into rootProject.file('.git/hooks')
-    fileMode 0775
-
-    from rootProject.file('scripts/post-commit')
-    into rootProject.file('.git/hooks')
-    fileMode 0775
-}
-
-build.dependsOn = [
-    'spotlessApply',
-    'installLocalGitHook'
-]
