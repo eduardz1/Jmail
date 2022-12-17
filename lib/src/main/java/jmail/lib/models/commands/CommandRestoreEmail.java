@@ -14,6 +14,5 @@ public class CommandRestoreEmail extends Command {
     return (CommandRestoreEmailParameter) super.getParameter();
   }
 
-  // FIXME: emailID settato inizialmente a "", non so se era necessario
   public record CommandRestoreEmailParameter(String emailID) implements CommandParameters {}
 }

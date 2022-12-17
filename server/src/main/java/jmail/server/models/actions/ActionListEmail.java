@@ -6,15 +6,17 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.Email;
 import jmail.lib.models.ServerResponse;
-import jmail.lib.models.ServerResponseBody;
 import jmail.lib.models.commands.CommandListEmail;
 import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.handlers.LockHandler;
-import lombok.NonNull;
+import lombok.Getter;
+import lombok.Setter;
 
 public class ActionListEmail implements ActionCommand {
   private final CommandListEmail command;
@@ -61,7 +63,7 @@ public class ActionListEmail implements ActionCommand {
 
     userLock.unlock();
     handler.removeLock(userEmail);
-    return ServerResponse.builder().body(new ActionListEmailServerResponseBody(mails)).build();
+    return new ActionListEmailServerResponse(mails);
   }
 
   private Long getUnixTimeFromFilename(File file) {
@@ -70,6 +72,16 @@ public class ActionListEmail implements ActionCommand {
     return Long.getLong(name.substring(last_ + 1));
   }
 
-  public record ActionListEmailServerResponseBody(@NonNull List<Email> emails)
-      implements ServerResponseBody {}
+
+  @Getter
+  @Setter
+  public class ActionListEmailServerResponse extends ServerResponse {
+    private List<Email> emails;
+
+    public ActionListEmailServerResponse(List<Email> emails) {
+      super(ServerResponseStatuses.OK, "");
+      this.emails = emails;
+    }
+  }
+
 }

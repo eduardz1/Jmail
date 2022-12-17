@@ -151,18 +151,14 @@ public class CommandHandler {
     try {
       var action = ActionCommandFactory.getActionCommand(internalCommand);
       var res = action.executeAndGetResult();
-
-      if (res.getStatus() == ServerResponseStatuses.ERROR) {
-        System.out.println(res.getErrorMessage()); // FIXME: remove
-        sendError(res.getErrorMessage());
-        return;
-      } else {
-        System.out.println("Login successful"); // FIXME: remove
-        sendOk();
-      }
+      writer.println(JsonHelper.toJson(res));
     } catch (ActionExecutionException ex) {
       System.out.println(ex.getInnerMessage());
       var msg = "Cannot execute login action: " + ex.getMessage();
+      LOGGER.error(msg);
+      sendError(msg);
+    } catch (JsonProcessingException e) {
+      var msg = "Cannot serialize response";
       LOGGER.error(msg);
       sendError(msg);
     }

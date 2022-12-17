@@ -96,15 +96,15 @@ public class SystemIOHelper {
   }
 
   public static User getUser(String email) {
-    User json = null;
+    User user = null;
     try {
-      json =
-          JsonHelper.fromJson(
-              readJSONFile(getUserDirectory(email).resolve("user.json")), User.class);
+      var json = readJSONFile(getUserDirectory(email).resolve("user.json"));
+      user =
+          JsonHelper.fromJson(json, User.class);
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    return json;
+    return user;
   }
 }

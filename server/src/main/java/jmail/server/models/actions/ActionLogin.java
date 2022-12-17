@@ -1,9 +1,12 @@
 package jmail.server.models.actions;
 
+import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.ServerResponse;
-import jmail.lib.models.ServerResponseBody;
+import jmail.lib.models.User;
 import jmail.lib.models.commands.CommandLogin;
+import lombok.Getter;
+import lombok.Setter;
 
 public class ActionLogin implements ActionCommand {
   private final CommandLogin command;
@@ -19,12 +22,19 @@ public class ActionLogin implements ActionCommand {
 
     var user = SystemIOHelper.getUser(command.getParameter().email());
     if (user.getPasswordSHA256().equals(command.getParameter().hashedPassword())) {
-      return ServerResponse.createOkResponse("Login successful");
+      return new ActionLoginServerResponse(user);
     } else {
       return ServerResponse.createErrorResponse("Login failed");
     }
   }
 
-  public record ActionLoginServerResponseBody(String token)
-      implements ServerResponseBody {} // Token should allow or disallow login maybe
+  @Getter
+  @Setter
+  public class ActionLoginServerResponse extends ServerResponse {
+    private User user;
+    public ActionLoginServerResponse(User user) {
+      super(ServerResponseStatuses.OK, "");
+      this.user = user;
+    }
+  }
 }

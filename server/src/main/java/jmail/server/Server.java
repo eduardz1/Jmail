@@ -33,15 +33,7 @@ public class Server extends Thread {
     try {
       internalServerSocket = new ServerSocket(port);
       SystemIOHelper.createBaseFoldersIfNotExists();
-
-      // FIXME: creati solo come prova
-      SystemIOHelper.createUserFolderIfNotExists("occhipinti.eduard@gmail.com");
-      SystemIOHelper.createUserFolderIfNotExists("emmedeveloper@gmail.com");
-      SystemIOHelper.createUserFolderIfNotExists("marcofrattarola@gmail.com");
-      SystemIOHelper.createUserFolderIfNotExists("eduard.occhipinti@edu.unito.it");
-
-      LOGGER.info("Folders created with success");
-
+      
     } catch (IOException e) {
       LOGGER.error("SocketServer exception on starting: " + e.getLocalizedMessage());
       e.printStackTrace();

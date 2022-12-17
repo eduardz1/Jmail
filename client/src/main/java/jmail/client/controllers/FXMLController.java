@@ -79,7 +79,7 @@ public class FXMLController implements Initializable {
 
     var params = new CommandSendEmailParameter(em);
     MailClient.getInstance()
-        .sendCommand(new CommandSendEmail(params), null); // FIXME: implement lambda
+        .sendCommand(new CommandSendEmail(params), null, null); // FIXME: implement lambda
   }
 
   @FXML
@@ -91,7 +91,7 @@ public class FXMLController implements Initializable {
   public void buttonTrash(javafx.event.ActionEvent e, String emailID) {
     var params = new CommandDeleteEmailParameter(emailID);
     MailClient.getInstance()
-        .sendCommand(new CommandDeleteEmail(params), null); // FIXME: implement lambda
+        .sendCommand(new CommandDeleteEmail(params), null, null); // FIXME: implement lambda
   }
 
   public void buttonNewMail(ActionEvent actionEvent) {}

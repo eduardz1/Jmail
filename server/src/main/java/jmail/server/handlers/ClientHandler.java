@@ -61,7 +61,7 @@ public class ClientHandler implements Runnable {
   }
 
   private void sendResponse(String status, String errorMessage) {
-    var resp = ServerResponse.builder().status(status).errorMessage(errorMessage).build();
+    var resp = new ServerResponse(status, errorMessage);
     try {
       writer.println(JsonHelper.toJson(resp));
     } catch (JsonProcessingException e) {
