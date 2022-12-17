@@ -19,7 +19,8 @@ dependencies {
 
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.0'
 
-    implementation 'org.controlsfx:controlsfx:11.1.2'
+    implementation 'org.kordamp.ikonli:ikonli-javafx:12.3.1'
+    implementation 'org.kordamp.ikonli:ikonli-fontawesome5-pack:12.3.1' // cheat-sheet here https://kordamp.org/ikonli/cheat-sheet-fontawesome5.html
 
     implementation('com.github.eduardz1:custom_window:50747b0328') {
         because 'customization of Windows 11 window, no effect on other OS'

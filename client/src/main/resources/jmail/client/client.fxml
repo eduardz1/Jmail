@@ -6,7 +6,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import org.controlsfx.glyphfont.Glyph?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <SplitPane dividerPositions="0.22395833333333334, 0.5"
     minHeight="200.0" minWidth="630.0" prefHeight="561.0" prefWidth="762.0"
@@ -117,8 +117,8 @@
                             onAction="#buttonTrash" prefHeight="21.0" prefWidth="21.0"
                             style="-fx-background-radius: 15; -fx-border-radius: 15;">
                             <graphic>
-                                <Glyph fontFamily="FontAwesome" fontSize="20.0"
-                                    icon="TRASH_ALT" />
+                                <FontIcon iconLiteral="far-trash-alt" iconSize="20"
+                                    iconColor="grey" />
                             </graphic>
                         </Button>
                     </buttons>
