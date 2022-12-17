@@ -19,6 +19,8 @@ dependencies {
 
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.0'
 
+    implementation 'org.controlsfx:controlsfx:11.1.2'
+
     implementation('com.github.eduardz1:custom_window:50747b0328') {
         because 'customization of Windows 11 window, no effect on other OS'
     }
