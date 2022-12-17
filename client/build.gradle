@@ -40,6 +40,10 @@ javafx {
     ]
 }
 
+tasks.named('configJavafxRun').configure {
+    notCompatibleWithConfigurationCache('issue tracked https://github.com/openjfx/javafx-gradle-plugin/issues/136')
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
