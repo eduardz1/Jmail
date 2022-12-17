@@ -26,10 +26,10 @@ dependencies {
 }
 
 javafx {
-    version = "17"
+    version = "19"
     modules = [
-        'javafx.controls',
-        'javafx.fxml'
+        "javafx.controls",
+        "javafx.fxml",
     ]
 }
 

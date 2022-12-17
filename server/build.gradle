@@ -1,9 +1,8 @@
 plugins {
-    // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
     id 'io.freefair.lombok'
-    id 'org.openjfx.javafxplugin'
     id "com.diffplug.spotless"
+    id 'org.openjfx.javafxplugin'
 }
 
 version = '30L'
@@ -28,7 +27,7 @@ dependencies {
         because 'syntax highlighting of logs'
     }
 
-    implementation('com.github.eduardz1:custom_window:181a04351f') {
+    implementation('com.github.eduardz1:custom_window:50747b0328') {
         because 'customization of Windows 11 window, no effect on other OS'
     }
 
@@ -40,10 +39,10 @@ application {
 }
 
 javafx {
-    version = "17"
+    version = "19"
     modules = [
-        'javafx.controls',
-        'javafx.fxml'
+        "javafx.controls",
+        "javafx.fxml",
     ]
 }
 

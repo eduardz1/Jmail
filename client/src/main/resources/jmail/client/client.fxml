@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<SplitPane xmlns:fx="http://javafx.com/fxml/1"
+<SplitPane xmlns:fx="http://javafx.com/fxml"
     dividerPositions="0.22395833333333334, 0.5" minHeight="200.0"
     minWidth="630.0" prefHeight="561.0" prefWidth="762.0"
     snapToPixel="false"
     stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css"
-    xmlns="http://javafx.com/javafx/17"
+    xmlns="http://javafx.com/javafx"
     fx:controller="jmail.client.controllers.FXMLController">
     <items>
         <AnchorPane minHeight="0.0" minWidth="200.0"

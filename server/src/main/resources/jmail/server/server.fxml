@@ -3,8 +3,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import org.fxmisc.flowless.VirtualizedScrollPane?>
 <?import org.fxmisc.richtext.CodeArea?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1"
-    xmlns="http://javafx.com/javafx/17"
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+    xmlns="http://javafx.com/javafx"
     fx:controller="jmail.server.controllers.FXMLMainController">
     <center>
         <StackPane layoutX="317.0" layoutY="96.0" prefHeight="176.0"

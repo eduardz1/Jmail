@@ -1,8 +1,8 @@
 plugins {
     id 'application'
     id 'io.freefair.lombok'
-    id 'org.openjfx.javafxplugin'
     id "com.diffplug.spotless"
+    id 'org.openjfx.javafxplugin'
 }
 
 version = '30L'
@@ -19,7 +19,7 @@ dependencies {
 
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.0'
 
-    implementation('com.github.eduardz1:custom_window:181a04351f') {
+    implementation('com.github.eduardz1:custom_window:50747b0328') {
         because 'customization of Windows 11 window, no effect on other OS'
     }
 
@@ -31,10 +31,10 @@ application {
 }
 
 javafx {
-    version = "17"
+    version = "19"
     modules = [
-        'javafx.controls',
-        'javafx.fxml'
+        "javafx.controls",
+        "javafx.fxml",
     ]
 }
 
@@ -67,11 +67,5 @@ spotless {
         target 'src/**/*.xml', 'src/**/*.fxml'
         eclipseWtp('xml')
         indentWithSpaces()
-    }
-}
-
-run {
-    jvmArgs("-Dprism.forceUploadingPainter=true") {
-        because 'fix for transaprency effect on border of window'
     }
 }
