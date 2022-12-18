@@ -23,7 +23,7 @@ dependencies {
         because 'text auto-completion for search field'
     }
 
-    implementation 'org.kordamp.ikonli:ikonli-fontawesome5-pack:12.3.1' // cheat-sheet here https://kordamp.org/ikonli/cheat-sheet-fontawesome5.html
+    implementation 'org.kordamp.ikonli:ikonli-materialdesign2-pack:12.3.1' // cheat-sheet here https://kordamp.org/ikonli/cheat-sheet-materialdesign2.html
     implementation('org.kordamp.ikonli:ikonli-javafx:12.3.1' ) {
         because 'icons for buttons, controlsfx implementation is very limited'
     }
