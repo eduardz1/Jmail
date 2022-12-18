@@ -11,6 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import jmail.client.Main;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.Command;

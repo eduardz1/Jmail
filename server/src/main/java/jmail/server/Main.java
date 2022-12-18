@@ -35,7 +35,6 @@ public class Main extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-
     FXMLLoader loader = new FXMLLoader(getClass().getResource("server.fxml"));
     Parent root = loader.load();
 
@@ -44,22 +43,21 @@ public class Main extends Application {
     ObservableStreamAppender.getObservable()
         .addListener((observable, oldValue, newValue) -> mainController.setTopText(newValue));
     Scene newScene = new Scene(root);
-    Stage newStage = new Stage();
-    newStage.setScene(newScene);
 
-    newStage.setTitle("SERVER");
-    newStage.getIcons().add(new Image("logo.png"));
+    primaryStage.setScene(newScene);
 
-    // Forces Dark Mode on Windows11 windows and enables mica effect on transaprent surfaces
+    primaryStage.setTitle("SERVER");
+    primaryStage.getIcons().add(new Image("logo.png"));
+
     Platform.runLater(
         () -> {
-          final var handle = StageOps.findWindowHandle(newStage);
+          final var handle = StageOps.findWindowHandle(primaryStage);
+
+          // Forces Dark Mode on Windows11
           StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
-          StageOps.dwmSetIntValue(
-              handle, DwmAttribute.DWMWA_SYSTEMBACKDROP_TYPE, DwmAttribute.DWMSBT_MAINWINDOW.value);
         });
 
-    newStage.show();
+    primaryStage.show();
   }
 
   @Override

@@ -18,7 +18,7 @@ public class Main extends Application {
   private static Stage primaryStage;
 
   public static void main(String[] args) throws IOException {
-    MailClient.getInstance().connect("localhost", 32666); // FIXME: hardcoded
+    MailClient.getInstance().connect("localhost", 8085); // FIXME: hardcoded
     launch(args);
   }
 
@@ -41,7 +41,6 @@ public class Main extends Application {
   public void start(Stage primaryStage) throws Exception {
     Main.primaryStage = primaryStage;
 
-    // opens the login window
     FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
     Parent root = loader.load();
 
@@ -53,11 +52,10 @@ public class Main extends Application {
 
     Platform.runLater(
         () -> {
-          // Forces Dark Mode on Windows11 windows and enables mica effect on transparent surfaces
           final var handle = StageOps.findWindowHandle(primaryStage);
+
+          // Forces Dark Mode on Windows11
           StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
-          StageOps.dwmSetIntValue(
-              handle, DwmAttribute.DWMWA_SYSTEMBACKDROP_TYPE, DwmAttribute.DWMSBT_MAINWINDOW.value);
         });
 
     primaryStage.show();

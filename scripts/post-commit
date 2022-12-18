@@ -1,7 +1,0 @@
-#!/bin/sh
-
-echo "*** Updating indexes ***"
-
-git update-index -g
-
-exit 0
