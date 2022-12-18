@@ -1,5 +1,6 @@
 package jmail.client.models.model;
 
+import java.util.List;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -12,123 +13,103 @@ import javafx.collections.ObservableList;
 import jmail.lib.models.Email;
 import jmail.lib.models.User;
 
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-
 public class DataModel {
 
-    private static ObservableList<User> loggedUsers;
-    private final ObjectProperty<User> currentUser;
-    private final SimpleStringProperty currentFolder; // Enum: inbox, sent, trash
+  private static final DataModel instance = new DataModel();
+  private final ObjectProperty<User> currentUser;
+  private final SimpleStringProperty currentFolder; // Enum: inbox, sent, trash
+  private final ObservableList<Email> inbox;
+  private final ObservableList<Email> sent;
+  private final ObservableList<Email> trash;
+  private final ObjectProperty<Email> currentEmail;
 
-    private final ObservableList<Email> inbox;
-    private final ObservableList<Email> sent;
-    private final ObservableList<Email> trash;
+  // TODO: Preferiti, bozze, etichette
+  private final SimpleBooleanProperty serverStatusConnected;
 
-    private final ObjectProperty<Email> currentEmail;
+  private DataModel() {
+    currentUser = new SimpleObjectProperty<>();
+    currentFolder = new SimpleStringProperty();
 
-    private final SimpleBooleanProperty serverStatusConnected;
+    inbox = FXCollections.emptyObservableList();
+    sent = FXCollections.emptyObservableList();
+    trash = FXCollections.emptyObservableList();
 
-    // TODO: Preferiti, bozze, etichette
+    currentEmail = new SimpleObjectProperty<>();
+    serverStatusConnected = new SimpleBooleanProperty();
+  }
 
-    private static final DataModel instance = new DataModel();
+  // get instance
+  public static DataModel getInstance() {
+    return instance;
+  }
 
-    private DataModel() {
-        loggedUsers = FXCollections.emptyObservableList();
-        currentUser = new SimpleObjectProperty<>();
-        currentFolder = new SimpleStringProperty();
+  // get current user observable
+  public ObservableObjectValue<User> currentUser() {
+    return currentUser;
+  }
 
-        inbox = FXCollections.emptyObservableList();
-        sent = FXCollections.emptyObservableList();
-        trash = FXCollections.emptyObservableList();
+  // set current user
+  public void setCurrentUser(User user) {
+    currentUser.set(user);
+  }
 
-        currentEmail = new SimpleObjectProperty<>();
-        serverStatusConnected = new SimpleBooleanProperty();
-    }
+  // get current folder observable string property
+  public ObservableStringValue currentFolder() {
+    return currentFolder;
+  }
 
-    // get logged users list
-    public ObservableList<User> getLoggedUsers() {
-        return loggedUsers;
-    }
+  // set current folder
+  public void setCurrentFolder(String folder) {
+    currentFolder.set(folder);
+  }
 
-    // set logged users list
-    public void setLoggedUsers(List<User> users) {
-        loggedUsers.setAll(users);
-    }
+  // get inbox observable list
+  public ObservableList<Email> getInbox() {
+    return inbox;
+  }
 
-    // get current user observable
-    public ObservableObjectValue<User> currentUser() {
-        return currentUser;
-    }
+  // set inbox
+  public void setInbox(List<Email> emails) {
+    inbox.setAll(emails);
+  }
 
-    // set current user
-    public void setCurrentUser(User user) {
-        currentUser.set(user);
-    }
+  // get sent observable list
+  public ObservableList<Email> getSent() {
+    return sent;
+  }
 
-    // get current folder observable string property
-    public ObservableStringValue currentFolder() {
-        return currentFolder;
-    }
+  // set sent
+  public void setSent(List<Email> emails) {
+    sent.setAll(emails);
+  }
 
-    // set current folder
-    public void setCurrentFolder(String folder) {
-        currentFolder.set(folder);
-    }
+  // get trash observable list
+  public ObservableList<Email> getTrash() {
+    return trash;
+  }
 
-    // get inbox observable list
-    public ObservableList<Email> getInbox() {
-        return inbox;
-    }
+  // set trash
+  public void setTrash(List<Email> emails) {
+    trash.setAll(emails);
+  }
 
-    // set inbox
-    public void setInbox(List<Email> emails) {
-        inbox.setAll(emails);
-    }
+  // get current email observable
+  public ObservableObjectValue<Email> currentEmail() {
+    return currentEmail;
+  }
 
-    // get sent observable list
-    public ObservableList<Email> getSent() {
-        return sent;
-    }
+  // set current email
+  public void setCurrentEmail(Email email) {
+    currentEmail.set(email);
+  }
 
-    // set sent
-    public void setSent(List<Email> emails) {
-        sent.setAll(emails);
-    }
+  // get server status connected observable
+  public Observable serverStatusConnected() {
+    return serverStatusConnected;
+  }
 
-    // get trash observable list
-    public ObservableList<Email> getTrash() {
-        return trash;
-    }
-
-    // set trash
-    public void setTrash(List<Email> emails) {
-        trash.setAll(emails);
-    }
-
-    // get current email observable
-    public ObservableObjectValue<Email> currentEmail() {
-        return currentEmail;
-    }
-
-    // set current email
-    public void setCurrentEmail(Email email) {
-        currentEmail.set(email);
-    }
-
-    // get server status connected observable
-    public Observable serverStatusConnected() {
-        return serverStatusConnected;
-    }
-
-    // set server status connected
-    public void setServerStatusConnected(boolean connected) {
-        serverStatusConnected.set(connected);
-    }
-
-    // get instance
-    public static DataModel getInstance() {
-        return instance;
-    }
-
+  // set server status connected
+  public void setServerStatusConnected(boolean connected) {
+    serverStatusConnected.set(connected);
+  }
 }

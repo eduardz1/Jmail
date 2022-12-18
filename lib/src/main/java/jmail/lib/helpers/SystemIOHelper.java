@@ -1,7 +1,13 @@
-package jmail.server.helpers;
+package jmail.lib.helpers;
 
-import java.io.*;
-import java.nio.file.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import jmail.lib.models.User;
 
 public class SystemIOHelper {
 
@@ -87,5 +93,18 @@ public class SystemIOHelper {
   public static Boolean userExists(String userEmail) {
     File f = new File(getUserDirectory(userEmail).toUri());
     return f.exists() && f.isDirectory();
+  }
+
+  public static User getUser(String email) {
+    User user = null;
+    try {
+      var json = readJSONFile(getUserDirectory(email).resolve("user.json"));
+      user =
+          JsonHelper.fromJson(json, User.class);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return user;
   }
 }

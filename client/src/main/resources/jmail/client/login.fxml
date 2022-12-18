@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            xmlns="http://javafx.com/javafx"
+            fx:controller="jmail.client.controllers.FXMLLogin"
+            stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css"
+            prefHeight="100.0" prefWidth="300.0">
+
+    <Label layoutX="10.0" layoutY="10.0" text="Username"/>
+    <Label layoutX="10.0" layoutY="40.0" text="Password"/>
+    <TextField fx:id="UsernameField" layoutX="70.0" layoutY="10.0" prefWidth="200"/>
+    <PasswordField fx:id="PasswordField" layoutX="70.0" layoutY="40.0" prefWidth="200" />
+    <Button fx:id="LoginButton" layoutX="10.0" layoutY="70.0" mnemonicParsing="false" text="Login"
+            onAction="#buttonLogin"/>
+</AnchorPane>

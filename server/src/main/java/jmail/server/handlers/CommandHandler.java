@@ -4,9 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.PrintWriter;
 import java.util.Map;
 import jmail.lib.constants.CommandActions;
+import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.models.ServerResponse;
-import jmail.lib.models.commands.*;
+import jmail.lib.models.commands.Command;
+import jmail.lib.models.commands.CommandDeleteEmail;
+import jmail.lib.models.commands.CommandReadEmail;
+import jmail.lib.models.commands.CommandSendEmail;
 import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.factory.ActionCommandFactory;
 import org.slf4j.Logger;
@@ -14,9 +18,8 @@ import org.slf4j.LoggerFactory;
 
 public class CommandHandler {
 
-  private final Command internalCommand;
   private static final Logger LOGGER = LoggerFactory.getLogger(CommandHandler.class.getName());
-
+  private final Command internalCommand;
   private final PrintWriter
       writer; // TODO Cambiare assolutamente con qualcosa di meno specifico per gestire le risposte
   // da inviare al client
@@ -32,7 +35,8 @@ public class CommandHandler {
           CommandActions.SEND, this::sendEmail,
           CommandActions.LIST, this::listEmails,
           CommandActions.READ, this::markEmailAsRead,
-          CommandActions.DELETE, this::deleteEmail);
+          CommandActions.DELETE, this::deleteEmail,
+          CommandActions.LOGIN, this::login);
 
   public CommandHandler(Command cmd, PrintWriter writer) {
     internalCommand = cmd;
@@ -91,9 +95,7 @@ public class CommandHandler {
       var action = ActionCommandFactory.getActionCommand(internalCommand);
       var response = action.executeAndGetResult();
 
-      var serverResp = new ServerResponse<>(response);
-      writer.println(JsonHelper.toJson(serverResp));
-
+      writer.println(JsonHelper.toJson(response));
     } catch (ActionExecutionException ex) {
       System.out.println(ex.getInnerMessage());
       var msg = "Cannot execute list mail action: " + ex.getMessage();
@@ -140,6 +142,23 @@ public class CommandHandler {
     } catch (ActionExecutionException ex) {
       System.out.println(ex.getInnerMessage());
       var msg = "Cannot execute delete mail action: " + ex.getMessage();
+      LOGGER.error(msg);
+      sendError(msg);
+    }
+  }
+
+  private void login() {
+    try {
+      var action = ActionCommandFactory.getActionCommand(internalCommand);
+      var res = action.executeAndGetResult();
+      writer.println(JsonHelper.toJson(res));
+    } catch (ActionExecutionException ex) {
+      System.out.println(ex.getInnerMessage());
+      var msg = "Cannot execute login action: " + ex.getMessage();
+      LOGGER.error(msg);
+      sendError(msg);
+    } catch (JsonProcessingException e) {
+      var msg = "Cannot serialize response";
       LOGGER.error(msg);
       sendError(msg);
     }

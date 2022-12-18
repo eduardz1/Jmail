@@ -1,18 +1,19 @@
 package jmail.lib.models.commands;
 
 import jmail.lib.constants.CommandActions;
-import lombok.Getter;
-import lombok.Setter;
 
 public class CommandReadEmail extends Command {
 
-  @Getter @Setter private CommandReadEmailParameter parameter;
-
   public CommandReadEmail(CommandReadEmailParameter parameter) {
     super(CommandActions.READ);
-    this.parameter = parameter;
+    super.setParameter(parameter);
   }
 
-  public static record CommandReadEmailParameter(String emailID, Boolean setAsRead)
+  @Override
+  public CommandReadEmailParameter getParameter() {
+    return (CommandReadEmailParameter) super.getParameter();
+  }
+
+  public record CommandReadEmailParameter(String emailID, Boolean setAsRead)
       implements CommandParameters {}
 }

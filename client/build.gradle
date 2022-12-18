@@ -47,7 +47,7 @@ application {
 
 javafx {
     version = "17"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
+    modules = ['javafx.controls', 'javafx.fxml']
 }
 
 tasks.named('test') {
@@ -56,17 +56,17 @@ tasks.named('test') {
 }
 
 spotless {
-  java {
-    // Use the default importOrder configuration
-    importOrder()
-    removeUnusedImports()
-    googleJavaFormat()
-    formatAnnotations()
-  }
+    java {
+        // Use the default importOrder configuration
+        importOrder()
+        removeUnusedImports()
+        googleJavaFormat()
+        formatAnnotations()
+    }
 }
 
 
-tasks.register('installLocalGitHook', Copy){
+tasks.register('installLocalGitHook', Copy) {
     from rootProject.file('scripts/pre-commit')
     into rootProject.file('.git/hooks')
     fileMode 0775

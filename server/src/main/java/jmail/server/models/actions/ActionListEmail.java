@@ -3,14 +3,20 @@ package jmail.server.models.actions;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.JsonHelper;
+import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.Email;
+import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.CommandListEmail;
 import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.handlers.LockHandler;
-import jmail.server.helpers.SystemIOHelper;
-import lombok.NonNull;
+import lombok.Getter;
+import lombok.Setter;
 
 public class ActionListEmail implements ActionCommand {
   private final CommandListEmail command;
@@ -20,7 +26,7 @@ public class ActionListEmail implements ActionCommand {
   }
 
   @Override
-  public ActionListEmailResponse executeAndGetResult() throws ActionExecutionException {
+  public ServerResponse executeAndGetResult() throws ActionExecutionException {
     var cmd = (CommandListEmail) this.command;
     var params = cmd.getParameter();
     var userEmail = cmd.getUserEmail();
@@ -29,8 +35,8 @@ public class ActionListEmail implements ActionCommand {
       throw new ActionExecutionException("Cannot send mail: user invalid");
     }
 
-    boolean shouldCheckUnixTime = params != null && params.lastUnixTimeCheck() != null;
     // If shouldCheckUnixTime is false means that user needs to load all emails
+    boolean shouldCheckUnixTime = params != null && params.lastUnixTimeCheck() != null;
 
     var handler = LockHandler.getInstance();
     var userLock = handler.getReadLock(userEmail);
@@ -55,34 +61,9 @@ public class ActionListEmail implements ActionCommand {
     }
     mails.sort(Comparator.comparing(Email::date));
 
-    // FIXME: Non mi piace per niente questo metodo qua
-    // è poco leggibile per chi non conosce bene gli stream
-    // controllare params e lastunixtime di params ogni volta è meno performante del check di una
-    // variabile
-    // Usare il map con una lambda in questo caso non mi piace,
-    //  la lambda nasconde l'eccezione corretta, e la logica di rimozione del lock
-    // Lo trovo poco utile in generale complicarci la vita per usare gli stream, non ci porta
-    // vantaggio
-    // lascio commentato ma andrà rimosso
-
-    // NB: il lock in lettura ha senso, se tagghi una mail come letta mentre in parallelo
-    // viene mandata una richiesta di cancellazione va in conflitto
-
-    //     var mails =
-    //        Arrays.stream(files)
-    //            .parallel()
-    //            .filter(
-    //                f ->
-    //                    params == null
-    //                        || params.getLastUnixTimeCheck() == null
-    //                        || getUnixTimeFromFilename(f) > params.getLastUnixTimeCheck())
-    //            .map(this::getEmailFromFile)
-    //            .sorted(Comparator.comparing(Email::date))
-    //            .collect(Collectors.toList());
-
     userLock.unlock();
     handler.removeLock(userEmail);
-    return new ActionListEmailResponse(mails);
+    return new ActionListEmailServerResponse(mails);
   }
 
   private Long getUnixTimeFromFilename(File file) {
@@ -91,5 +72,16 @@ public class ActionListEmail implements ActionCommand {
     return Long.getLong(name.substring(last_ + 1));
   }
 
-  public record ActionListEmailResponse(@NonNull List<Email> emails) implements Response {}
+
+  @Getter
+  @Setter
+  public class ActionListEmailServerResponse extends ServerResponse {
+    private List<Email> emails;
+
+    public ActionListEmailServerResponse(List<Email> emails) {
+      super(ServerResponseStatuses.OK, "");
+      this.emails = emails;
+    }
+  }
+
 }

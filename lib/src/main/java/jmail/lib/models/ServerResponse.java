@@ -2,40 +2,30 @@ package jmail.lib.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jmail.lib.constants.ServerResponseStatuses;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.jackson.Jacksonized;
 
-@Setter
-@Getter
+@Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ServerResponse<T> {
+public class ServerResponse {
   private String status;
-  private String errorMessage;
-  private String responseMessage;
-  private T body;
-
+  private String message;
   public ServerResponse() {}
-
-  public ServerResponse(T body) {
-    this.status = ServerResponseStatuses.OK;
-    this.body = body;
-  }
-
-  public ServerResponse(String status, String errorMessage) {
+  public ServerResponse(String status, String message) {
     this.status = status;
-    this.errorMessage = errorMessage;
+    this.message = message;
   }
-
-  public ServerResponse(String status, String responseMessage, String errorMessage) {
+  public ServerResponse(String status) {
     this.status = status;
-    this.errorMessage = errorMessage;
-    this.responseMessage = responseMessage;
   }
 
-  public static <T> ServerResponse<T> createOkResponse(String message) {
-    return new ServerResponse<>(ServerResponseStatuses.OK, message, "");
+  public static ServerResponse createOkResponse(String message) {
+    return new ServerResponse(ServerResponseStatuses.OK, message);
   }
-
-  public static <T> ServerResponse<T> createErrorResponse(String message) {
-    return new ServerResponse<>(ServerResponseStatuses.ERROR, message);
+  public static ServerResponse createErrorResponse(String message) {
+    return new ServerResponse(ServerResponseStatuses.ERROR, message);
   }
 }

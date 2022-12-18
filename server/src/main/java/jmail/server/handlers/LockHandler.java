@@ -6,10 +6,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class LockHandler {
+  private static final LockHandler instance = new LockHandler();
   /** La chiave del lock è l'uuid del'utente TODO: Documentare */
   private final ConcurrentHashMap<String, CountableLock> lockMap;
-
-  private static final LockHandler instance = new LockHandler();
 
   private LockHandler() {
     lockMap = new ConcurrentHashMap<>();

@@ -25,7 +25,7 @@ repositories {
 version = '30L'
 
 sourceCompatibility = 17
- 
+
 dependencies {
     // Use JUnit Jupiter for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
@@ -54,7 +54,7 @@ application {
 
 javafx {
     version = "17"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
+    modules = ['javafx.controls', 'javafx.fxml']
 }
 
 tasks.named('test') {
@@ -63,16 +63,16 @@ tasks.named('test') {
 }
 
 spotless {
-  java {
-    // Use the default importOrder configuration
-    importOrder()
-    removeUnusedImports()
-    googleJavaFormat()
-    formatAnnotations()  // fixes formatting of type annotations
-  }
+    java {
+        // Use the default importOrder configuration
+        importOrder()
+        removeUnusedImports()
+        googleJavaFormat()
+        formatAnnotations()  // fixes formatting of type annotations
+    }
 }
 
-tasks.register('installLocalGitHook', Copy){
+tasks.register('installLocalGitHook', Copy) {
     from rootProject.file('scripts/pre-commit')
     into rootProject.file('.git/hooks')
     fileMode 0775

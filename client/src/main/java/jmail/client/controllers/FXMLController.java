@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -17,28 +18,21 @@ import jmail.lib.models.commands.CommandSendEmail.CommandSendEmailParameter;
 
 public class FXMLController implements Initializable {
 
-  private MailClient client;
+  @FXML private Button NewMailButton;
+
+  //  public void initializeData(MailClient client) {
+  //    this.client = client;
+  //  }
+  @FXML private Button SearchButton;
+  @FXML private Button ReplyButton;
+  @FXML private Button FwdButton;
+  @FXML private Button FwdallButton;
+  @FXML private Button TrashButton;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    // TODO Auto-generated method stub
+    // TODO: Auto-generated method stub
   }
-
-  public void initializeData(MailClient client) {
-    this.client = client;
-  };
-
-  @FXML private Button NewMailButton;
-
-  @FXML private Button SearchButton;
-
-  @FXML private Button ReplyButton;
-
-  @FXML private Button FwdButton;
-
-  @FXML private Button FwdallButton;
-
-  @FXML private Button TrashButton;
 
   @FXML
   public void buttonNewMail(javafx.event.ActionEvent e, Email email) {
@@ -84,7 +78,8 @@ public class FXMLController implements Initializable {
             false);
 
     var params = new CommandSendEmailParameter(em);
-    client.sendCommand(new CommandSendEmail(params), null);
+    MailClient.getInstance()
+        .sendCommand(new CommandSendEmail(params), null, null); // FIXME: implement lambda
   }
 
   @FXML
@@ -95,6 +90,15 @@ public class FXMLController implements Initializable {
   @FXML // FIXME: non so se si può passare un parametro alla funzione
   public void buttonTrash(javafx.event.ActionEvent e, String emailID) {
     var params = new CommandDeleteEmailParameter(emailID);
-    client.sendCommand(new CommandDeleteEmail(params), null);
+    MailClient.getInstance()
+        .sendCommand(new CommandDeleteEmail(params), null, null); // FIXME: implement lambda
   }
+
+  public void buttonNewMail(ActionEvent actionEvent) {}
+
+  public void buttonReply(ActionEvent actionEvent) {}
+
+  public void buttonFwd(ActionEvent actionEvent) {}
+
+  public void buttonTrash(ActionEvent actionEvent) {}
 }

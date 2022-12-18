@@ -7,4 +7,5 @@ public class CommandActions {
   public static final String READ = "read";
   public static final String DELETE = "delete";
   public static final String RESTORE = "restore";
+  public static final String LOGIN = "login";
 }
