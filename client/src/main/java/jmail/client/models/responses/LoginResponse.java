@@ -7,14 +7,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginResponse extends ServerResponse  {
-    private User user;
+public class LoginResponse extends ServerResponse {
+  private User user;
 
-    public LoginResponse(String status, String message) {
-        super(status, message);
-    }
+  public LoginResponse(String status, String message) {
+    super(status, message);
+  }
 
-    public LoginResponse() {
-        super();
-    }
+  public LoginResponse() {
+    super();
+  }
 }

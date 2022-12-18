@@ -2,22 +2,21 @@ package jmail.lib.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jmail.lib.constants.ServerResponseStatuses;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ServerResponse {
   private String status;
   private String message;
+
   public ServerResponse() {}
+
   public ServerResponse(String status, String message) {
     this.status = status;
     this.message = message;
   }
+
   public ServerResponse(String status) {
     this.status = status;
   }
@@ -25,6 +24,7 @@ public class ServerResponse {
   public static ServerResponse createOkResponse(String message) {
     return new ServerResponse(ServerResponseStatuses.OK, message);
   }
+
   public static ServerResponse createErrorResponse(String message) {
     return new ServerResponse(ServerResponseStatuses.ERROR, message);
   }

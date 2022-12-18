@@ -99,8 +99,7 @@ public class SystemIOHelper {
     User user = null;
     try {
       var json = readJSONFile(getUserDirectory(email).resolve("user.json"));
-      user =
-          JsonHelper.fromJson(json, User.class);
+      user = JsonHelper.fromJson(json, User.class);
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

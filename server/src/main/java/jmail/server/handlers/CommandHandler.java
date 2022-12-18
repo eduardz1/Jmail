@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.PrintWriter;
 import java.util.Map;
 import jmail.lib.constants.CommandActions;
-import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.Command;

@@ -32,6 +32,7 @@ public class ActionLogin implements ActionCommand {
   @Setter
   public class ActionLoginServerResponse extends ServerResponse {
     private User user;
+
     public ActionLoginServerResponse(User user) {
       super(ServerResponseStatuses.OK, "");
       this.user = user;

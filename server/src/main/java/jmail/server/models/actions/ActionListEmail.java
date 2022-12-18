@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.helpers.SystemIOHelper;
@@ -72,7 +71,6 @@ public class ActionListEmail implements ActionCommand {
     return Long.getLong(name.substring(last_ + 1));
   }
 
-
   @Getter
   @Setter
   public class ActionListEmailServerResponse extends ServerResponse {
@@ -83,5 +81,4 @@ public class ActionListEmail implements ActionCommand {
       this.emails = emails;
     }
   }
-
 }

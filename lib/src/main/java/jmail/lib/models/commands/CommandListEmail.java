@@ -18,6 +18,5 @@ public class CommandListEmail extends Command {
     return (CommandListEmailParameter) super.getParameter();
   }
 
-  public record CommandListEmailParameter(Long lastUnixTimeCheck)
-      implements CommandParameters {}
+  public record CommandListEmailParameter(Long lastUnixTimeCheck) implements CommandParameters {}
 }

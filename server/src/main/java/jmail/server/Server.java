@@ -33,7 +33,7 @@ public class Server extends Thread {
     try {
       internalServerSocket = new ServerSocket(port);
       SystemIOHelper.createBaseFoldersIfNotExists();
-      
+
     } catch (IOException e) {
       LOGGER.error("SocketServer exception on starting: " + e.getLocalizedMessage());
       e.printStackTrace();
