@@ -58,7 +58,7 @@ public class ActionListEmail implements ActionCommand {
         }
       }
     }
-    mails.sort(Comparator.comparing(Email::date));
+    mails.sort(Comparator.comparing(Email::getDate));
 
     userLock.unlock();
     handler.removeLock(userEmail);

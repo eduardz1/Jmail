@@ -34,7 +34,7 @@ public class ActionLogin implements ActionCommand {
     private User user;
 
     public ActionLoginServerResponse(User user) {
-      super(ServerResponseStatuses.OK, "");
+      super(ServerResponseStatuses.OK, "Login successful");
       this.user = user;
     }
   }

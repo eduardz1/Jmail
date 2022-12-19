@@ -31,7 +31,7 @@ public class ActionSendEmail implements ActionCommand {
     var email = params.email();
 
     var areAllRecipientsValid =
-        email.recipients().stream()
+        email.getRecipients().stream()
             .allMatch(
                 user -> {
                   if (!SystemIOHelper.userExists(user)) {
@@ -65,7 +65,7 @@ public class ActionSendEmail implements ActionCommand {
     }
 
     // All recs valid, send email
-    for (String receiver : email.recipients()) {
+    for (String receiver : email.getRecipients()) {
       var receiverLock = handler.getWriteLock(receiver);
       try {
         receiverLock.lock();

@@ -1,9 +1,14 @@
 package jmail.client.controllers;
 
 import com.google.common.hash.Hashing;
+
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -18,6 +23,8 @@ import jmail.lib.models.commands.CommandLogin;
 
 public class FXMLLogin implements Initializable {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(FXMLLogin.class.getName());
+
   @FXML private TextField UsernameField;
   @FXML private PasswordField PasswordField;
   @FXML private Button LoginButton;
@@ -31,9 +38,12 @@ public class FXMLLogin implements Initializable {
   public void buttonLogin(javafx.event.ActionEvent e) {
 
     var username = UsernameField.getText();
-    var hashed =
-        Hashing.sha256().hashString(PasswordField.getText(), StandardCharsets.UTF_8).toString();
-    var command = new CommandLogin(new CommandLogin.CommandLoginParameter(username, hashed));
+    var hashed = Hashing
+      .sha256()
+      .hashString(PasswordField.getText(), StandardCharsets.UTF_8)
+      .toString();
+    var params = new CommandLogin.CommandLoginParameter(username, hashed);
+    var command = new CommandLogin(params);
     command.setUserEmail(username);
 
     MailClient.getInstance()
@@ -43,11 +53,10 @@ public class FXMLLogin implements Initializable {
               if (response.getStatus().equals(ServerResponseStatuses.OK)) {
                 var resp = (LoginResponse) response;
                 DataModel.getInstance().setCurrentUser(resp.getUser());
-                System.out.println("Login successful"); // TODO: use LOGGER here
                 Main.changeScene("client.fxml");
-              } else {
-                System.out.println("Login failed");
               }
+
+              LOGGER.info(response.getMessage());
             },
             LoginResponse.class);
   }

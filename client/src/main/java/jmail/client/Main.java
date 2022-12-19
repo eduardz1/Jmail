@@ -23,6 +23,10 @@ public class Main extends Application {
   }
 
   public static void changeScene(String fxml) {
+    Platform.runLater(() -> changeSceneImpl(fxml));
+  }
+
+  private static void changeSceneImpl(String fxml) {
     Parent pane = null;
     try {
       pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxml)));

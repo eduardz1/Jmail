@@ -38,10 +38,17 @@ class ServerTest {
     emme.setSurname("Developer");
     emme.setPasswordSHA256(Hashing.sha256().hashString("emme", StandardCharsets.UTF_8).toString());
 
+    var mario = new User();
+    mario.setEmail("mario@yahoo.it");
+    mario.setName("Mario");
+    mario.setSurname("Oiram");
+    mario.setPasswordSHA256(Hashing.sha256().hashString("mario", StandardCharsets.UTF_8).toString());
+
     save(edu1);
     save(edu2);
     save(fratta);
     save(emme);
+    save(mario);
   }
 
   public void save(User user) { // FIXME: dont know if it's the best way to do it
