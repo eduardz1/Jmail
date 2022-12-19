@@ -23,6 +23,7 @@ public class Main extends Application {
   }
 
   public static void changeScene(String fxml) {
+
     Platform.runLater(() -> changeSceneImpl(fxml));
   }
 
@@ -35,6 +36,9 @@ public class Main extends Application {
     }
     primaryStage.getScene().setRoot(pane);
     primaryStage.sizeToScene();
+    primaryStage.setResizable(
+        true); // FIXME: setting has no effect, I'm missing something don't know what, maybe
+    // primaryStage needs to be unshown and shown again
   }
 
   public String getGreeting() {
@@ -46,6 +50,7 @@ public class Main extends Application {
     Main.primaryStage = primaryStage;
 
     FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
+
     Parent root = loader.load();
 
     Scene scene = new Scene(root);
@@ -62,6 +67,7 @@ public class Main extends Application {
           StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
         });
 
+    primaryStage.setResizable(false);
     primaryStage.show();
   }
 }

@@ -844,19 +844,6 @@
   border-radius: 0;
 }
 
-/* VirtualizedScrollPane */
-.virtualized-scroll-pane {
-  -fx-background-color: #1a1a1a;
-  background-color: #1a1a1a;
-  -fx-background-radius: 0;
-  -fx-border-color: #222222;
-  border-color: #222222;
-  -fx-border-width: 1;
-  border-width: 1;
-  -fx-border-radius: 0;
-  border-radius: 0;
-}
-
 /* CodeArea */
 .code-area {
   -fx-background-color: #202020;
@@ -870,11 +857,6 @@
   border-radius: 0;
   -fx-text-fill: #afb1b3;
 }
-
-/* .code-area:focused{
-    -fx-border-color: #4e4e4e;
-    border-color: #4e4e4e;
-} */
 
 /*  ****************************************************
     *                                                  *
