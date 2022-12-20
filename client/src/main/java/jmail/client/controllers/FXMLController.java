@@ -2,10 +2,14 @@ package jmail.client.controllers;
 
 import java.net.URL;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.UUID;
 
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +18,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart.Data;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import jmail.client.models.client.MailClient;
 import jmail.client.models.model.DataModel;
 import jmail.client.models.responses.DeleteMailResponse;
@@ -28,20 +34,47 @@ public class FXMLController implements Initializable {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(FXMLController.class.getName());
 
-  @FXML private Button NewMailButton;
+  @FXML private Button newMailButton;
 
   //  public void initializeData(MailClient client) {
   //    this.client = client;
   //  }
-  @FXML private Button SearchButton;
-  @FXML private Button ReplyButton;
-  @FXML private Button FwdButton;
-  @FXML private Button FwdallButton;
-  @FXML private Button TrashButton;
+  @FXML private Button searchButton;
+  @FXML private Button replyButton;
+  @FXML private Button forwardButton;
+  @FXML private Button forwardAllButton;
+  @FXML private Button trashButton;
+  @FXML private TextField searchField;
+  @FXML private Label currentMailField;
+  @FXML private Label currentUserEmail;
+
+  private Set<String> suggestions = new HashSet<String>();
+  private AutoCompletionBinding<String> autoCompletionBinding;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    // TODO: Auto-generated method stub
+    autoCompletionBinding = TextFields.bindAutoCompletion(searchField, suggestions);
+    
+    searchField.setOnKeyPressed(
+        e -> {
+          if (e.getCode() == javafx.scene.input.KeyCode.ENTER) {
+            LOGGER.info("SearchField: {}", searchField.getText().trim());
+            // buttonSearch(e); TODO: implement
+            learnWord(searchField.getText().trim());
+          }
+        });
+
+    currentMailField.textProperty().bind(DataModel.getInstance().getCurrentEmailProperty().map(e -> e == null ? "" : e.getSubject()));
+    currentUserEmail.textProperty().bind(DataModel.getInstance().getCurrentUserProperty().map(u -> u == null ? "" : u.getEmail()));
+  }
+
+  private void learnWord(String trim) {
+    suggestions.add(trim);
+    if (autoCompletionBinding != null) {
+      autoCompletionBinding.dispose();
+    }
+    autoCompletionBinding = TextFields.bindAutoCompletion(searchField, suggestions);
+    autoCompletionBinding.getAutoCompletionPopup().prefWidthProperty().bind(searchField.widthProperty());
   }
 
   @FXML

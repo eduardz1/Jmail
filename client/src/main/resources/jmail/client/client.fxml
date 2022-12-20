@@ -5,145 +5,92 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import org.controlsfx.control.textfield.CustomTextField?>
+<?import javafx.scene.layout.HBox?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<SplitPane dividerPositions="0.224, 0.5" minHeight="768.0"
-    minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0"
-    snapToPixel="false"
-    stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css"
-    xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-    fx:controller="jmail.client.controllers.FXMLController">
+<SplitPane dividerPositions="0.224, 0.5" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" snapToPixel="false" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jmail.client.controllers.FXMLController">
     <items>
-        <AnchorPane minHeight="0.0" minWidth="200.0"
-            prefHeight="554.0" prefWidth="300.0"
-            stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css">
+        <AnchorPane minHeight="0.0" minWidth="200.0" prefHeight="554.0" prefWidth="300.0" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css">
             <children>
-                <ButtonBar layoutX="6.0" layoutY="36.0" minWidth="212.0"
-                    prefHeight="25.0" prefWidth="212.0" AnchorPane.leftAnchor="6.0"
-                    AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="36.0">
+                <ButtonBar buttonMinWidth="48.0" layoutX="145.0" layoutY="34.0" minWidth="48.0" prefHeight="25.0" prefWidth="69.0" AnchorPane.leftAnchor="145.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="34.0">
                     <buttons>
-                        <Button fx:id="NewMailButton" minWidth="48.0"
-                            mnemonicParsing="false" onAction="#buttonNewMail"
-                            prefHeight="48.0" prefWidth="48.0"
-                            style="-fx-border-radius: 15; -fx-background-radius: 15;">
+                        <Button fx:id="newMailButton" minWidth="48.0" mnemonicParsing="false" onAction="#buttonNewMail" prefHeight="48.0" prefWidth="48.0" style="-fx-border-radius: 15; -fx-background-radius: 15;">
                             <graphic>
-                                <FontIcon iconColor="#afb1b3"
-                                    iconLiteral="mdi2e-email-plus" iconSize="20" />
+                                <FontIcon iconColor="#afb1b3" iconLiteral="mdi2e-email-plus" iconSize="20" />
                             </graphic>
                         </Button>
                     </buttons>
                 </ButtonBar>
-                <ScrollPane fitToHeight="true" fitToWidth="true"
-                    hbarPolicy="NEVER" layoutX="4.0" layoutY="67.0" prefHeight="489.0"
-                    prefWidth="163.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="3.0"
-                    AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="3.0"
-                    AnchorPane.topAnchor="67.0">
+                <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="4.0" layoutY="67.0" prefHeight="489.0" prefWidth="163.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="67.0">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="200.0"
-                            prefHeight="200.0" prefWidth="200.0" />
+                        <AnchorPane minHeight="0.0" minWidth="200.0" prefHeight="200.0" prefWidth="200.0" />
                     </content>
                 </ScrollPane>
+                <Label fx:id="currentUserEmail" alignment="CENTER" layoutX="53.0" layoutY="2.0" prefHeight="25.0" prefWidth="122.0" />
             </children>
         </AnchorPane>
-        <AnchorPane minHeight="0.0" minWidth="200.0"
-            prefHeight="555.0" prefWidth="213.0">
+        <AnchorPane minHeight="0.0" minWidth="200.0" prefHeight="555.0" prefWidth="213.0">
             <children>
-                <Label alignment="CENTER" layoutX="80.0" layoutY="2.0"
-                    prefHeight="25.0" prefWidth="122.0" text="Entrata - Jmail"
-                    AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="2.0" />
-                <ButtonBar layoutX="183.0" layoutY="35.0"
-                    prefHeight="25.0" prefWidth="85.0" AnchorPane.rightAnchor="14.0"
-                    AnchorPane.topAnchor="35.0">
+                <Label alignment="CENTER" layoutX="80.0" layoutY="2.0" prefHeight="25.0" prefWidth="122.0" text="Entrata - Jmail" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="2.0" />
+                <ButtonBar buttonMinWidth="48.0" layoutX="159.0" layoutY="24.0" prefHeight="48.0" prefWidth="48.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="24.0">
                     <buttons>
-                        <Button fx:id="SearchButton" minWidth="48.0"
-                            mnemonicParsing="false" onAction="#buttonSearch"
-                            prefHeight="48.0" prefWidth="48.0"
-                            style="-fx-background-radius: 15; -fx-border-radius: 15;">
+                        <Button fx:id="searchButton" minWidth="48.0" mnemonicParsing="false" onAction="#buttonSearch" prefHeight="48.0" prefWidth="48.0" style="-fx-background-radius: 15; -fx-border-radius: 15;">
                             <graphic>
-                                <FontIcon iconColor="#afb1b3"
-                                    iconLiteral="mdi2m-magnify" iconSize="20" />
+                                <FontIcon iconColor="#afb1b3" iconLiteral="mdi2m-magnify" iconSize="20" />
                             </graphic>
                         </Button>
                     </buttons>
                 </ButtonBar>
-                <ScrollPane fitToHeight="true" fitToWidth="true"
-                    hbarPolicy="NEVER" layoutX="5.0" layoutY="66.0" prefHeight="489.0"
-                    prefWidth="200.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="4.0"
-                    AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="4.0"
-                    AnchorPane.topAnchor="66.0">
+                <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="5.0" layoutY="66.0" prefHeight="489.0" prefWidth="200.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="66.0">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0"
-                            prefHeight="200.0" prefWidth="200.0" />
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
                     </content>
                 </ScrollPane>
-                <CustomTextField layoutX="14.0" layoutY="35.0"
-                    prefWidth="175.0" promptText="search" />
+            <HBox layoutX="5.0" layoutY="36.0" prefHeight="25.0" prefWidth="210.0">
+               <children>
+                      <TextField fx:id="searchField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="23.0" prefHeight="23.0" prefWidth="211.0" promptText="search" />
+               </children>
+            </HBox>
             </children>
         </AnchorPane>
-        <AnchorPane minHeight="0.0" minWidth="365.0"
-            prefHeight="554.0" prefWidth="350.0">
+        <AnchorPane minHeight="0.0" minWidth="365.0" prefHeight="554.0" prefWidth="350.0">
             <children>
-                <ButtonBar buttonMinWidth="48.0" layoutX="14.0"
-                    layoutY="35.0" prefHeight="25.0" prefWidth="180.0"
-                    AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="35.0">
+                <ButtonBar buttonMinWidth="48.0" layoutX="14.0" layoutY="35.0" prefHeight="25.0" prefWidth="180.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="35.0">
                     <buttons>
-                        <Button fx:id="ReplyButton" layoutY="14.0" minWidth="21.0"
-                            mnemonicParsing="false" onAction="#buttonReply" prefHeight="21.0"
-                            prefWidth="64.0"
-                            style="-fx-background-radius: 15; -fx-border-radius: 15;">
+                        <Button fx:id="replyButton" layoutY="14.0" minWidth="21.0" mnemonicParsing="false" onAction="#buttonReply" prefHeight="21.0" prefWidth="64.0" style="-fx-background-radius: 15; -fx-border-radius: 15;">
                             <graphic>
-                                <FontIcon iconColor="#afb1b3" iconLiteral="mdi2r-reply"
-                                    iconSize="20" />
+                                <FontIcon iconColor="#afb1b3" iconLiteral="mdi2r-reply" iconSize="20" />
                             </graphic>
                         </Button>
-                        <Button fx:id="FwdButton" layoutY="14.0" minWidth="21.0"
-                            mnemonicParsing="false" onAction="#buttonFwd" prefHeight="21.0"
-                            prefWidth="64.0"
-                            style="-fx-background-radius: 15; -fx-border-radius: 15;">
+                        <Button fx:id="forwardButton" layoutY="14.0" minWidth="21.0" mnemonicParsing="false" onAction="#buttonFwd" prefHeight="21.0" prefWidth="64.0" style="-fx-background-radius: 15; -fx-border-radius: 15;">
                             <graphic>
-                                <FontIcon iconColor="#afb1b3" iconLiteral="mdi2s-share"
-                                    iconSize="20" />
+                                <FontIcon iconColor="#afb1b3" iconLiteral="mdi2s-share" iconSize="20" />
                             </graphic>
                         </Button>
-                        <Button fx:id="FwdallButton" layoutY="14.0" minWidth="21.0"
-                            mnemonicParsing="false" onAction="#buttonFwdall"
-                            prefHeight="21.0" prefWidth="64.0"
-                            style="-fx-background-radius: 15; -fx-border-radius: 15;">
+                        <Button fx:id="forwardAllButton" layoutY="14.0" minWidth="21.0" mnemonicParsing="false" onAction="#buttonFwdall" prefHeight="21.0" prefWidth="64.0" style="-fx-background-radius: 15; -fx-border-radius: 15;">
                             <graphic>
-                                <FontIcon iconColor="#afb1b3"
-                                    iconLiteral="mdi2s-share-all" iconSize="20" />
+                                <FontIcon iconColor="#afb1b3" iconLiteral="mdi2s-share-all" iconSize="20" />
                             </graphic>
                         </Button>
                     </buttons>
                 </ButtonBar>
-                <ScrollPane fitToHeight="true" fitToWidth="true"
-                    hbarPolicy="NEVER" layoutX="5.0" layoutY="66.0" prefHeight="489.0"
-                    prefWidth="365.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="4.0"
-                    AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="9.0"
-                    AnchorPane.topAnchor="66.0">
+                <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="5.0" layoutY="66.0" prefHeight="489.0" prefWidth="365.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="66.0">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0"
-                            prefHeight="200.0" prefWidth="200.0" />
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
                     </content>
                 </ScrollPane>
-                <ButtonBar buttonMinWidth="48.0" layoutX="397.0"
-                    layoutY="8.0" prefHeight="25.0" prefWidth="99.0"
-                    AnchorPane.leftAnchor="397.0" AnchorPane.rightAnchor="14.0"
-                    AnchorPane.topAnchor="35.0">
+                <ButtonBar buttonMinWidth="48.0" layoutX="397.0" layoutY="8.0" prefHeight="25.0" prefWidth="99.0" AnchorPane.leftAnchor="397.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="35.0">
                     <buttons>
-                        <Button fx:id="TrashButton" accessibleHelp="trash"
-                            accessibleText="trash" graphicTextGap="0.0" minWidth="48.0"
-                            mnemonicParsing="false" onAction="#buttonTrash" prefHeight="48.0"
-                            style="-fx-background-radius: 15; -fx-border-radius: 15;">
+                        <Button fx:id="trashButton" accessibleHelp="trash" accessibleText="trash" graphicTextGap="0.0" minWidth="48.0" mnemonicParsing="false" onAction="#buttonTrash" prefHeight="48.0" style="-fx-background-radius: 15; -fx-border-radius: 15;">
                             <graphic>
-                                <FontIcon iconColor="#afb1b3"
-                                    iconLiteral="mdi2t-trash-can" iconSize="20" />
+                                <FontIcon iconColor="#afb1b3" iconLiteral="mdi2t-trash-can" iconSize="20" />
                             </graphic>
                         </Button>
                     </buttons>
                 </ButtonBar>
+                <Label fx:id="currentMailField" alignment="CENTER" layoutX="36.0" layoutY="6.0" prefHeight="17.0" prefWidth="454.0" />
             </children>
         </AnchorPane>
     </items>
