@@ -17,7 +17,7 @@ public class Main extends Application {
 
   private static Stage primaryStage;
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
     MailClient.getInstance().connect("localhost", 8085); // FIXME: hardcoded
     launch(args);
   }
@@ -28,7 +28,7 @@ public class Main extends Application {
   }
 
   private static void changeSceneImpl(String fxml) {
-    Parent pane = null;
+    Parent pane;
     try {
       pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxml)));
     } catch (IOException e) {

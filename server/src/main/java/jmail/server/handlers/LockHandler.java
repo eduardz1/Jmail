@@ -51,6 +51,6 @@ public class LockHandler {
   }
 
   private static class CountableLock extends ReentrantReadWriteLock {
-    public AtomicInteger occurences = new AtomicInteger();
+    public final AtomicInteger occurences = new AtomicInteger();
   }
 }

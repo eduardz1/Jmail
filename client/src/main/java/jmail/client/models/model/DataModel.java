@@ -37,8 +37,15 @@ public class DataModel {
     serverStatusConnected = new SimpleBooleanProperty();
 
     // FIXME: remove
-    currentEmail.set(new Email(java.util.UUID.randomUUID().toString(), "Oggetto prova", 
-    "Buongiorno,\nAvrebbe due minuti per parlare del Nostro signore?", "mario@yahoo.it", List.of("emmedeveloper@gmail.com"), java.util.Calendar.getInstance().getTime(), false));
+    currentEmail.set(
+        new Email(
+            java.util.UUID.randomUUID().toString(),
+            "Oggetto prova",
+            "Buongiorno,\nAvrebbe due minuti per parlare del Nostro signore?",
+            "mario@yahoo.it",
+            List.of("emmedeveloper@gmail.com"),
+            java.util.Calendar.getInstance().getTime(),
+            false));
   }
 
   public static DataModel getInstance() {
@@ -115,15 +122,9 @@ public class DataModel {
 
   public void removeCurrentEmail() {
     switch (currentFolder.get()) {
-      case "inbox":
-        inbox.remove(currentEmail.get());
-        break;
-      case "sent":
-        sent.remove(currentEmail.get());
-        break;
-      case "trash":
-        trash.remove(currentEmail.get());
-        break;
+      case "inbox" -> inbox.remove(currentEmail.get());
+      case "sent" -> sent.remove(currentEmail.get());
+      case "trash" -> trash.remove(currentEmail.get());
     }
     currentEmail.set(null);
   }

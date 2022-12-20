@@ -7,11 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DeleteMailResponse extends ServerResponse {
-    
-    public DeleteMailResponse() { super(); }
-    
-    public DeleteMailResponse(String status, String message) {
-        super(status, message);
-    }
-    
+
+  public DeleteMailResponse() {
+    super();
+  }
+
+  public DeleteMailResponse(String status, String message) {
+    super(status, message);
+  }
 }

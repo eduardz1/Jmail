@@ -1,14 +1,9 @@
 package jmail.client.controllers;
 
 import com.google.common.hash.Hashing;
-
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -20,6 +15,8 @@ import jmail.client.models.model.DataModel;
 import jmail.client.models.responses.LoginResponse;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.models.commands.CommandLogin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FXMLLogin implements Initializable {
 
@@ -38,10 +35,8 @@ public class FXMLLogin implements Initializable {
   public void buttonLogin(javafx.event.ActionEvent e) {
 
     var username = UsernameField.getText();
-    var hashed = Hashing
-      .sha256()
-      .hashString(PasswordField.getText(), StandardCharsets.UTF_8)
-      .toString();
+    var hashed =
+        Hashing.sha256().hashString(PasswordField.getText(), StandardCharsets.UTF_8).toString();
     var params = new CommandLogin.CommandLoginParameter(username, hashed);
     var command = new CommandLogin(params);
     command.setUserEmail(username);

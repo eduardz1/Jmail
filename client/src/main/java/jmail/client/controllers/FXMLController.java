@@ -7,28 +7,23 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.UUID;
-
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.PieChart.Data;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import jmail.client.models.client.MailClient;
 import jmail.client.models.model.DataModel;
 import jmail.client.models.responses.DeleteMailResponse;
+import jmail.lib.autocompletion.textfield.AutoCompletionBinding;
+import jmail.lib.autocompletion.textfield.TextFields;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.models.Email;
 import jmail.lib.models.commands.CommandDeleteEmail;
 import jmail.lib.models.commands.CommandDeleteEmail.CommandDeleteEmailParameter;
-import jmail.lib.models.commands.CommandSendEmail;
-import jmail.lib.models.commands.CommandSendEmail.CommandSendEmailParameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FXMLController implements Initializable {
 
@@ -48,13 +43,13 @@ public class FXMLController implements Initializable {
   @FXML private Label currentMailField;
   @FXML private Label currentUserEmail;
 
-  private Set<String> suggestions = new HashSet<String>();
+  private final Set<String> suggestions = new HashSet<>();
   private AutoCompletionBinding<String> autoCompletionBinding;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     autoCompletionBinding = TextFields.bindAutoCompletion(searchField, suggestions);
-    
+
     searchField.setOnKeyPressed(
         e -> {
           if (e.getCode() == javafx.scene.input.KeyCode.ENTER) {
@@ -64,8 +59,18 @@ public class FXMLController implements Initializable {
           }
         });
 
-    currentMailField.textProperty().bind(DataModel.getInstance().getCurrentEmailProperty().map(e -> e == null ? "" : e.getSubject()));
-    currentUserEmail.textProperty().bind(DataModel.getInstance().getCurrentUserProperty().map(u -> u == null ? "" : u.getEmail()));
+    currentMailField
+        .textProperty()
+        .bind(
+            DataModel.getInstance()
+                .getCurrentEmailProperty()
+                .map(e -> e == null ? "" : e.getSubject()));
+    currentUserEmail
+        .textProperty()
+        .bind(
+            DataModel.getInstance()
+                .getCurrentUserProperty()
+                .map(u -> u == null ? "" : u.getEmail()));
   }
 
   private void learnWord(String trim) {
@@ -74,19 +79,23 @@ public class FXMLController implements Initializable {
       autoCompletionBinding.dispose();
     }
     autoCompletionBinding = TextFields.bindAutoCompletion(searchField, suggestions);
-    autoCompletionBinding.getAutoCompletionPopup().prefWidthProperty().bind(searchField.widthProperty());
+    autoCompletionBinding
+        .getAutoCompletionPopup()
+        .prefWidthProperty()
+        .bind(searchField.widthProperty());
   }
 
   @FXML
   public void buttonNewMail(ActionEvent e) {
-    var newEmail = new Email(
-        UUID.randomUUID().toString(),
-        null,
-        null,
-        DataModel.getInstance().getCurrentUser().getEmail(),
-        List.of(),
-        Calendar.getInstance().getTime(),
-        false);
+    var newEmail =
+        new Email(
+            UUID.randomUUID().toString(),
+            null,
+            null,
+            DataModel.getInstance().getCurrentUser().getEmail(),
+            List.of(),
+            Calendar.getInstance().getTime(),
+            false);
 
     DataModel.getInstance().setCurrentEmail(newEmail);
     LOGGER.info("NewMailButton: {}", newEmail);
@@ -112,7 +121,7 @@ public class FXMLController implements Initializable {
             List.of(email.getSender()),
             today.getTime(),
             false);
-    
+
     DataModel.getInstance().setCurrentEmail(newEmail);
     LOGGER.info("ReplyButton: {}", newEmail);
   }
@@ -134,8 +143,8 @@ public class FXMLController implements Initializable {
             today.getTime(),
             false);
 
-            DataModel.getInstance().setCurrentEmail(newEmail);
-            LOGGER.info("FwdButton: {}", newEmail);
+    DataModel.getInstance().setCurrentEmail(newEmail);
+    LOGGER.info("FwdButton: {}", newEmail);
   }
 
   @FXML
@@ -150,12 +159,14 @@ public class FXMLController implements Initializable {
     var command = new CommandDeleteEmail(params);
 
     MailClient.getInstance()
-        .sendCommand(command, response -> {
-          if (response.getStatus().equals(ServerResponseStatuses.OK))  {
-            DataModel.getInstance().removeCurrentEmail();
-          }
-          LOGGER.info("DeleteMailResponse: {}", response);
-        }, DeleteMailResponse.class);
+        .sendCommand(
+            command,
+            response -> {
+              if (response.getStatus().equals(ServerResponseStatuses.OK)) {
+                DataModel.getInstance().removeCurrentEmail();
+              }
+              LOGGER.info("DeleteMailResponse: {}", response);
+            },
+            DeleteMailResponse.class);
   }
-
 }

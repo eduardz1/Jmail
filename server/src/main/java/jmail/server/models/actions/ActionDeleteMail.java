@@ -1,7 +1,6 @@
 package jmail.server.models.actions;
 
 import java.io.IOException;
-
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.ServerResponse;

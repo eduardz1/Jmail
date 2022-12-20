@@ -23,9 +23,9 @@ dependencies {
 
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.0'
 
-    implementation ('org.controlsfx:controlsfx:11.1.2') {
-        because 'text auto-completion for search field'
-    }
+    // implementation ('org.controlsfx:controlsfx:11.1.2') {
+    //     because 'text auto-completion for search field'
+    // }
 
     implementation 'org.kordamp.ikonli:ikonli-materialdesign2-pack:12.3.1' // cheat-sheet here https://kordamp.org/ikonli/cheat-sheet-materialdesign2.html
     implementation('org.kordamp.ikonli:ikonli-javafx:12.3.1' ) {
@@ -41,7 +41,10 @@ dependencies {
 
 application {
     mainClass = 'jmail.client.Main'
-    applicationDefaultJvmArgs = ['--add-opens=javafx.controls/javafx.scene.control=ALL-UNNAMED', '--add-exports=javafx.base/com.sun.javafx.event=ALL-UNNAMED']
+    applicationDefaultJvmArgs = [
+        '--add-opens=javafx.controls/javafx.scene.control=ALL-UNNAMED',
+        '--add-exports=javafx.base/com.sun.javafx.event=ALL-UNNAMED'
+    ]
 }
 
 javafx {

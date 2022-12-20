@@ -22,7 +22,7 @@ public class ClientHandler implements Runnable {
   private BufferedReader reader;
   private PrintWriter writer;
 
-  public ClientHandler(Socket clientSocket) throws IOException {
+  public ClientHandler(Socket clientSocket) {
     internalSocket = clientSocket;
   }
 

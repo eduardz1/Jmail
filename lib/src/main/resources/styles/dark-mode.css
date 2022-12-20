@@ -869,11 +869,12 @@
   border-color: #222222;
 }
 
-/* .auto-complete-popup .list-view {
+.auto-complete-popup .list-view {
   -fx-background-insets: 0 0 0 0, 0 0 0 0;
+  -fx-effect: null;
 }
 
-.auto-complete-popup .list-view .virtual-flow .clipped-container .sheet .list-cell {
+/* .auto-complete-popup .list-view .virtual-flow .clipped-container .sheet .list-cell {
   -fx-background-color: #1a1a1a;
   background-color: #1a1a1a;
   -fx-text-fill: #afb1b3;

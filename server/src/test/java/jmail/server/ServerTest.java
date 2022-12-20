@@ -42,7 +42,8 @@ class ServerTest {
     mario.setEmail("mario@yahoo.it");
     mario.setName("Mario");
     mario.setSurname("Oiram");
-    mario.setPasswordSHA256(Hashing.sha256().hashString("mario", StandardCharsets.UTF_8).toString());
+    mario.setPasswordSHA256(
+        Hashing.sha256().hashString("mario", StandardCharsets.UTF_8).toString());
 
     save(edu1);
     save(edu2);
