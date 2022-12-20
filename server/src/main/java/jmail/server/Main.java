@@ -2,9 +2,6 @@ package jmail.server;
 
 import io.github.mimoguz.custom_window.DwmAttribute;
 import io.github.mimoguz.custom_window.StageOps;
-import java.io.IOException;
-import java.util.Objects;
-import java.util.Properties;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -12,10 +9,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import jmail.lib.logger.ObservableStreamAppender;
 import jmail.server.controllers.FXMLMainController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.Objects;
+import java.util.Properties;
 
 public class Main extends Application {
 
@@ -39,9 +39,6 @@ public class Main extends Application {
     Parent root = loader.load();
 
     FXMLMainController mainController = loader.getController();
-
-    ObservableStreamAppender.getObservable()
-        .addListener((observable, oldValue, newValue) -> mainController.setTopText(newValue));
     Scene newScene = new Scene(root);
 
     primaryStage.setScene(newScene);

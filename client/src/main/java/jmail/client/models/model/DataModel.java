@@ -1,17 +1,18 @@
 package jmail.client.models.model;
 
-import java.util.List;
-import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.beans.value.ObservableStringValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import jmail.lib.models.Email;
 import jmail.lib.models.User;
+
+import java.util.List;
 
 public class DataModel {
 
@@ -104,7 +105,7 @@ public class DataModel {
   }
 
   // get server status connected observable
-  public Observable serverStatusConnected() {
+  public ObservableBooleanValue serverStatusConnected() {
     return serverStatusConnected;
   }
 

@@ -1,5 +1,13 @@
 package jmail.server.controllers;
 
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import jmail.lib.logger.ObservableStreamAppender;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.model.StyleSpans;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
+
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,11 +15,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.model.StyleSpans;
-import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 public class FXMLMainController implements Initializable {
 
@@ -94,17 +97,17 @@ public class FXMLMainController implements Initializable {
               + ")");
   @FXML private CodeArea codeArea;
 
-  public void setTopText(String text) {
-    // set text from another class
-    codeArea.appendText("\n" + text);
-  }
-
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     codeArea
         .richChanges()
         .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
         .subscribe(change -> codeArea.setStyleSpans(0, computeHighlighting(codeArea.getText())));
+
+    ObservableStreamAppender.getObservable()
+            .addListener((observable, oldValue, newValue) -> {
+              Platform.runLater(() -> codeArea.appendText(newValue + '\n'));
+            });
   }
 
   private StyleSpans<Collection<String>> computeHighlighting(String text) {

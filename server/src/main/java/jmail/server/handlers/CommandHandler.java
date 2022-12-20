@@ -1,26 +1,24 @@
 package jmail.server.handlers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import java.io.PrintWriter;
-import java.util.Map;
 import jmail.lib.constants.CommandActions;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.models.ServerResponse;
-import jmail.lib.models.commands.Command;
-import jmail.lib.models.commands.CommandDeleteEmail;
-import jmail.lib.models.commands.CommandReadEmail;
-import jmail.lib.models.commands.CommandSendEmail;
+import jmail.lib.models.commands.*;
 import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.factory.ActionCommandFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.PrintWriter;
+import java.util.Map;
 
 public class CommandHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CommandHandler.class.getName());
   private final Command internalCommand;
   private final PrintWriter
-      writer; // TODO Cambiare assolutamente con qualcosa di meno specifico per gestire le risposte
+          writer; // TODO Cambiare assolutamente con qualcosa di meno specifico per gestire le risposte
   // da inviare al client
 
   /* For reference, in case we need to change signature of the methods:
@@ -30,12 +28,15 @@ public class CommandHandler {
    *   1     |  Supplier     Function
    */
   private final Map<String, Runnable> commandMap =
-      Map.of(
-          CommandActions.SEND, this::sendEmail,
-          CommandActions.LIST, this::listEmails,
-          CommandActions.READ, this::markEmailAsRead,
-          CommandActions.DELETE, this::deleteEmail,
-          CommandActions.LOGIN, this::login);
+          Map.of(
+                  CommandActions.SEND, this::sendEmail,
+                  CommandActions.LIST, this::listEmails,
+                  CommandActions.READ, this::markEmailAsRead,
+                  CommandActions.DELETE, this::deleteEmail,
+                  CommandActions.LOGIN, this::login, 
+                  CommandActions.RESTORE, this::restoreEmail,
+                  CommandActions.PING, this::sendOk
+          );
 
   public CommandHandler(Command cmd, PrintWriter writer) {
     internalCommand = cmd;
@@ -67,6 +68,25 @@ public class CommandHandler {
     } catch (JsonProcessingException ex) {
       LOGGER.error("Cannot serialize server response: " + ex.getLocalizedMessage());
       writer.println("{\"status\": \"error\", \"message\":\"Unable to get response from server\"}");
+    }
+  }
+
+  private void restoreEmail() {
+    var restoreCmd = (CommandRestoreEmail) internalCommand;
+    var param = restoreCmd.getParameter();
+
+    try {
+      if (param == null || param.emailID() == null || param.emailID().isEmpty()) {
+        throw new IllegalArgumentException("Command restore: email id cannot be null or empty");
+      }
+      var action = ActionCommandFactory.getActionCommand(internalCommand);
+      action.execute();
+      sendOk();
+    } catch (ActionExecutionException ex) {
+      System.out.println(ex.getInnerMessage());
+      var msg = "Cannot execute restore mail action: " + ex.getMessage();
+      LOGGER.error(msg);
+      sendError(msg);
     }
   }
 

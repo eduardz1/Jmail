@@ -8,4 +8,5 @@ public class CommandActions {
   public static final String DELETE = "delete";
   public static final String RESTORE = "restore";
   public static final String LOGIN = "login";
+  public static final String PING = "ping";
 }

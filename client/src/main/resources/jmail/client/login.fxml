@@ -5,7 +5,7 @@
     xmlns="http://javafx.com/javafx"
     fx:controller="jmail.client.controllers.FXMLLogin"
     stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css"
-    prefHeight="100.0" prefWidth="300.0">
+    prefHeight="140.0" prefWidth="300.0">
 
     <Label layoutX="10.0" layoutY="10.0" text="Username" />
     <Label layoutX="10.0" layoutY="40.0" text="Password" />
@@ -15,4 +15,6 @@
         layoutY="40.0" prefWidth="200" />
     <Button fx:id="LoginButton" layoutX="10.0" layoutY="70.0"
         mnemonicParsing="false" text="Login" onAction="#buttonLogin" />
+
+    <Label layoutX="10.0" layoutY="110.0" fx:id="connLbl" text="ok" />
 </AnchorPane>

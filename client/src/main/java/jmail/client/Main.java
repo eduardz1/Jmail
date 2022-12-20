@@ -2,23 +2,32 @@ package jmail.client;
 
 import io.github.mimoguz.custom_window.DwmAttribute;
 import io.github.mimoguz.custom_window.StageOps;
-import java.io.IOException;
-import java.util.Objects;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import jmail.client.models.client.MailClient;
+import jmail.client.models.model.DataModel;
+import jmail.lib.constants.ServerResponseStatuses;
+import jmail.lib.models.ServerResponse;
+import jmail.lib.models.commands.CommandPing;
+
+import java.io.IOException;
+import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Main extends Application {
 
   private static Stage primaryStage;
+  private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
   public static void main(String[] args) throws IOException {
-    MailClient.getInstance().connect("localhost", 8085); // FIXME: hardcoded
     launch(args);
   }
 
@@ -31,6 +40,16 @@ public class Main extends Application {
     }
     primaryStage.getScene().setRoot(pane);
     primaryStage.sizeToScene();
+  }
+
+  public static void tryConnect() {
+    try {
+      MailClient.getInstance().connect("localhost", 8085);      // FIXME: hardcoded
+      System.out.println("Connected");
+    } catch (IOException e) {
+      System.out.println("Failed to connect to server");
+      DataModel.getInstance().setServerStatusConnected(false);
+    }
   }
 
   public String getGreeting() {
@@ -51,13 +70,45 @@ public class Main extends Application {
     primaryStage.setScene(scene);
 
     Platform.runLater(
-        () -> {
-          final var handle = StageOps.findWindowHandle(primaryStage);
-
-          // Forces Dark Mode on Windows11
-          StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
-        });
+            () -> {
+              final var handle = StageOps.findWindowHandle(primaryStage);
+              // Forces Dark Mode on Windows11
+              StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
+              startCheckThread();
+            });
 
     primaryStage.show();
   }
+
+  public static void showNotConnectServerErrorDialog() {
+    // FIXME: Orribile, da correggere con un dialog
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Error");
+    alert.setHeaderText("Server not available");
+    alert.setContentText("Server is currently not available. Please try again later.");
+    alert.showAndWait();
+  }
+
+  public void startCheckThread() {
+    scheduler.scheduleAtFixedRate(
+            () -> sendPingForConnectionCheck()
+            , 5, 15, TimeUnit.SECONDS);
+  }
+
+  public static void sendPingForConnectionCheck() {
+    var pingCmd = new CommandPing();
+    MailClient.getInstance()
+            .sendCommand(
+                    pingCmd,
+                    response -> {
+                      if (response.getStatus().equals(ServerResponseStatuses.OK)) {
+                        DataModel.getInstance().setServerStatusConnected(true);
+                      } else {
+                        tryConnect();
+                      }
+                    },
+                    ServerResponse.class);
+  }
+
+
 }

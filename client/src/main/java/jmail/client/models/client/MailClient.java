@@ -1,18 +1,18 @@
 package jmail.client.models.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jmail.client.models.model.DataModel;
+import jmail.lib.constants.ServerResponseStatuses;
+import jmail.lib.helpers.JsonHelper;
+import jmail.lib.models.ServerResponse;
+import jmail.lib.models.commands.Command;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import jmail.client.models.model.DataModel;
-import jmail.lib.helpers.JsonHelper;
-import jmail.lib.models.ServerResponse;
-import jmail.lib.models.commands.Command;
+import java.util.concurrent.*;
 
 public class MailClient {
   private Socket internalServerSocket;
@@ -30,11 +30,12 @@ public class MailClient {
     threadPool.allowCoreThreadTimeOut(true);
   }
 
-  public void connect(String address, int port) {
+  public void connect(String address, int port) throws IOException {
     try {
       internalServerSocket = new Socket(address, port);
     } catch (Exception e) {
-      syncConnectionState();
+      syncConnectionState(false);
+      throw e;
     }
   }
 
@@ -43,7 +44,7 @@ public class MailClient {
   }
 
   public boolean isConnected() {
-    return internalServerSocket != null && internalServerSocket.isConnected();
+    return internalServerSocket != null && internalServerSocket.isConnected() && !internalServerSocket.isClosed();
   }
 
   public <T extends ServerResponse> void sendCommand(
@@ -61,22 +62,18 @@ public class MailClient {
               var resp = JsonHelper.fromJson(response, responseClass);
               responseFunc.run(resp);
             } catch (JsonProcessingException ex) {
-              System.out.println(
-                  "Error: [Response:'"
-                      + response
-                      + "', Error: '"
-                      + ex.getLocalizedMessage()
-                      + "']");
+              System.out.println("Error parsing response: " + ex.getLocalizedMessage()); // TODO: Show alert to user
+              responseFunc.run(new ServerResponse(ServerResponseStatuses.ERROR, "Error parsing response"));
             }
-          } catch (IOException e) {
-            throw new RuntimeException(e);
+          } catch (Exception e) {
+            responseFunc.run(new ServerResponse(ServerResponseStatuses.ERROR, "Error connecting to server"));
           }
         });
   }
 
-  private void syncConnectionState() {
+  private void syncConnectionState(boolean connected) {
     var data = DataModel.getInstance();
-    data.setServerStatusConnected(this.isConnected());
+    data.setServerStatusConnected(connected);
   }
 
   @FunctionalInterface

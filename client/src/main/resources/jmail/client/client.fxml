@@ -52,6 +52,7 @@
                 <Label layoutX="5.0" layoutY="16.0" prefHeight="25.0"
                     prefWidth="122.0" text="Entrata - Jmail"
                     AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="16.0" />
+                <Label layoutX="10.0" layoutY="16.0" text="Username" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="16.0" />
                 <ButtonBar layoutX="120.0" layoutY="1.0" prefHeight="66.0"
                     prefWidth="75.0" AnchorPane.rightAnchor="5.0"
                     AnchorPane.topAnchor="-5.0">

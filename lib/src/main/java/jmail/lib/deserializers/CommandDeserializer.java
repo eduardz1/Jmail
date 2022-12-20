@@ -1,14 +1,15 @@
 package jmail.lib.deserializers;
 
-import static jmail.lib.constants.CommandActions.*;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import jmail.lib.models.commands.*;
+
+import java.io.IOException;
+
+import static jmail.lib.constants.CommandActions.*;
 
 public class CommandDeserializer extends JsonDeserializer<Command> {
   @Override
@@ -34,6 +35,7 @@ public class CommandDeserializer extends JsonDeserializer<Command> {
                   parameters, CommandRestoreEmail.CommandRestoreEmailParameter.class));
           case LOGIN -> new CommandLogin(
               mapper.treeToValue(parameters, CommandLogin.CommandLoginParameter.class));
+          case PING -> new CommandPing();
           default -> null;
         };
     if (command != null) command.setUserEmail(user);
