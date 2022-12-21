@@ -1,6 +1,5 @@
 package jmail.client.models.model;
 
-import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -12,6 +11,8 @@ import javafx.collections.ObservableList;
 import jmail.lib.models.Email;
 import jmail.lib.models.User;
 
+import java.util.List;
+
 public class DataModel {
 
   private static final DataModel instance = new DataModel();
@@ -22,7 +23,7 @@ public class DataModel {
   private final ObservableList<Email> trash;
 
   private final ObservableList<Email>
-      currentFilteredEmails; // Used for filtering emails to show by search
+      currentFilteredEmails; // Used for filtering emails to show bby search
   private final ObjectProperty<Email> currentEmail;
 
   // TODO: Preferiti, bozze, etichette
@@ -78,6 +79,17 @@ public class DataModel {
 
   public void setCurrentFolder(String folder) {
     currentFolder.set(folder);
+    switch (folder) {
+      case "inbox":
+        currentFilteredEmails.setAll(inbox);
+        break;
+      case "sent":
+        currentFilteredEmails.setAll(sent);
+        break;
+      case "trash":
+        currentFilteredEmails.setAll(trash);
+        break;
+    }
   }
 
   public ObservableList<Email> getInbox() {

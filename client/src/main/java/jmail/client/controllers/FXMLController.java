@@ -1,12 +1,11 @@
 package jmail.client.controllers;
 
-import java.net.URL;
-import java.util.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import jmail.client.models.client.MailClient;
 import jmail.client.models.model.DataModel;
@@ -23,6 +22,9 @@ import jmail.lib.models.commands.CommandListEmail;
 import jmail.lib.models.commands.CommandSendEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.URL;
+import java.util.*;
 
 public class FXMLController implements Initializable {
 
@@ -43,6 +45,11 @@ public class FXMLController implements Initializable {
   @FXML private Label currentMailField;
   @FXML private Label currentUserEmail;
 
+
+  @FXML private ListView listEmails;
+  @FXML private ListView listFolder;
+
+
   private final Set<String> suggestions = new HashSet<>();
   private AutoCompletionBinding<String> autoCompletionBinding;
 
@@ -51,27 +58,39 @@ public class FXMLController implements Initializable {
     autoCompletionBinding = TextFields.bindAutoCompletion(searchField, suggestions);
 
     searchField.setOnKeyPressed(
-        event -> {
-          if (event.getCode() == javafx.scene.input.KeyCode.ENTER) {
-            LOGGER.info("SearchField: {}", searchField.getText().trim());
-            // buttonSearch(e); TODO: implement
-            learnWord(searchField.getText().trim());
-          }
-        });
+            event -> {
+              if (event.getCode() == javafx.scene.input.KeyCode.ENTER) {
+                LOGGER.info("SearchField: {}", searchField.getText().trim());
+                // buttonSearch(e); TODO: implement
+                learnWord(searchField.getText().trim());
+              }
+            });
 
     currentMailField
-        .textProperty()
-        .bind(
-            DataModel.getInstance()
-                .getCurrentEmailProperty()
-                .map(e -> e == null ? "" : e.getSubject()));
+            .textProperty()
+            .bind(
+                    DataModel.getInstance()
+                            .getCurrentEmailProperty()
+                            .map(e -> e == null ? "" : e.getSubject()));
 
     currentUserEmail
-        .textProperty()
-        .bind(
-            DataModel.getInstance()
-                .getCurrentUserProperty()
-                .map(u -> u == null ? "" : u.getEmail()));
+            .textProperty()
+            .bind(
+                    DataModel.getInstance()
+                            .getCurrentUserProperty()
+                            .map(u -> u == null ? "" : u.getEmail()));
+
+    String[] folders = {"Inbox", "Sent", "Trash"};
+    listFolder.getItems().addAll(folders);
+
+    listFolder
+            .getSelectionModel()
+            .selectedItemProperty()
+            .addListener(
+                    (observable, oldValue, newValue) -> {
+                      LOGGER.info("Selected item: {}", newValue);
+                      DataModel.getInstance().setCurrentFolder(newValue.toString().toLowerCase());
+                    });
   }
 
   private void learnWord(String trim) {
@@ -192,14 +211,9 @@ public class FXMLController implements Initializable {
 
   public void sendEmail(Email email) {
 
-    // Check recipients
-    if (email.getRecipients().isEmpty()) {
-      LOGGER.error("No recipients");
-      return;
-    }
-
-    if (email.getRecipients().stream().anyMatch(rec -> !ValidatorHelper.isEmailValid(rec))) {
-      LOGGER.error("Invalid recipients");
+    var valid = ValidatorHelper.isEmailValid(email);
+    if (!valid.getKey()) {
+      LOGGER.error("Email not valid: {}", valid.getValue());
       return;
     }
 
