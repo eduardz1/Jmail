@@ -1,12 +1,7 @@
 package jmail.client.controllers;
 
 import java.net.URL;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,19 +10,24 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import jmail.client.models.client.MailClient;
 import jmail.client.models.model.DataModel;
-import jmail.client.models.responses.DeleteMailResponse;
+import jmail.client.models.responses.ListEmailResponse;
 import jmail.lib.autocompletion.textfield.AutoCompletionBinding;
 import jmail.lib.autocompletion.textfield.TextFields;
 import jmail.lib.constants.ServerResponseStatuses;
+import jmail.lib.helpers.ValidatorHelper;
 import jmail.lib.models.Email;
+import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.CommandDeleteEmail;
 import jmail.lib.models.commands.CommandDeleteEmail.CommandDeleteEmailParameter;
+import jmail.lib.models.commands.CommandListEmail;
+import jmail.lib.models.commands.CommandSendEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FXMLController implements Initializable {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(FXMLController.class.getName());
+  private Long lastUnixTimeEmailCheck = 0L;
 
   @FXML private Button newMailButton;
 
@@ -51,8 +51,8 @@ public class FXMLController implements Initializable {
     autoCompletionBinding = TextFields.bindAutoCompletion(searchField, suggestions);
 
     searchField.setOnKeyPressed(
-        e -> {
-          if (e.getCode() == javafx.scene.input.KeyCode.ENTER) {
+        event -> {
+          if (event.getCode() == javafx.scene.input.KeyCode.ENTER) {
             LOGGER.info("SearchField: {}", searchField.getText().trim());
             // buttonSearch(e); TODO: implement
             learnWord(searchField.getText().trim());
@@ -65,6 +65,7 @@ public class FXMLController implements Initializable {
             DataModel.getInstance()
                 .getCurrentEmailProperty()
                 .map(e -> e == null ? "" : e.getSubject()));
+
     currentUserEmail
         .textProperty()
         .bind(
@@ -79,6 +80,7 @@ public class FXMLController implements Initializable {
       autoCompletionBinding.dispose();
     }
     autoCompletionBinding = TextFields.bindAutoCompletion(searchField, suggestions);
+
     autoCompletionBinding
         .getAutoCompletionPopup()
         .prefWidthProperty()
@@ -155,7 +157,72 @@ public class FXMLController implements Initializable {
 
   @FXML
   public void buttonTrash(ActionEvent e) {
-    var params = new CommandDeleteEmailParameter(DataModel.getInstance().getCurrentEmail().getId());
+    var currEmail = DataModel.getInstance().getCurrentEmail();
+    if (currEmail != null && currEmail.getRead()) {
+      var id = currEmail.getId();
+      deleteEmail(id);
+    }
+  }
+
+  public void listEmails() {
+    // TODO: Schedule function each 15s
+
+    Calendar today = Calendar.getInstance();
+    today.set(Calendar.HOUR_OF_DAY, 0);
+
+    var params = new CommandListEmail.CommandListEmailParameter(lastUnixTimeEmailCheck);
+    var command = new CommandListEmail(params);
+
+    MailClient.getInstance()
+        .sendCommand(
+            command,
+            response -> {
+              if (response.getStatus().equals(ServerResponseStatuses.OK)) {
+                var resp = (ListEmailResponse) response;
+                DataModel.getInstance()
+                    .addEmail("inbox", resp.getEmails().stream().toArray(Email[]::new));
+                lastUnixTimeEmailCheck = today.getTimeInMillis();
+                LOGGER.info("Email list: {}", response);
+              } else {
+                LOGGER.error("Error getting email: {}", response);
+              }
+            },
+            ListEmailResponse.class);
+  }
+
+  public void sendEmail(Email email) {
+
+    // Check recipients
+    if (email.getRecipients().isEmpty()) {
+      LOGGER.error("No recipients");
+      return;
+    }
+
+    if (email.getRecipients().stream().anyMatch(rec -> !ValidatorHelper.isEmailValid(rec))) {
+      LOGGER.error("Invalid recipients");
+      return;
+    }
+
+    var params = new CommandSendEmail.CommandSendEmailParameter(email);
+    var command = new CommandSendEmail(params);
+
+    MailClient.getInstance()
+        .sendCommand(
+            command,
+            response -> {
+              if (response.getStatus().equals(ServerResponseStatuses.OK)) {
+                DataModel.getInstance().addEmail("sent", email);
+                LOGGER.info("Email sent: {}", response);
+              } else {
+                LOGGER.error("Error sending email: {}", response);
+              }
+            },
+            ServerResponse.class);
+  }
+
+  public void deleteEmail(String emailID) {
+    // TODO: Implement hard delete, with a confirmation dialog
+    var params = new CommandDeleteEmailParameter(emailID);
     var command = new CommandDeleteEmail(params);
 
     MailClient.getInstance()
@@ -164,9 +231,11 @@ public class FXMLController implements Initializable {
             response -> {
               if (response.getStatus().equals(ServerResponseStatuses.OK)) {
                 DataModel.getInstance().removeCurrentEmail();
+                LOGGER.info("DeleteMailResponse: {}", response);
+              } else {
+                LOGGER.error("Error deleting email: {}", response);
               }
-              LOGGER.info("DeleteMailResponse: {}", response);
             },
-            DeleteMailResponse.class);
+            ServerResponse.class);
   }
 }

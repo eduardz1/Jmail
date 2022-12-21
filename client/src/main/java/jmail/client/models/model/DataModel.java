@@ -20,6 +20,9 @@ public class DataModel {
   private final ObservableList<Email> inbox;
   private final ObservableList<Email> sent;
   private final ObservableList<Email> trash;
+
+  private final ObservableList<Email>
+      currentFilteredEmails; // Used for filtering emails to show by search
   private final ObjectProperty<Email> currentEmail;
 
   // TODO: Preferiti, bozze, etichette
@@ -32,6 +35,7 @@ public class DataModel {
     inbox = FXCollections.emptyObservableList();
     sent = FXCollections.emptyObservableList();
     trash = FXCollections.emptyObservableList();
+    currentFilteredEmails = FXCollections.emptyObservableList();
 
     currentEmail = new SimpleObjectProperty<>();
     serverStatusConnected = new SimpleBooleanProperty();
@@ -100,6 +104,10 @@ public class DataModel {
     trash.setAll(emails);
   }
 
+  public ObservableList<Email> getCurrentFilteredEmails() {
+    return currentFilteredEmails;
+  }
+
   public ObservableObjectValue<Email> getCurrentEmailProperty() {
     return currentEmail;
   }
@@ -127,5 +135,15 @@ public class DataModel {
       case "trash" -> trash.remove(currentEmail.get());
     }
     currentEmail.set(null);
+  }
+
+  public void addEmail(String folder, Email... emails) {
+    for (Email email : emails) {
+      switch (folder) {
+        case "inbox" -> inbox.add(email);
+        case "sent" -> sent.add(email);
+        case "trash" -> trash.add(email);
+      }
+    }
   }
 }
