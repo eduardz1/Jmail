@@ -1,7 +1,6 @@
 package jmail.client.models.model;
 
 import java.util.List;
-import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -15,101 +14,145 @@ import jmail.lib.models.User;
 
 public class DataModel {
 
-  private static final DataModel instance = new DataModel();
-  private final ObjectProperty<User> currentUser;
-  private final SimpleStringProperty currentFolder; // Enum: inbox, sent, trash
-  private final ObservableList<Email> inbox;
-  private final ObservableList<Email> sent;
-  private final ObservableList<Email> trash;
-  private final ObjectProperty<Email> currentEmail;
+    private static final DataModel instance = new DataModel();
+    private final ObjectProperty<User> currentUser;
+    private final SimpleStringProperty currentFolder; // TODO: Enum: inbox, sent, trash
+    private final ObservableList<Email> inbox;
+    private final ObservableList<Email> sent;
+    private final ObservableList<Email> trash;
 
-  // TODO: Preferiti, bozze, etichette
-  private final SimpleBooleanProperty serverStatusConnected;
+    private final ObservableList<Email> currentFilteredEmails; // Used for filtering emails to show bby search
+    private final ObjectProperty<Email> currentEmail;
 
-  private DataModel() {
-    currentUser = new SimpleObjectProperty<>();
-    currentFolder = new SimpleStringProperty();
+    // TODO: Preferiti, bozze, etichette
+    private final SimpleBooleanProperty serverStatusConnected;
 
-    inbox = FXCollections.emptyObservableList();
-    sent = FXCollections.emptyObservableList();
-    trash = FXCollections.emptyObservableList();
+    private DataModel() {
+        currentUser = new SimpleObjectProperty<>();
+        currentFolder = new SimpleStringProperty();
 
-    currentEmail = new SimpleObjectProperty<>();
-    serverStatusConnected = new SimpleBooleanProperty();
-  }
+        inbox = FXCollections.emptyObservableList();
+        sent = FXCollections.emptyObservableList();
+        trash = FXCollections.emptyObservableList();
+        currentFilteredEmails = FXCollections.emptyObservableList();
 
-  // get instance
-  public static DataModel getInstance() {
-    return instance;
-  }
+        currentEmail = new SimpleObjectProperty<>();
+        serverStatusConnected = new SimpleBooleanProperty();
 
-  // get current user observable
-  public ObservableObjectValue<User> currentUser() {
-    return currentUser;
-  }
+        // FIXME: remove
+        currentEmail.set(new Email(
+                java.util.UUID.randomUUID().toString(),
+                "Oggetto prova",
+                "Buongiorno,\nAvrebbe due minuti per parlare del Nostro signore?",
+                "mario@yahoo.it",
+                List.of("emmedeveloper@gmail.com"),
+                java.util.Calendar.getInstance().getTime(),
+                false));
+    }
 
-  // set current user
-  public void setCurrentUser(User user) {
-    currentUser.set(user);
-  }
+    public static DataModel getInstance() {
+        return instance;
+    }
 
-  // get current folder observable string property
-  public ObservableStringValue currentFolder() {
-    return currentFolder;
-  }
+    public ObservableObjectValue<User> getCurrentUserProperty() {
+        return currentUser;
+    }
 
-  // set current folder
-  public void setCurrentFolder(String folder) {
-    currentFolder.set(folder);
-  }
+    public User getCurrentUser() {
+        return currentUser.get();
+    }
 
-  // get inbox observable list
-  public ObservableList<Email> getInbox() {
-    return inbox;
-  }
+    public void setCurrentUser(User user) {
+        currentUser.set(user);
+    }
 
-  // set inbox
-  public void setInbox(List<Email> emails) {
-    inbox.setAll(emails);
-  }
+    public ObservableStringValue getCurrentFolderProperty() {
+        return currentFolder;
+    }
 
-  // get sent observable list
-  public ObservableList<Email> getSent() {
-    return sent;
-  }
+    public String getCurrentFolder() {
+        return currentFolder.get();
+    }
 
-  // set sent
-  public void setSent(List<Email> emails) {
-    sent.setAll(emails);
-  }
+    public void setCurrentFolder(String folder) {
+        currentFolder.set(folder);
+        switch (folder) {
+            case "inbox":
+                currentFilteredEmails.setAll(inbox);
+                break;
+            case "sent":
+                currentFilteredEmails.setAll(sent);
+                break;
+            case "trash":
+                currentFilteredEmails.setAll(trash);
+                break;
+        }
+    }
 
-  // get trash observable list
-  public ObservableList<Email> getTrash() {
-    return trash;
-  }
+    public ObservableList<Email> getInbox() {
+        return inbox;
+    }
 
-  // set trash
-  public void setTrash(List<Email> emails) {
-    trash.setAll(emails);
-  }
+    public void setInbox(List<Email> emails) {
+        inbox.setAll(emails);
+    }
 
-  // get current email observable
-  public ObservableObjectValue<Email> currentEmail() {
-    return currentEmail;
-  }
+    public ObservableList<Email> getSent() {
+        return sent;
+    }
 
-  // set current email
-  public void setCurrentEmail(Email email) {
-    currentEmail.set(email);
-  }
+    public void setSent(List<Email> emails) {
+        sent.setAll(emails);
+    }
 
-  // get server status connected observable
-  public Observable serverStatusConnected() {
-    return serverStatusConnected;
-  }
+    public ObservableList<Email> getTrash() {
+        return trash;
+    }
 
-  // set server status connected
-  public void setServerStatusConnected(boolean connected) {
-    serverStatusConnected.set(connected);
-  }
+    public void setTrash(List<Email> emails) {
+        trash.setAll(emails);
+    }
+
+    public ObservableList<Email> getCurrentFilteredEmails() {
+        return currentFilteredEmails;
+    }
+
+    public ObservableObjectValue<Email> getCurrentEmailProperty() {
+        return currentEmail;
+    }
+
+    public Email getCurrentEmail() {
+        return currentEmail.get();
+    }
+
+    public void setCurrentEmail(Email email) {
+        currentEmail.set(email);
+    }
+
+    public boolean isServerStatusConnected() {
+        return serverStatusConnected.get();
+    }
+
+    public void setServerStatusConnected(boolean serverStatusConnected) {
+        this.serverStatusConnected.set(serverStatusConnected);
+    }
+
+    public void removeCurrentEmail() {
+        switch (currentFolder.get()) {
+            case "inbox" -> inbox.remove(currentEmail.get());
+            case "sent" -> sent.remove(currentEmail.get());
+            case "trash" -> trash.remove(currentEmail.get());
+        }
+        currentEmail.set(null);
+    }
+
+    public void addEmail(String folder, Email... emails) {
+        for (Email email : emails) {
+            switch (folder) {
+                case "inbox" -> inbox.add(email);
+                case "sent" -> sent.add(email);
+                case "trash" -> trash.add(email);
+            }
+        }
+    }
 }

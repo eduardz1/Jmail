@@ -15,49 +15,57 @@ import jmail.client.models.client.MailClient;
 
 public class Main extends Application {
 
-  private static Stage primaryStage;
+    private static Stage primaryStage;
 
-  public static void main(String[] args) throws IOException {
-    MailClient.getInstance().connect("localhost", 8085); // FIXME: hardcoded
-    launch(args);
-  }
-
-  public static void changeScene(String fxml) {
-    Parent pane = null;
-    try {
-      pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxml)));
-    } catch (IOException e) {
-      throw new RuntimeException(e); // TODO: handle exception
+    public static void main(String[] args) {
+        MailClient.getInstance().connect("localhost", 8085); // FIXME: hardcoded
+        launch(args);
     }
-    primaryStage.getScene().setRoot(pane);
-    primaryStage.sizeToScene();
-  }
 
-  public String getGreeting() {
-    return "Hello World!";
-  }
+    public static void changeScene(String fxml) {
 
-  @Override
-  public void start(Stage primaryStage) throws Exception {
-    Main.primaryStage = primaryStage;
+        Platform.runLater(() -> changeSceneImpl(fxml));
+    }
 
-    FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
-    Parent root = loader.load();
+    private static void changeSceneImpl(String fxml) {
+        Parent pane;
+        try {
+            pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxml)));
+        } catch (IOException e) {
+            throw new RuntimeException(e); // TODO: handle exception
+        }
+        primaryStage.getScene().setRoot(pane);
+        primaryStage.sizeToScene();
+        primaryStage.setResizable(true); // FIXME: setting has no effect, I'm missing something don't know what, maybe
+        // primaryStage needs to be unshown and shown again
+    }
 
-    Scene scene = new Scene(root);
+    public String getGreeting() {
+        return "Hello World!";
+    }
 
-    primaryStage.setTitle("JMAIL");
-    primaryStage.getIcons().add(new Image("logo.png"));
-    primaryStage.setScene(scene);
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Main.primaryStage = primaryStage;
 
-    Platform.runLater(
-        () -> {
-          final var handle = StageOps.findWindowHandle(primaryStage);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
 
-          // Forces Dark Mode on Windows11
-          StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
+        Parent root = loader.load();
+
+        Scene scene = new Scene(root);
+
+        primaryStage.setTitle("JMAIL");
+        primaryStage.getIcons().add(new Image("icon.png"));
+        primaryStage.setScene(scene);
+
+        Platform.runLater(() -> {
+            final var handle = StageOps.findWindowHandle(primaryStage);
+
+            // Forces Dark Mode on Windows11
+            StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
         });
 
-    primaryStage.show();
-  }
+        primaryStage.setResizable(false);
+        primaryStage.show();
+    }
 }
