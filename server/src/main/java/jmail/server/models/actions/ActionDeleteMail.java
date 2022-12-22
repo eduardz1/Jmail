@@ -12,41 +12,41 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class ActionDeleteMail implements ActionCommand {
-  private final CommandDeleteEmail command;
+    private final CommandDeleteEmail command;
 
-  public ActionDeleteMail(CommandDeleteEmail cmd) {
-    this.command = cmd;
-  }
-
-  @Override
-  public void execute() throws ActionExecutionException {
-    var userEmail = command.getUserEmail();
-    var emailID = command.getParameter().emailID();
-
-    if (userEmail == null || userEmail.isEmpty()) {
-      throw new ActionExecutionException("Cannot delete mail: user invalid");
+    public ActionDeleteMail(CommandDeleteEmail cmd) {
+        this.command = cmd;
     }
-    var handler = LockHandler.getInstance();
-    var lock = handler.getWriteLock(userEmail);
-    try {
-      lock.lock();
-      SystemIOHelper.moveFile(
-          SystemIOHelper.getInboxEmailPath(userEmail, emailID),
-          SystemIOHelper.getDeletedEmailPath(userEmail, emailID));
-    } catch (IOException e) {
-      throw new ActionExecutionException(e, "Cannot delete email: internal error");
-    } finally {
-      lock.unlock();
-      handler.removeLock(userEmail);
-    }
-  }
 
-  @Getter
-  @Setter
-  public class ActionDeleteMailServerResponse extends ServerResponse {
+    @Override
+    public void execute() throws ActionExecutionException {
+        var userEmail = command.getUserEmail();
+        var emailID = command.getParameter().emailID();
 
-    public ActionDeleteMailServerResponse(User user) {
-      super(ServerResponseStatuses.OK, "Mail deleted");
+        if (userEmail == null || userEmail.isEmpty()) {
+            throw new ActionExecutionException("Cannot delete mail: user invalid");
+        }
+        var handler = LockHandler.getInstance();
+        var lock = handler.getWriteLock(userEmail);
+        try {
+            lock.lock();
+            SystemIOHelper.moveFile(
+                    SystemIOHelper.getInboxEmailPath(userEmail, emailID),
+                    SystemIOHelper.getDeletedEmailPath(userEmail, emailID));
+        } catch (IOException e) {
+            throw new ActionExecutionException(e, "Cannot delete email: internal error");
+        } finally {
+            lock.unlock();
+            handler.removeLock(userEmail);
+        }
     }
-  }
+
+    @Getter
+    @Setter
+    public class ActionDeleteMailServerResponse extends ServerResponse {
+
+        public ActionDeleteMailServerResponse(User user) {
+            super(ServerResponseStatuses.OK, "Mail deleted");
+        }
+    }
 }

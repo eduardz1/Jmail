@@ -20,39 +20,41 @@ import org.slf4j.LoggerFactory;
 
 public class FXMLLogin implements Initializable {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(FXMLLogin.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(FXMLLogin.class.getName());
 
-  @FXML private TextField UsernameField;
-  @FXML private PasswordField PasswordField;
-  @FXML private Button LoginButton;
+    @FXML private TextField UsernameField;
 
-  @Override
-  public void initialize(URL location, ResourceBundle resources) {
-    // TODO:
-  }
+    @FXML private PasswordField PasswordField;
 
-  @FXML
-  public void buttonLogin(javafx.event.ActionEvent e) {
+    @FXML private Button LoginButton;
 
-    var username = UsernameField.getText();
-    var hashed =
-        Hashing.sha256().hashString(PasswordField.getText(), StandardCharsets.UTF_8).toString();
-    var params = new CommandLogin.CommandLoginParameter(username, hashed);
-    var command = new CommandLogin(params);
-    command.setUserEmail(username);
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // TODO:
+    }
 
-    MailClient.getInstance()
-        .sendCommand(
-            command,
-            response -> {
-              if (response.getStatus().equals(ServerResponseStatuses.OK)) {
-                var resp = (LoginResponse) response;
-                DataModel.getInstance().setCurrentUser(resp.getUser());
-                Main.changeScene("client.fxml");
-              }
+    @FXML public void buttonLogin(javafx.event.ActionEvent e) {
 
-              LOGGER.info(response.getMessage());
-            },
-            LoginResponse.class);
-  }
+        var username = UsernameField.getText();
+        var hashed = Hashing.sha256()
+                .hashString(PasswordField.getText(), StandardCharsets.UTF_8)
+                .toString();
+        var params = new CommandLogin.CommandLoginParameter(username, hashed);
+        var command = new CommandLogin(params);
+        command.setUserEmail(username);
+
+        MailClient.getInstance()
+                .sendCommand(
+                        command,
+                        response -> {
+                            if (response.getStatus().equals(ServerResponseStatuses.OK)) {
+                                var resp = (LoginResponse) response;
+                                DataModel.getInstance().setCurrentUser(resp.getUser());
+                                Main.changeScene("client.fxml");
+                            }
+
+                            LOGGER.info(response.getMessage());
+                        },
+                        LoginResponse.class);
+    }
 }

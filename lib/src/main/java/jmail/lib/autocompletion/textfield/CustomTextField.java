@@ -47,104 +47,103 @@ import jmail.lib.autocompletion.skin.CustomTextFieldSkin;
  */
 public class CustomTextField extends TextField {
 
-  /**************************************************************************
-   *
-   * Private fields
-   *
-   **************************************************************************/
+    /**************************************************************************
+     *
+     * Private fields
+     *
+     **************************************************************************/
 
-  /**************************************************************************
-   *
-   * Constructors
-   *
-   **************************************************************************/
+    /**************************************************************************
+     *
+     * Constructors
+     *
+     **************************************************************************/
 
-  /** Instantiates a default CustomTextField. */
-  public CustomTextField() {
-    getStyleClass().add("custom-text-field"); // $NON-NLS-1$
-  }
+    /** Instantiates a default CustomTextField. */
+    public CustomTextField() {
+        getStyleClass().add("custom-text-field"); // $NON-NLS-1$
+    }
 
-  /**************************************************************************
-   *
-   * Properties
-   *
-   **************************************************************************/
+    /**************************************************************************
+     *
+     * Properties
+     *
+     **************************************************************************/
 
-  // --- left
-  private final ObjectProperty<Node> left = new SimpleObjectProperty<>(this, "left"); // $NON-NLS-1$
+    // --- left
+    private final ObjectProperty<Node> left = new SimpleObjectProperty<>(this, "left"); // $NON-NLS-1$
 
-  /**
-   * @return An ObjectProperty wrapping the {@link Node} that is placed on the left ofthe text
-   *     field.
-   */
-  public final ObjectProperty<Node> leftProperty() {
-    return left;
-  }
+    /**
+     * @return An ObjectProperty wrapping the {@link Node} that is placed on the left ofthe text
+     *     field.
+     */
+    public final ObjectProperty<Node> leftProperty() {
+        return left;
+    }
 
-  /**
-   * @return the {@link Node} that is placed on the left of the text field.
-   */
-  public final Node getLeft() {
-    return left.get();
-  }
+    /**
+     * @return the {@link Node} that is placed on the left of the text field.
+     */
+    public final Node getLeft() {
+        return left.get();
+    }
 
-  /**
-   * Sets the {@link Node} that is placed on the left of the text field.
-   *
-   * @param value
-   */
-  public final void setLeft(Node value) {
-    left.set(value);
-  }
+    /**
+     * Sets the {@link Node} that is placed on the left of the text field.
+     *
+     * @param value
+     */
+    public final void setLeft(Node value) {
+        left.set(value);
+    }
 
-  // --- right
-  private final ObjectProperty<Node> right =
-      new SimpleObjectProperty<>(this, "right"); // $NON-NLS-1$
+    // --- right
+    private final ObjectProperty<Node> right = new SimpleObjectProperty<>(this, "right"); // $NON-NLS-1$
 
-  /**
-   * Property representing the {@link Node} that is placed on the right of the text field.
-   *
-   * @return An ObjectProperty.
-   */
-  public final ObjectProperty<Node> rightProperty() {
-    return right;
-  }
+    /**
+     * Property representing the {@link Node} that is placed on the right of the text field.
+     *
+     * @return An ObjectProperty.
+     */
+    public final ObjectProperty<Node> rightProperty() {
+        return right;
+    }
 
-  /**
-   * @return The {@link Node} that is placed on the right of the text field.
-   */
-  public final Node getRight() {
-    return right.get();
-  }
+    /**
+     * @return The {@link Node} that is placed on the right of the text field.
+     */
+    public final Node getRight() {
+        return right.get();
+    }
 
-  /**
-   * Sets the {@link Node} that is placed on the right of the text field.
-   *
-   * @param value
-   */
-  public final void setRight(Node value) {
-    right.set(value);
-  }
+    /**
+     * Sets the {@link Node} that is placed on the right of the text field.
+     *
+     * @param value
+     */
+    public final void setRight(Node value) {
+        right.set(value);
+    }
 
-  /**************************************************************************
-   *
-   * Public API
-   *
-   **************************************************************************/
+    /**************************************************************************
+     *
+     * Public API
+     *
+     **************************************************************************/
 
-  /** {@inheritDoc} */
-  @Override
-  protected Skin<?> createDefaultSkin() {
-    return new CustomTextFieldSkin(this) {
-      @Override
-      public ObjectProperty<Node> leftProperty() {
-        return CustomTextField.this.leftProperty();
-      }
+    /** {@inheritDoc} */
+    @Override
+    protected Skin<?> createDefaultSkin() {
+        return new CustomTextFieldSkin(this) {
+            @Override
+            public ObjectProperty<Node> leftProperty() {
+                return CustomTextField.this.leftProperty();
+            }
 
-      @Override
-      public ObjectProperty<Node> rightProperty() {
-        return CustomTextField.this.rightProperty();
-      }
-    };
-  }
+            @Override
+            public ObjectProperty<Node> rightProperty() {
+                return CustomTextField.this.rightProperty();
+            }
+        };
+    }
 }

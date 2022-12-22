@@ -35,116 +35,112 @@ import jmail.lib.autocompletion.textfield.AutoCompletionBinding;
  */
 public class AutoCompletionTextFieldBinding<T> extends AutoCompletionBinding<T> {
 
-  /***************************************************************************
-   *                                                                         *
-   * Static properties and methods                                           *
-   *                                                                         *
-   **************************************************************************/
+    /***************************************************************************
+     *                                                                         *
+     * Static properties and methods                                           *
+     *                                                                         *
+     **************************************************************************/
+    private static <T> StringConverter<T> defaultStringConverter() {
+        return new StringConverter<>() {
+            @Override
+            public String toString(T t) {
+                return t == null ? null : t.toString();
+            }
 
-  private static <T> StringConverter<T> defaultStringConverter() {
-    return new StringConverter<>() {
-      @Override
-      public String toString(T t) {
-        return t == null ? null : t.toString();
-      }
+            @SuppressWarnings("unchecked")
+            @Override
+            public T fromString(String string) {
+                return (T) string;
+            }
+        };
+    }
 
-      @SuppressWarnings("unchecked")
-      @Override
-      public T fromString(String string) {
-        return (T) string;
-      }
-    };
-  }
+    /***************************************************************************
+     *                                                                         *
+     * Private fields                                                          *
+     *                                                                         *
+     **************************************************************************/
 
-  /***************************************************************************
-   *                                                                         *
-   * Private fields                                                          *
-   *                                                                         *
-   **************************************************************************/
+    /** String converter to be used to convert suggestions to strings. */
+    private final StringConverter<T> converter;
 
-  /** String converter to be used to convert suggestions to strings. */
-  private final StringConverter<T> converter;
+    /***************************************************************************
+     *                                                                         *
+     * Constructors                                                            *
+     *                                                                         *
+     **************************************************************************/
 
-  /***************************************************************************
-   *                                                                         *
-   * Constructors                                                            *
-   *                                                                         *
-   **************************************************************************/
+    /**
+     * Creates a new auto-completion binding between the given textField and the given suggestion
+     * provider.
+     *
+     * @param textField
+     * @param suggestionProvider
+     */
+    public AutoCompletionTextFieldBinding(
+            final TextField textField, Callback<ISuggestionRequest, Collection<T>> suggestionProvider) {
 
-  /**
-   * Creates a new auto-completion binding between the given textField and the given suggestion
-   * provider.
-   *
-   * @param textField
-   * @param suggestionProvider
-   */
-  public AutoCompletionTextFieldBinding(
-      final TextField textField, Callback<ISuggestionRequest, Collection<T>> suggestionProvider) {
+        this(textField, suggestionProvider, AutoCompletionTextFieldBinding.defaultStringConverter());
+    }
 
-    this(textField, suggestionProvider, AutoCompletionTextFieldBinding.defaultStringConverter());
-  }
+    /**
+     * Creates a new auto-completion binding between the given textField and the given suggestion
+     * provider.
+     *
+     * @param textField
+     * @param suggestionProvider
+     */
+    public AutoCompletionTextFieldBinding(
+            final TextField textField,
+            Callback<ISuggestionRequest, Collection<T>> suggestionProvider,
+            final StringConverter<T> converter) {
 
-  /**
-   * Creates a new auto-completion binding between the given textField and the given suggestion
-   * provider.
-   *
-   * @param textField
-   * @param suggestionProvider
-   */
-  public AutoCompletionTextFieldBinding(
-      final TextField textField,
-      Callback<ISuggestionRequest, Collection<T>> suggestionProvider,
-      final StringConverter<T> converter) {
+        super(textField, suggestionProvider, converter);
+        this.converter = converter;
 
-    super(textField, suggestionProvider, converter);
-    this.converter = converter;
+        getCompletionTarget().textProperty().addListener(textChangeListener);
+        getCompletionTarget().focusedProperty().addListener(focusChangedListener);
+    }
 
-    getCompletionTarget().textProperty().addListener(textChangeListener);
-    getCompletionTarget().focusedProperty().addListener(focusChangedListener);
-  }
+    /***************************************************************************
+     *                                                                         *
+     * Public API                                                              *
+     *                                                                         *
+     **************************************************************************/
 
-  /***************************************************************************
-   *                                                                         *
-   * Public API                                                              *
-   *                                                                         *
-   **************************************************************************/
+    /** {@inheritDoc} */
+    @Override
+    public TextField getCompletionTarget() {
+        return (TextField) super.getCompletionTarget();
+    }
 
-  /** {@inheritDoc} */
-  @Override
-  public TextField getCompletionTarget() {
-    return (TextField) super.getCompletionTarget();
-  }
+    /** {@inheritDoc} */
+    @Override
+    public void dispose() {
+        getCompletionTarget().textProperty().removeListener(textChangeListener);
+        getCompletionTarget().focusedProperty().removeListener(focusChangedListener);
+    }
 
-  /** {@inheritDoc} */
-  @Override
-  public void dispose() {
-    getCompletionTarget().textProperty().removeListener(textChangeListener);
-    getCompletionTarget().focusedProperty().removeListener(focusChangedListener);
-  }
+    /** {@inheritDoc} */
+    @Override
+    protected void completeUserInput(T completion) {
+        String newText = converter.toString(completion);
+        getCompletionTarget().setText(newText);
+        getCompletionTarget().positionCaret(newText.length());
+    }
 
-  /** {@inheritDoc} */
-  @Override
-  protected void completeUserInput(T completion) {
-    String newText = converter.toString(completion);
-    getCompletionTarget().setText(newText);
-    getCompletionTarget().positionCaret(newText.length());
-  }
-
-  /***************************************************************************
-   *                                                                         *
-   * Event Listeners                                                         *
-   *                                                                         *
-   **************************************************************************/
-
-  private final ChangeListener<String> textChangeListener =
-      (obs, oldText, newText) -> {
+    /***************************************************************************
+     *                                                                         *
+     * Event Listeners                                                         *
+     *                                                                         *
+     **************************************************************************/
+    private final ChangeListener<String> textChangeListener = (obs, oldText, newText) -> {
         if (getCompletionTarget().isFocused()) {
-          setUserInput(newText);
+            setUserInput(newText);
         }
-      };
+    };
 
-  private final ChangeListener<Boolean> focusChangedListener =
-      (obs, oldFocused, newFocused) -> {
+    private final ChangeListener<Boolean> focusChangedListener = (obs, oldFocused, newFocused) -> {
         if (newFocused == false) hidePopup();
-      };
+    };
 }

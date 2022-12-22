@@ -35,97 +35,93 @@ import jmail.lib.autocompletion.AutoCompletePopup;
 
 public class AutoCompletePopupSkin<T> implements Skin<AutoCompletePopup<T>> {
 
-  private final AutoCompletePopup<T> control;
-  public final ListView<T> suggestionList;
-  final int LIST_CELL_HEIGHT = 24;
+    private final AutoCompletePopup<T> control;
+    public final ListView<T> suggestionList;
+    final int LIST_CELL_HEIGHT = 24;
 
-  public AutoCompletePopupSkin(AutoCompletePopup<T> control) {
-    this(control, control.getConverter());
-  }
-
-  /**
-   * @param control The popup to be skinned
-   * @param displayConverter An alternate {@link StringConverter} to use. This way, you can show
-   *     autocomplete suggestions that when applied will fill in a different text than displayed.
-   *     For example, you may preview {@code Files.newBufferedReader(Path: path) - Bufferedreader}
-   *     but only fill in {@code Files.newBufferedReader(}
-   */
-  public AutoCompletePopupSkin(AutoCompletePopup<T> control, StringConverter<T> displayConverter) {
-    this(control, TextFieldListCell.forListView(displayConverter));
-  }
-
-  /**
-   * @param control The popup to be skinned
-   * @param cellFactory Set a custom cell factory for the suggestions.
-   */
-  public AutoCompletePopupSkin(
-      AutoCompletePopup<T> control, Callback<ListView<T>, ListCell<T>> cellFactory) {
-    this.control = control;
-    suggestionList = new ListView<>(control.getSuggestions());
-
-    suggestionList.getStyleClass().add(AutoCompletePopup.DEFAULT_STYLE_CLASS);
-
-    suggestionList
-        .prefHeightProperty()
-        .bind(
-            Bindings.min(
-                    control.visibleRowCountProperty(),
-                    Bindings.size(
-                        suggestionList
-                            .getItems()
-                            .filtered(item -> item != null && !item.toString().isEmpty())))
-                .multiply(LIST_CELL_HEIGHT));
-    suggestionList.setCellFactory(cellFactory);
-
-    // Allowing the user to control ListView width.
-    suggestionList.prefWidthProperty().bind(control.prefWidthProperty());
-    suggestionList.maxWidthProperty().bind(control.maxWidthProperty());
-    suggestionList.minWidthProperty().bind(control.minWidthProperty());
-    registerEventListener();
-  }
-
-  private void registerEventListener() {
-    suggestionList.setOnMouseClicked(
-        me -> {
-          if (me.getButton() == MouseButton.PRIMARY) {
-            onSuggestionChosen(suggestionList.getSelectionModel().getSelectedItem());
-          }
-        });
-
-    suggestionList.setOnKeyPressed(
-        ke -> {
-          switch (ke.getCode()) {
-            case TAB:
-            case ENTER:
-              onSuggestionChosen(suggestionList.getSelectionModel().getSelectedItem());
-              break;
-            case ESCAPE:
-              if (control.isHideOnEscape()) {
-                control.hide();
-              }
-              break;
-            default:
-              break;
-          }
-        });
-  }
-
-  private void onSuggestionChosen(T suggestion) {
-    if (suggestion != null) {
-      Event.fireEvent(control, new AutoCompletePopup.SuggestionEvent<>(suggestion));
+    public AutoCompletePopupSkin(AutoCompletePopup<T> control) {
+        this(control, control.getConverter());
     }
-  }
 
-  @Override
-  public Node getNode() {
-    return suggestionList;
-  }
+    /**
+     * @param control The popup to be skinned
+     * @param displayConverter An alternate {@link StringConverter} to use. This way, you can show
+     *     autocomplete suggestions that when applied will fill in a different text than displayed.
+     *     For example, you may preview {@code Files.newBufferedReader(Path: path) - Bufferedreader}
+     *     but only fill in {@code Files.newBufferedReader(}
+     */
+    public AutoCompletePopupSkin(AutoCompletePopup<T> control, StringConverter<T> displayConverter) {
+        this(control, TextFieldListCell.forListView(displayConverter));
+    }
 
-  @Override
-  public AutoCompletePopup<T> getSkinnable() {
-    return control;
-  }
+    /**
+     * @param control The popup to be skinned
+     * @param cellFactory Set a custom cell factory for the suggestions.
+     */
+    public AutoCompletePopupSkin(AutoCompletePopup<T> control, Callback<ListView<T>, ListCell<T>> cellFactory) {
+        this.control = control;
+        suggestionList = new ListView<>(control.getSuggestions());
 
-  @Override
-  public void dispose() {}
+        suggestionList.getStyleClass().add(AutoCompletePopup.DEFAULT_STYLE_CLASS);
+
+        suggestionList
+                .prefHeightProperty()
+                .bind(Bindings.min(
+                                control.visibleRowCountProperty(),
+                                Bindings.size(suggestionList
+                                        .getItems()
+                                        .filtered(item ->
+                                                item != null && !item.toString().isEmpty())))
+                        .multiply(LIST_CELL_HEIGHT));
+        suggestionList.setCellFactory(cellFactory);
+
+        // Allowing the user to control ListView width.
+        suggestionList.prefWidthProperty().bind(control.prefWidthProperty());
+        suggestionList.maxWidthProperty().bind(control.maxWidthProperty());
+        suggestionList.minWidthProperty().bind(control.minWidthProperty());
+        registerEventListener();
+    }
+
+    private void registerEventListener() {
+        suggestionList.setOnMouseClicked(me -> {
+            if (me.getButton() == MouseButton.PRIMARY) {
+                onSuggestionChosen(suggestionList.getSelectionModel().getSelectedItem());
+            }
+        });
+
+        suggestionList.setOnKeyPressed(ke -> {
+            switch (ke.getCode()) {
+                case TAB:
+                case ENTER:
+                    onSuggestionChosen(suggestionList.getSelectionModel().getSelectedItem());
+                    break;
+                case ESCAPE:
+                    if (control.isHideOnEscape()) {
+                        control.hide();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        });
+    }
+
+    private void onSuggestionChosen(T suggestion) {
+        if (suggestion != null) {
+            Event.fireEvent(control, new AutoCompletePopup.SuggestionEvent<>(suggestion));
+        }
+    }
+
+    @Override
+    public Node getNode() {
+        return suggestionList;
+    }
+
+    @Override
+    public AutoCompletePopup<T> getSkinnable() {
+        return control;
+    }
+
+    @Override
+    public void dispose() {}
 }

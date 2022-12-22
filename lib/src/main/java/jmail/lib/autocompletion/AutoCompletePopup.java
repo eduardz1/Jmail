@@ -45,186 +45,180 @@ import jmail.lib.autocompletion.skin.AutoCompletePopupSkin;
  */
 public class AutoCompletePopup<T> extends PopupControl {
 
-  /***************************************************************************
-   *                                                                         *
-   * Private fields                                                          *
-   *                                                                         *
-   **************************************************************************/
+    /***************************************************************************
+     *                                                                         *
+     * Private fields                                                          *
+     *                                                                         *
+     **************************************************************************/
+    private final ObservableList<T> suggestions = FXCollections.observableArrayList();
 
-  private final ObservableList<T> suggestions = FXCollections.observableArrayList();
+    private StringConverter<T> converter;
+    /**
+     * The maximum number of rows to be visible in the popup when it is showing. By default this value
+     * is 10, but this can be changed to increase or decrease the height of the popup.
+     */
+    private final IntegerProperty visibleRowCount = new SimpleIntegerProperty(this, "visibleRowCount", 10);
 
-  private StringConverter<T> converter;
-  /**
-   * The maximum number of rows to be visible in the popup when it is showing. By default this value
-   * is 10, but this can be changed to increase or decrease the height of the popup.
-   */
-  private final IntegerProperty visibleRowCount =
-      new SimpleIntegerProperty(this, "visibleRowCount", 10);
-
-  /***************************************************************************
-   *                                                                         *
-   * Inner classes                                                           *
-   *                                                                         *
-   **************************************************************************/
-
-  /**
-   * Represents an Event which is fired when the user has selected a suggestion for auto-complete
-   *
-   * @param <TE>
-   */
-  @SuppressWarnings("serial")
-  public static class SuggestionEvent<TE> extends Event {
-    public static final EventType<SuggestionEvent<?>> SUGGESTION =
-        new EventType<>("SUGGESTION" + UUID.randomUUID().toString()); // $NON-NLS-1$
-
-    private final TE suggestion;
-
-    public SuggestionEvent(TE suggestion) {
-      super(SUGGESTION);
-      this.suggestion = suggestion;
-    }
+    /***************************************************************************
+     *                                                                         *
+     * Inner classes                                                           *
+     *                                                                         *
+     **************************************************************************/
 
     /**
-     * Returns the suggestion which was chosen by the user
+     * Represents an Event which is fired when the user has selected a suggestion for auto-complete
+     *
+     * @param <TE>
+     */
+    @SuppressWarnings("serial")
+    public static class SuggestionEvent<TE> extends Event {
+        public static final EventType<SuggestionEvent<?>> SUGGESTION =
+                new EventType<>("SUGGESTION" + UUID.randomUUID().toString()); // $NON-NLS-1$
+
+        private final TE suggestion;
+
+        public SuggestionEvent(TE suggestion) {
+            super(SUGGESTION);
+            this.suggestion = suggestion;
+        }
+
+        /**
+         * Returns the suggestion which was chosen by the user
+         *
+         * @return
+         */
+        public TE getSuggestion() {
+            return suggestion;
+        }
+    }
+
+    /***************************************************************************
+     *                                                                         *
+     * Constructors                                                            *
+     *                                                                         *
+     **************************************************************************/
+
+    /** Creates a new AutoCompletePopup */
+    public AutoCompletePopup() {
+        this.setAutoFix(true);
+        this.setAutoHide(true);
+        this.setHideOnEscape(true);
+
+        getStyleClass().add(DEFAULT_STYLE_CLASS);
+    }
+
+    /***************************************************************************
+     *                                                                         *
+     * Public API                                                              *
+     *                                                                         *
+     **************************************************************************/
+
+    /**
+     * Get the suggestions presented by this AutoCompletePopup
      *
      * @return
      */
-    public TE getSuggestion() {
-      return suggestion;
-    }
-  }
-
-  /***************************************************************************
-   *                                                                         *
-   * Constructors                                                            *
-   *                                                                         *
-   **************************************************************************/
-
-  /** Creates a new AutoCompletePopup */
-  public AutoCompletePopup() {
-    this.setAutoFix(true);
-    this.setAutoHide(true);
-    this.setHideOnEscape(true);
-
-    getStyleClass().add(DEFAULT_STYLE_CLASS);
-  }
-
-  /***************************************************************************
-   *                                                                         *
-   * Public API                                                              *
-   *                                                                         *
-   **************************************************************************/
-
-  /**
-   * Get the suggestions presented by this AutoCompletePopup
-   *
-   * @return
-   */
-  public ObservableList<T> getSuggestions() {
-    return suggestions;
-  }
-
-  /**
-   * Show this popup right below the given Node
-   *
-   * @param node
-   */
-  public void show(Node node) {
-
-    if (node.getScene() == null || node.getScene().getWindow() == null)
-      throw new IllegalStateException(
-          "Can not show popup. The node must be attached to a scene/window."); //$NON-NLS-1$
-
-    if (isShowing()) {
-      return;
+    public ObservableList<T> getSuggestions() {
+        return suggestions;
     }
 
-    Window parent = node.getScene().getWindow();
-    getScene().setNodeOrientation(node.getEffectiveNodeOrientation());
-    if (node.getEffectiveNodeOrientation() == NodeOrientation.RIGHT_TO_LEFT) {
-      setAnchorLocation(AnchorLocation.CONTENT_TOP_RIGHT);
-    } else {
-      setAnchorLocation(AnchorLocation.CONTENT_TOP_LEFT);
+    /**
+     * Show this popup right below the given Node
+     *
+     * @param node
+     */
+    public void show(Node node) {
+
+        if (node.getScene() == null || node.getScene().getWindow() == null)
+            throw new IllegalStateException(
+                    "Can not show popup. The node must be attached to a scene/window."); //$NON-NLS-1$
+
+        if (isShowing()) {
+            return;
+        }
+
+        Window parent = node.getScene().getWindow();
+        getScene().setNodeOrientation(node.getEffectiveNodeOrientation());
+        if (node.getEffectiveNodeOrientation() == NodeOrientation.RIGHT_TO_LEFT) {
+            setAnchorLocation(AnchorLocation.CONTENT_TOP_RIGHT);
+        } else {
+            setAnchorLocation(AnchorLocation.CONTENT_TOP_LEFT);
+        }
+        this.show(
+                parent,
+                parent.getX() + node.localToScene(0, 0).getX() + node.getScene().getX(),
+                parent.getY()
+                        + node.localToScene(0, 0).getY()
+                        + node.getScene().getY()
+                        + node.getBoundsInParent().getHeight());
     }
-    this.show(
-        parent,
-        parent.getX() + node.localToScene(0, 0).getX() + node.getScene().getX(),
-        parent.getY()
-            + node.localToScene(0, 0).getY()
-            + node.getScene().getY()
-            + node.getBoundsInParent().getHeight());
-  }
 
-  /** Set the string converter used to turn a generic suggestion into a string */
-  public void setConverter(StringConverter<T> converter) {
-    this.converter = converter;
-  }
+    /** Set the string converter used to turn a generic suggestion into a string */
+    public void setConverter(StringConverter<T> converter) {
+        this.converter = converter;
+    }
 
-  /** Get the string converter used to turn a generic suggestion into a string */
-  public StringConverter<T> getConverter() {
-    return converter;
-  }
+    /** Get the string converter used to turn a generic suggestion into a string */
+    public StringConverter<T> getConverter() {
+        return converter;
+    }
 
-  public final void setVisibleRowCount(int value) {
-    visibleRowCount.set(value);
-  }
+    public final void setVisibleRowCount(int value) {
+        visibleRowCount.set(value);
+    }
 
-  public final int getVisibleRowCount() {
-    return visibleRowCount.get();
-  }
+    public final int getVisibleRowCount() {
+        return visibleRowCount.get();
+    }
 
-  public final IntegerProperty visibleRowCountProperty() {
-    return visibleRowCount;
-  }
+    public final IntegerProperty visibleRowCountProperty() {
+        return visibleRowCount;
+    }
 
-  /***************************************************************************
-   *                                                                         *
-   * Properties                                                              *
-   *                                                                         *
-   **************************************************************************/
+    /***************************************************************************
+     *                                                                         *
+     * Properties                                                              *
+     *                                                                         *
+     **************************************************************************/
+    public final ObjectProperty<EventHandler<SuggestionEvent<T>>> onSuggestionProperty() {
+        return onSuggestion;
+    }
 
-  public final ObjectProperty<EventHandler<SuggestionEvent<T>>> onSuggestionProperty() {
-    return onSuggestion;
-  }
+    public final void setOnSuggestion(EventHandler<SuggestionEvent<T>> value) {
+        onSuggestionProperty().set(value);
+    }
 
-  public final void setOnSuggestion(EventHandler<SuggestionEvent<T>> value) {
-    onSuggestionProperty().set(value);
-  }
+    public final EventHandler<SuggestionEvent<T>> getOnSuggestion() {
+        return onSuggestionProperty().get();
+    }
 
-  public final EventHandler<SuggestionEvent<T>> getOnSuggestion() {
-    return onSuggestionProperty().get();
-  }
-
-  private final ObjectProperty<EventHandler<SuggestionEvent<T>>> onSuggestion =
-      new ObjectPropertyBase<>() {
+    private final ObjectProperty<EventHandler<SuggestionEvent<T>>> onSuggestion = new ObjectPropertyBase<>() {
         @SuppressWarnings({"rawtypes", "unchecked"})
         @Override
         protected void invalidated() {
-          setEventHandler(
-              SuggestionEvent.SUGGESTION, (EventHandler<SuggestionEvent>) (Object) get());
+            setEventHandler(SuggestionEvent.SUGGESTION, (EventHandler<SuggestionEvent>) (Object) get());
         }
 
         @Override
         public Object getBean() {
-          return AutoCompletePopup.this;
+            return AutoCompletePopup.this;
         }
 
         @Override
         public String getName() {
-          return "onSuggestion"; //$NON-NLS-1$
+            return "onSuggestion"; //$NON-NLS-1$
         }
-      };
+    };
 
-  /***************************************************************************
-   *                                                                         *
-   * Stylesheet Handling                                                     *
-   *                                                                         *
-   **************************************************************************/
+    /***************************************************************************
+     *                                                                         *
+     * Stylesheet Handling                                                     *
+     *                                                                         *
+     **************************************************************************/
+    public static final String DEFAULT_STYLE_CLASS = "auto-complete-popup"; // $NON-NLS-1$
 
-  public static final String DEFAULT_STYLE_CLASS = "auto-complete-popup"; // $NON-NLS-1$
-
-  @Override
-  protected Skin<?> createDefaultSkin() {
-    return new AutoCompletePopupSkin<>(this);
-  }
+    @Override
+    protected Skin<?> createDefaultSkin() {
+        return new AutoCompletePopupSkin<>(this);
+    }
 }

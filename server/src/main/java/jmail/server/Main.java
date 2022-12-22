@@ -19,47 +19,44 @@ import org.slf4j.LoggerFactory;
 
 public class Main extends Application {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(Main.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class.getName());
 
-  public static void main(String... args) throws IOException {
+    public static void main(String... args) throws IOException {
 
-    Properties properties = new Properties();
-    properties.load(
-        Objects.requireNonNull(
-            Main.class.getClassLoader().getResourceAsStream("server.properties")));
+        Properties properties = new Properties();
+        properties.load(Objects.requireNonNull(Main.class.getClassLoader().getResourceAsStream("server.properties")));
 
-    Server server = new Server(Integer.parseInt(properties.getProperty("port")));
-    server.start();
-    launch(args);
-  }
+        Server server = new Server(Integer.parseInt(properties.getProperty("port")));
+        server.start();
+        launch(args);
+    }
 
-  @Override
-  public void start(Stage primaryStage) throws Exception {
-    FXMLLoader loader = new FXMLLoader(getClass().getResource("server.fxml"));
-    Parent root = loader.load();
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("server.fxml"));
+        Parent root = loader.load();
 
-    FXMLMainController mainController = loader.getController();
+        FXMLMainController mainController = loader.getController();
 
-    ObservableStreamAppender.getObservable()
-        .addListener((observable, oldValue, newValue) -> mainController.setTopText(newValue));
-    Scene newScene = new Scene(root);
+        ObservableStreamAppender.getObservable()
+                .addListener((observable, oldValue, newValue) -> mainController.setTopText(newValue));
+        Scene newScene = new Scene(root);
 
-    primaryStage.setScene(newScene);
+        primaryStage.setScene(newScene);
 
-    primaryStage.setTitle("SERVER");
-    primaryStage.getIcons().add(new Image("icon.png"));
+        primaryStage.setTitle("SERVER");
+        primaryStage.getIcons().add(new Image("icon.png"));
 
-    Platform.runLater(
-        () -> {
-          final var handle = StageOps.findWindowHandle(primaryStage);
+        Platform.runLater(() -> {
+            final var handle = StageOps.findWindowHandle(primaryStage);
 
-          // Forces Dark Mode on Windows11
-          StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
+            // Forces Dark Mode on Windows11
+            StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
         });
 
-    primaryStage.show();
-  }
+        primaryStage.show();
+    }
 
-  @Override
-  public void stop() {}
+    @Override
+    public void stop() {}
 }

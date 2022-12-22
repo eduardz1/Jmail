@@ -48,141 +48,135 @@ import jmail.lib.autocompletion.textfield.AutoCompletionBinding.ISuggestionReque
  * @see CustomTextField
  */
 public class TextFields {
-  private static final Duration FADE_DURATION = Duration.millis(350);
+    private static final Duration FADE_DURATION = Duration.millis(350);
 
-  private TextFields() {
-    // no-op
-  }
+    private TextFields() {
+        // no-op
+    }
 
-  /***************************************************************************
-   *                                                                         *
-   * Search fields                                                           *
-   *                                                                         *
-   **************************************************************************/
+    /***************************************************************************
+     *                                                                         *
+     * Search fields                                                           *
+     *                                                                         *
+     **************************************************************************/
 
-  /**
-   * Creates a TextField that shows a clear button inside the TextField (on the right hand side of
-   * it) when text is entered by the user.
-   */
-  public static TextField createClearableTextField() {
-    CustomTextField inputField = new CustomTextField();
-    setupClearButtonField(inputField, inputField.rightProperty());
-    return inputField;
-  }
+    /**
+     * Creates a TextField that shows a clear button inside the TextField (on the right hand side of
+     * it) when text is entered by the user.
+     */
+    public static TextField createClearableTextField() {
+        CustomTextField inputField = new CustomTextField();
+        setupClearButtonField(inputField, inputField.rightProperty());
+        return inputField;
+    }
 
-  /**
-   * Creates a PasswordField that shows a clear button inside the PasswordField (on the right hand
-   * side of it) when text is entered by the user.
-   */
-  public static PasswordField createClearablePasswordField() {
-    CustomPasswordField inputField = new CustomPasswordField();
-    setupClearButtonField(inputField, inputField.rightProperty());
-    return inputField;
-  }
+    /**
+     * Creates a PasswordField that shows a clear button inside the PasswordField (on the right hand
+     * side of it) when text is entered by the user.
+     */
+    public static PasswordField createClearablePasswordField() {
+        CustomPasswordField inputField = new CustomPasswordField();
+        setupClearButtonField(inputField, inputField.rightProperty());
+        return inputField;
+    }
 
-  private static void setupClearButtonField(
-      TextField inputField, ObjectProperty<Node> rightProperty) {
-    inputField.getStyleClass().add("clearable-field"); // $NON-NLS-1$
+    private static void setupClearButtonField(TextField inputField, ObjectProperty<Node> rightProperty) {
+        inputField.getStyleClass().add("clearable-field"); // $NON-NLS-1$
 
-    Region clearButton = new Region();
-    clearButton.getStyleClass().addAll("graphic"); // $NON-NLS-1$
-    StackPane clearButtonPane = new StackPane(clearButton);
-    clearButtonPane.getStyleClass().addAll("clear-button"); // $NON-NLS-1$
-    clearButtonPane.setOpacity(0.0);
-    clearButtonPane.setCursor(Cursor.DEFAULT);
-    clearButtonPane.setOnMouseReleased(e -> inputField.clear());
-    clearButtonPane.managedProperty().bind(inputField.editableProperty());
-    clearButtonPane.visibleProperty().bind(inputField.editableProperty());
+        Region clearButton = new Region();
+        clearButton.getStyleClass().addAll("graphic"); // $NON-NLS-1$
+        StackPane clearButtonPane = new StackPane(clearButton);
+        clearButtonPane.getStyleClass().addAll("clear-button"); // $NON-NLS-1$
+        clearButtonPane.setOpacity(0.0);
+        clearButtonPane.setCursor(Cursor.DEFAULT);
+        clearButtonPane.setOnMouseReleased(e -> inputField.clear());
+        clearButtonPane.managedProperty().bind(inputField.editableProperty());
+        clearButtonPane.visibleProperty().bind(inputField.editableProperty());
 
-    rightProperty.set(clearButtonPane);
+        rightProperty.set(clearButtonPane);
 
-    final FadeTransition fader = new FadeTransition(FADE_DURATION, clearButtonPane);
-    fader.setCycleCount(1);
+        final FadeTransition fader = new FadeTransition(FADE_DURATION, clearButtonPane);
+        fader.setCycleCount(1);
 
-    inputField
-        .textProperty()
-        .addListener(
-            new InvalidationListener() {
+        inputField.textProperty().addListener(new InvalidationListener() {
 
-              private boolean isButtonVisible = false;
+            private boolean isButtonVisible = false;
 
-              @Override
-              public void invalidated(Observable arg0) {
+            @Override
+            public void invalidated(Observable arg0) {
                 String text = inputField.getText();
                 boolean isTextEmpty = text == null || text.isEmpty();
 
                 if (isTextEmpty == isButtonVisible) {
-                  isButtonVisible = !isTextEmpty;
-                  fadeTo(isButtonVisible);
+                    isButtonVisible = !isTextEmpty;
+                    fadeTo(isButtonVisible);
                 }
-              }
+            }
 
-              private void fadeTo(boolean visible) {
+            private void fadeTo(boolean visible) {
                 fader.stop();
                 fader.setFromValue(visible ? 0.0 : 1.0);
                 fader.setToValue(visible ? 1.0 : 0.0);
                 fader.play();
-              }
-            });
-  }
+            }
+        });
+    }
 
-  /***************************************************************************
-   *                                                                         *
-   * Auto-completion                                                         *
-   *                                                                         *
-   **************************************************************************/
+    /***************************************************************************
+     *                                                                         *
+     * Auto-completion                                                         *
+     *                                                                         *
+     **************************************************************************/
 
-  /**
-   * Create a new auto-completion binding between the given textField and the given suggestion
-   * provider.
-   *
-   * <p>The {@link TextFields} API has some suggestion-provider builder methods for simple use
-   * cases.
-   *
-   * @param textField The {@link TextField} to which auto-completion shall be added
-   * @param suggestionProvider A suggestion-provider strategy to use
-   * @param converter The converter to be used to convert suggestions to strings
-   */
-  public static <T> AutoCompletionBinding<T> bindAutoCompletion(
-      TextField textField,
-      Callback<ISuggestionRequest, Collection<T>> suggestionProvider,
-      StringConverter<T> converter) {
-    return new AutoCompletionTextFieldBinding<>(textField, suggestionProvider, converter);
-  }
+    /**
+     * Create a new auto-completion binding between the given textField and the given suggestion
+     * provider.
+     *
+     * <p>The {@link TextFields} API has some suggestion-provider builder methods for simple use
+     * cases.
+     *
+     * @param textField The {@link TextField} to which auto-completion shall be added
+     * @param suggestionProvider A suggestion-provider strategy to use
+     * @param converter The converter to be used to convert suggestions to strings
+     */
+    public static <T> AutoCompletionBinding<T> bindAutoCompletion(
+            TextField textField,
+            Callback<ISuggestionRequest, Collection<T>> suggestionProvider,
+            StringConverter<T> converter) {
+        return new AutoCompletionTextFieldBinding<>(textField, suggestionProvider, converter);
+    }
 
-  /**
-   * Create a new auto-completion binding between the given textField and the given suggestion
-   * provider.
-   *
-   * <p>The {@link TextFields} API has some suggestion-provider builder methods for simple use
-   * cases.
-   *
-   * @param textField The {@link TextField} to which auto-completion shall be added
-   * @param suggestionProvider A suggestion-provider strategy to use
-   * @return The AutoCompletionBinding
-   */
-  public static <T> AutoCompletionBinding<T> bindAutoCompletion(
-      TextField textField, Callback<ISuggestionRequest, Collection<T>> suggestionProvider) {
-    return new AutoCompletionTextFieldBinding<>(textField, suggestionProvider);
-  }
+    /**
+     * Create a new auto-completion binding between the given textField and the given suggestion
+     * provider.
+     *
+     * <p>The {@link TextFields} API has some suggestion-provider builder methods for simple use
+     * cases.
+     *
+     * @param textField The {@link TextField} to which auto-completion shall be added
+     * @param suggestionProvider A suggestion-provider strategy to use
+     * @return The AutoCompletionBinding
+     */
+    public static <T> AutoCompletionBinding<T> bindAutoCompletion(
+            TextField textField, Callback<ISuggestionRequest, Collection<T>> suggestionProvider) {
+        return new AutoCompletionTextFieldBinding<>(textField, suggestionProvider);
+    }
 
-  /**
-   * Create a new auto-completion binding between the given {@link TextField} using the given
-   * auto-complete suggestions
-   *
-   * @param textField The {@link TextField} to which auto-completion shall be added
-   * @param possibleSuggestions Possible auto-complete suggestions
-   * @return The AutoCompletionBinding
-   */
-  @SafeVarargs
-  public static <T> AutoCompletionBinding<T> bindAutoCompletion(
-      TextField textField, T... possibleSuggestions) {
-    return bindAutoCompletion(textField, Arrays.asList(possibleSuggestions));
-  }
+    /**
+     * Create a new auto-completion binding between the given {@link TextField} using the given
+     * auto-complete suggestions
+     *
+     * @param textField The {@link TextField} to which auto-completion shall be added
+     * @param possibleSuggestions Possible auto-complete suggestions
+     * @return The AutoCompletionBinding
+     */
+    @SafeVarargs
+    public static <T> AutoCompletionBinding<T> bindAutoCompletion(TextField textField, T... possibleSuggestions) {
+        return bindAutoCompletion(textField, Arrays.asList(possibleSuggestions));
+    }
 
-  public static <T> AutoCompletionBinding<T> bindAutoCompletion(
-      TextField textField, Collection<T> possibleSuggestions) {
-    return new AutoCompletionTextFieldBinding<>(
-        textField, SuggestionProvider.create(possibleSuggestions));
-  }
+    public static <T> AutoCompletionBinding<T> bindAutoCompletion(
+            TextField textField, Collection<T> possibleSuggestions) {
+        return new AutoCompletionTextFieldBinding<>(textField, SuggestionProvider.create(possibleSuggestions));
+    }
 }

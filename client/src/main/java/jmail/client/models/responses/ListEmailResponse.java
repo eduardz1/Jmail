@@ -9,13 +9,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ListEmailResponse extends ServerResponse {
-  private List<Email> emails;
+    private List<Email> emails;
 
-  public ListEmailResponse(String status, String message) {
-    super(status, message);
-  }
+    public ListEmailResponse(String status, String message) {
+        super(status, message);
+    }
 
-  public ListEmailResponse() {
-    super();
-  }
+    public ListEmailResponse() {
+        super();
+    }
 }
