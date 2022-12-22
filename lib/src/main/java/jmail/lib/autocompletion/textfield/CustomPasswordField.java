@@ -21,12 +21,12 @@
  */
 package jmail.lib.autocompletion.textfield;
 
+import jmail.lib.autocompletion.skin.CustomTextFieldSkin;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Skin;
-import jmail.lib.autocompletion.skin.CustomTextFieldSkin;
 
 /**
  * A base class for people wanting to customize a {@link PasswordField} to contain nodes inside the

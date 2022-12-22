@@ -26,10 +26,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+
+import jmail.lib.autocompletion.textfield.AutoCompletionBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.util.Callback;
-import jmail.lib.autocompletion.textfield.AutoCompletionBinding.ISuggestionRequest;
 
 /**
  * This is a simple implementation of a generic suggestion provider callback. The complexity of
@@ -37,7 +38,7 @@ import jmail.lib.autocompletion.textfield.AutoCompletionBinding.ISuggestionReque
  *
  * @param <T> Type of suggestions
  */
-public abstract class SuggestionProvider<T> implements Callback<ISuggestionRequest, Collection<T>> {
+public abstract class SuggestionProvider<T> implements Callback<AutoCompletionBinding.ISuggestionRequest, Collection<T>> {
 
   private final List<T> possibleSuggestions = new ArrayList<>();
   private final Object possibleSuggestionsLock = new Object();
@@ -105,7 +106,7 @@ public abstract class SuggestionProvider<T> implements Callback<ISuggestionReque
   }
 
   @Override
-  public Collection<T> call(final ISuggestionRequest request) {
+  public Collection<T> call(final AutoCompletionBinding.ISuggestionRequest request) {
     List<T> suggestions = new ArrayList<>();
     if (!request.getUserText().isEmpty()) {
       synchronized (possibleSuggestionsLock) {
@@ -140,7 +141,7 @@ public abstract class SuggestionProvider<T> implements Callback<ISuggestionReque
    * @param request
    * @return
    */
-  protected abstract boolean isMatch(T suggestion, ISuggestionRequest request);
+  protected abstract boolean isMatch(T suggestion, AutoCompletionBinding.ISuggestionRequest request);
 
   /***************************************************************************
    *                                                                         *
@@ -223,7 +224,7 @@ public abstract class SuggestionProvider<T> implements Callback<ISuggestionReque
 
     /** {@inheritDoc} */
     @Override
-    protected boolean isMatch(T suggestion, ISuggestionRequest request) {
+    protected boolean isMatch(T suggestion, AutoCompletionBinding.ISuggestionRequest request) {
       String userTextLower = request.getUserText().toLowerCase();
       String suggestionStr = stringConverter.call(suggestion).toLowerCase();
       return suggestionStr.contains(userTextLower);

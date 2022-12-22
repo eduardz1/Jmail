@@ -22,6 +22,8 @@
 package jmail.lib.autocompletion;
 
 import java.util.UUID;
+
+import jmail.lib.autocompletion.skin.AutoCompletePopupSkin;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;
@@ -37,7 +39,6 @@ import javafx.scene.control.PopupControl;
 import javafx.scene.control.Skin;
 import javafx.stage.Window;
 import javafx.util.StringConverter;
-import jmail.lib.autocompletion.skin.AutoCompletePopupSkin;
 
 /**
  * The auto-complete-popup provides an list of available suggestions in order to complete current

@@ -38,7 +38,6 @@ import javafx.util.Duration;
 import javafx.util.StringConverter;
 import jmail.lib.autocompletion.AutoCompletionTextFieldBinding;
 import jmail.lib.autocompletion.SuggestionProvider;
-import jmail.lib.autocompletion.textfield.AutoCompletionBinding.ISuggestionRequest;
 
 /**
  * A class containing useful customizations for the JavaFX {@link TextField}. Note that this class
@@ -145,7 +144,7 @@ public class TextFields {
    */
   public static <T> AutoCompletionBinding<T> bindAutoCompletion(
       TextField textField,
-      Callback<ISuggestionRequest, Collection<T>> suggestionProvider,
+      Callback<AutoCompletionBinding.ISuggestionRequest, Collection<T>> suggestionProvider,
       StringConverter<T> converter) {
     return new AutoCompletionTextFieldBinding<>(textField, suggestionProvider, converter);
   }
@@ -162,7 +161,7 @@ public class TextFields {
    * @return The AutoCompletionBinding
    */
   public static <T> AutoCompletionBinding<T> bindAutoCompletion(
-      TextField textField, Callback<ISuggestionRequest, Collection<T>> suggestionProvider) {
+      TextField textField, Callback<AutoCompletionBinding.ISuggestionRequest, Collection<T>> suggestionProvider) {
     return new AutoCompletionTextFieldBinding<>(textField, suggestionProvider);
   }
 

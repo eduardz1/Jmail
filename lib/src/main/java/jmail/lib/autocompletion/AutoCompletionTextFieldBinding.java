@@ -22,11 +22,12 @@
 package jmail.lib.autocompletion;
 
 import java.util.Collection;
+
+import jmail.lib.autocompletion.textfield.AutoCompletionBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-import jmail.lib.autocompletion.textfield.AutoCompletionBinding;
 
 /**
  * Represents a binding between a text field and a auto-completion popup

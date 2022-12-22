@@ -1,13 +1,13 @@
 package jmail.lib.deserializers;
 
-import static jmail.lib.constants.CommandActions.*;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+
+import jmail.lib.constants.CommandActions;
 import jmail.lib.models.commands.*;
 
 public class CommandDeserializer extends JsonDeserializer<Command> {
@@ -21,18 +21,18 @@ public class CommandDeserializer extends JsonDeserializer<Command> {
     ObjectMapper mapper = new ObjectMapper();
     var command =
         switch (action) {
-          case DELETE -> new CommandDeleteEmail(
+          case CommandActions.DELETE -> new CommandDeleteEmail(
               mapper.treeToValue(parameters, CommandDeleteEmail.CommandDeleteEmailParameter.class));
-          case LIST -> new CommandListEmail(
+          case CommandActions.LIST -> new CommandListEmail(
               mapper.treeToValue(parameters, CommandListEmail.CommandListEmailParameter.class));
-          case READ -> new CommandReadEmail(
+          case CommandActions.READ -> new CommandReadEmail(
               mapper.treeToValue(parameters, CommandReadEmail.CommandReadEmailParameter.class));
-          case SEND -> new CommandSendEmail(
+          case CommandActions.SEND -> new CommandSendEmail(
               mapper.treeToValue(parameters, CommandSendEmail.CommandSendEmailParameter.class));
-          case RESTORE -> new CommandRestoreEmail(
+          case CommandActions.RESTORE -> new CommandRestoreEmail(
               mapper.treeToValue(
                   parameters, CommandRestoreEmail.CommandRestoreEmailParameter.class));
-          case LOGIN -> new CommandLogin(
+          case CommandActions.LOGIN -> new CommandLogin(
               mapper.treeToValue(parameters, CommandLogin.CommandLoginParameter.class));
           default -> null;
         };

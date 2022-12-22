@@ -1,7 +1,7 @@
 package jmail.lib.helpers;
 
-import javafx.util.Pair;
 import jmail.lib.models.Email;
+import javafx.util.Pair;
 
 public class ValidatorHelper {
 

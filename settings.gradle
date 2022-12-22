@@ -3,6 +3,9 @@ pluginManagement {
         id 'io.freefair.lombok' version "${lombokPluginVersion}"
         id 'com.diffplug.spotless' version "${spotlessPluginVersion}"
         id 'org.openjfx.javafxplugin' version "${javafxPluginVersion}"
+        id 'com.github.johnrengelman.shadow' version "${shadowPluginVersion}"
+        id 'org.beryx.runtime' version '1.12.7'
+        id 'org.beryx.jlink' version '2.25.0'
     }
 }
 

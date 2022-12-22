@@ -21,16 +21,16 @@
  */
 package jmail.lib.autocompletion.textfield;
 
-import com.sun.javafx.event.EventHandlerManager;
-import java.util.Collection;
-import java.util.UUID;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.concurrent.Task;
-import javafx.event.*;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventTarget;
+import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Skin;
@@ -38,6 +38,9 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import jmail.lib.autocompletion.AutoCompletePopup;
 import jmail.lib.autocompletion.skin.AutoCompletePopupSkin;
+
+import java.util.Collection;
+import java.util.UUID;
 
 /**
  * The AutoCompletionBinding is the abstract base class of all auto-completion bindings. This class
@@ -51,7 +54,7 @@ import jmail.lib.autocompletion.skin.AutoCompletePopupSkin;
  * @param <T> Model-Type of the suggestions
  * @see TextFields
  */
-public abstract class AutoCompletionBinding<T> implements EventTarget {
+public abstract class AutoCompletionBinding<T> {
 
   /***************************************************************************
    *                                                                         *
@@ -302,7 +305,7 @@ public abstract class AutoCompletionBinding<T> implements EventTarget {
   }
 
   protected void fireAutoCompletion(T completion) {
-    Event.fireEvent(this, new AutoCompletionEvent<>(completion));
+    onAutoCompleted.get().handle(new AutoCompletionBinding.AutoCompletionEvent<>(completion));
   }
 
   /***************************************************************************
@@ -436,119 +439,76 @@ public abstract class AutoCompletionBinding<T> implements EventTarget {
   }
 
   /***************************************************************************
-   *                                                                         *
-   * Events                                                                  *
-   *                                                                         *
-   **************************************************************************/
-
-  // --- AutoCompletionEvent
-
-  /** Represents an Event which is fired after an auto completion. */
-  @SuppressWarnings("serial")
-  public static class AutoCompletionEvent<TE> extends Event {
-
+  *                                                                         *
+  * Events                                                                  *
+  *                                                                         *
+  **************************************************************************/
+    
+    
+    // --- AutoCompletionEvent
+    
     /**
-     * The event type that should be listened to by people interested in knowing when an auto
-     * completion has been performed.
+     * Represents an Event which is fired after an auto completion.
      */
-    public static final EventType<AutoCompletionEvent<?>> AUTO_COMPLETED =
-        new EventType<>("AUTO_COMPLETED" + UUID.randomUUID().toString()); // $NON-NLS-1$
-
-    private final TE completion;
-
-    /** Creates a new event that can subsequently be fired. */
-    public AutoCompletionEvent(TE completion) {
-      super(AUTO_COMPLETED);
-      this.completion = completion;
+    @SuppressWarnings("serial")
+    public static class AutoCompletionEvent<TE> extends Event {
+        
+        /**
+         * The event type that should be listened to by people interested in
+         * knowing when an auto completion has been performed.
+         */
+        public static final EventType<AutoCompletionBinding.AutoCompletionEvent<?>> AUTO_COMPLETED
+                = new EventType<>("AUTO_COMPLETED" + UUID.randomUUID()); //$NON-NLS-1$
+        
+        private final TE completion;
+        
+        /**
+         * Creates a new event that can subsequently be fired.
+         */
+        public AutoCompletionEvent(TE completion) {
+            super(AUTO_COMPLETED);
+            this.completion = completion;
+        }
+        
+        /**
+         * Returns the chosen completion.
+         */
+        public TE getCompletion() {
+            return completion;
+        }
     }
-
-    /** Returns the chosen completion. */
-    public TE getCompletion() {
-      return completion;
+    
+    
+    private ObjectProperty<EventHandler<AutoCompletionBinding.AutoCompletionEvent<T>>> onAutoCompleted;
+    
+    /**
+     * Set a event handler which is invoked after an auto completion.
+     * @param value
+     */
+    public final void setOnAutoCompleted(EventHandler<AutoCompletionBinding.AutoCompletionEvent<T>> value) {
+        onAutoCompletedProperty().set(value);
     }
-  }
-
-  private ObjectProperty<EventHandler<AutoCompletionEvent<T>>> onAutoCompleted;
-
-  /**
-   * Set a event handler which is invoked after an auto completion.
-   *
-   * @param value
-   */
-  public final void setOnAutoCompleted(EventHandler<AutoCompletionEvent<T>> value) {
-    onAutoCompletedProperty().set(value);
-  }
-
-  public final EventHandler<AutoCompletionEvent<T>> getOnAutoCompleted() {
-    return onAutoCompleted == null ? null : onAutoCompleted.get();
-  }
-
-  public final ObjectProperty<EventHandler<AutoCompletionEvent<T>>> onAutoCompletedProperty() {
-    if (onAutoCompleted == null) {
-      onAutoCompleted =
-          new ObjectPropertyBase<>() {
-            @SuppressWarnings({"rawtypes", "unchecked"})
-            @Override
-            protected void invalidated() {
-              eventHandlerManager.setEventHandler(
-                  AutoCompletionEvent.AUTO_COMPLETED,
-                  (EventHandler<AutoCompletionEvent>) (Object) get());
-            }
-
-            @Override
-            public Object getBean() {
-              return AutoCompletionBinding.this;
-            }
-
-            @Override
-            public String getName() {
-              return "onAutoCompleted"; //$NON-NLS-1$
-            }
-          };
+    
+    public final EventHandler<AutoCompletionBinding.AutoCompletionEvent<T>> getOnAutoCompleted() {
+        return onAutoCompleted == null ? null : onAutoCompleted.get();
     }
-    return onAutoCompleted;
-  }
-
-  /***************************************************************************
-   *                                                                         *
-   * EventTarget Implementation                                              *
-   *                                                                         *
-   **************************************************************************/
-
-  final EventHandlerManager eventHandlerManager = new EventHandlerManager(this);
-
-  /**
-   * Registers an event handler to this EventTarget. The handler is called when the menu item
-   * receives an {@code Event} of the specified type during the bubbling phase of event delivery.
-   *
-   * @param <E> the specific event class of the handler
-   * @param eventType the type of the events to receive by the handler
-   * @param eventHandler the handler to register
-   * @throws NullPointerException if the event type or handler is null
-   */
-  public <E extends Event> void addEventHandler(
-      EventType<E> eventType, EventHandler<E> eventHandler) {
-    eventHandlerManager.addEventHandler(eventType, eventHandler);
-  }
-
-  /**
-   * Unregisters a previously registered event handler from this EventTarget. One handler might have
-   * been registered for different event types, so the caller needs to specify the particular event
-   * type from which to unregister the handler.
-   *
-   * @param <E> the specific event class of the handler
-   * @param eventType the event type from which to unregister
-   * @param eventHandler the handler to unregister
-   * @throws NullPointerException if the event type or handler is null
-   */
-  public <E extends Event> void removeEventHandler(
-      EventType<E> eventType, EventHandler<E> eventHandler) {
-    eventHandlerManager.removeEventHandler(eventType, eventHandler);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public EventDispatchChain buildEventDispatchChain(EventDispatchChain tail) {
-    return tail.prepend(eventHandlerManager);
-  }
+    
+    public final ObjectProperty<EventHandler<AutoCompletionBinding.AutoCompletionEvent<T>>> onAutoCompletedProperty() {
+        if (onAutoCompleted == null) {
+            onAutoCompleted = new ObjectPropertyBase<>() {
+                @Override
+                @SuppressWarnings({ "rawtypes", "unchecked" })
+                protected void invalidated(){}
+                @Override
+                public Object getBean(){
+                    return AutoCompletionBinding.this;
+                }
+                @Override
+                public String getName(){
+                    return "onAutoCompleted"; //$NON-NLS-1$
+                }
+            };
+        }
+        return onAutoCompleted;
+    }
 }

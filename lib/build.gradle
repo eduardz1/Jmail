@@ -2,10 +2,11 @@ plugins {
     id 'java-library'
     id 'io.freefair.lombok'
     id "com.diffplug.spotless"
+    id 'org.javamodularity.moduleplugin' version '1.8.12'
     id 'org.openjfx.javafxplugin'
 }
 
-version = '30L'
+version = '30.0.1'
 
 java {
     toolchain {
@@ -67,4 +68,8 @@ spotless {
         eclipseWtp('xml')
         indentWithSpaces()
     }
+}
+
+tasks.named('compileJava') {
+    notCompatibleWithConfigurationCache('')
 }
