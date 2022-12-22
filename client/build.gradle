@@ -40,7 +40,7 @@ dependencies {
 }
 
 application {
-    mainClass = 'jmail.client.Main'
+    mainClass = 'jmail.client.Launcher'
     applicationDefaultJvmArgs = [
         '--add-opens=javafx.controls/javafx.scene.control=ALL-UNNAMED',
         '--add-exports=javafx.base/com.sun.javafx.event=ALL-UNNAMED'

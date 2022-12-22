@@ -47,7 +47,7 @@ public class Main extends Application {
     primaryStage.setScene(newScene);
 
     primaryStage.setTitle("SERVER");
-    primaryStage.getIcons().add(new Image("logo.png"));
+    primaryStage.getIcons().add(new Image("icon.png"));
 
     Platform.runLater(
         () -> {

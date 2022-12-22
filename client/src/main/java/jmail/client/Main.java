@@ -56,7 +56,7 @@ public class Main extends Application {
     Scene scene = new Scene(root);
 
     primaryStage.setTitle("JMAIL");
-    primaryStage.getIcons().add(new Image("logo.png"));
+    primaryStage.getIcons().add(new Image("icon.png"));
     primaryStage.setScene(scene);
 
     Platform.runLater(

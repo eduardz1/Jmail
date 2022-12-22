@@ -80,8 +80,7 @@ public class FXMLController implements Initializable {
                             .getCurrentUserProperty()
                             .map(u -> u == null ? "" : u.getEmail()));
 
-    String[] folders = {"Inbox", "Sent", "Trash"};
-    listFolder.getItems().addAll(folders);
+    listFolder.getItems().addAll("Inbox", "Sent", "Trash");
 
     listFolder
             .getSelectionModel()
