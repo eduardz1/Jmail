@@ -6,7 +6,7 @@ module jmail.lib {
   requires javafx.base;
   requires javafx.graphics;
   requires javafx.controls;
-  requires lombok;
+  requires static lombok;
 
   exports jmail.lib.autocompletion.skin;
     exports jmail.lib.autocompletion;

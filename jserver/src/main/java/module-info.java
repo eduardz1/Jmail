@@ -5,7 +5,7 @@ module jmail.server {
   requires javafx.fxml;
   requires com.fasterxml.jackson.core;
   requires org.fxmisc.richtext;
-  requires lombok;
+  requires static lombok;
   requires javafx.controls;
   requires javafx.graphics;
 

@@ -7,7 +7,7 @@ module jmail.client {
   requires org.slf4j;
   requires javafx.controls;
   requires com.google.common;
-  requires lombok;
+  requires static lombok;
 
   opens jmail.client.controllers to javafx.fxml;
   exports jmail.client;

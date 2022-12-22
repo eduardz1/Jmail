@@ -54,7 +54,8 @@ javafx {
 
 import org.apache.tools.ant.taskdefs.condition.Os
 jlink {
-    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    addExtraDependencies("javafx")
+//    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
     launcher {
         noConsole = true
     }
@@ -68,10 +69,10 @@ jlink {
             installerOptions += ['--win-per-user-install', '--win-dir-chooser', '--win-menu', '--win-shortcut']
         }
         else if (Os.isFamily(Os.FAMILY_UNIX)) {
-            installerOptions += ['--linux-package-name', 'server','--linux-shortcut']
+            installerOptions += ['--linux-package-name', 'jmail-server','--linux-shortcut']
         }
         else if (Os.isFamily(Os.FAMILY_MAC)) {
-            installerOptions += ['--mac-package-name', 'server']
+            installerOptions += ['--mac-package-name', 'jmail-server']
         }
     }
 }
@@ -138,4 +139,8 @@ tasks.named('prepareModulesDir').configure {
 
 tasks.named('startScripts').configure {
    notCompatibleWithConfigurationCache('')
+}
+
+tasks.named('jlinkZip').configure {
+    notCompatibleWithConfigurationCache('')
 }
