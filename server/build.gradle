@@ -59,7 +59,6 @@ spotless {
 
     java {
         importOrder() // Use the default importOrder configuration
-        removeUnusedImports()
         googleJavaFormat()
         formatAnnotations()
     }
