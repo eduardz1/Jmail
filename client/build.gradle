@@ -68,8 +68,9 @@ spotless {
 
     java {
         importOrder() // Use the default importOrder configuration
-        googleJavaFormat()
-        formatAnnotations()
+        palantirJavaFormat()
+        removeUnusedImports()
+        formatAnnotations().addTypeAnnotation("FXML")
     }
 
     groovyGradle {
