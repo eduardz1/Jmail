@@ -5,10 +5,16 @@ import java.util.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import jmail.client.models.client.MailClient;
 import jmail.client.models.model.DataModel;
 import jmail.client.models.responses.ListEmailResponse;
@@ -22,6 +28,9 @@ import jmail.lib.models.commands.CommandDeleteEmail;
 import jmail.lib.models.commands.CommandDeleteEmail.CommandDeleteEmailParameter;
 import jmail.lib.models.commands.CommandListEmail;
 import jmail.lib.models.commands.CommandSendEmail;
+
+import org.kordamp.ikonli.Ikon;
+import org.kordamp.ikonli.javafx.FontIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,11 +58,12 @@ public class FXMLController implements Initializable {
 
     @FXML private Label currentMailField;
 
+    @FXML private Label currentUserName;
     @FXML private Label currentUserEmail;
 
-    @FXML private ListView listEmails;
+    @FXML private ListView<Email> listEmails;
 
-    @FXML private ListView listFolder;
+    @FXML private ListView<String> listFolder;
 
     private final Set<String> suggestions = new HashSet<>();
     private AutoCompletionBinding<String> autoCompletionBinding;
@@ -74,15 +84,60 @@ public class FXMLController implements Initializable {
                 .textProperty()
                 .bind(DataModel.getInstance().getCurrentEmailProperty().map(e -> e == null ? "" : e.getSubject()));
 
-        currentUserEmail
-                .textProperty()
-                .bind(DataModel.getInstance().getCurrentUserProperty().map(u -> u == null ? "" : u.getEmail()));
+        currentUserName
+            .textProperty()
+            .bind(DataModel.getInstance().getCurrentUserProperty().map(u -> u == null ? "" : u.getName()));
+        var avatar = DataModel.getInstance().getCurrentUserProperty().getValue().getAvatar();
+        Node graphic;
+        if(avatar == null) {
+            var fontIcon = new FontIcon("mdi2a-account");
+            fontIcon.setIconColor(Paint.valueOf("#afb1b3"));
+            graphic = fontIcon;
+        } else {
+            graphic = new ImageView(avatar);
+        }
+        currentUserName.setGraphic(graphic);
+        
 
         listFolder.getItems().addAll("Inbox", "Sent", "Trash");
+        listFolder.setCellFactory(param -> new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    return;
+                }
+
+                switch(item.toLowerCase()) {
+                    case "inbox":
+                        var fontIcon1 = new FontIcon("mdi2i-inbox");
+                        fontIcon1.setIconColor(Paint.valueOf("#afb1b3"));
+                        setGraphic(fontIcon1);
+                        break;
+                    case "sent":
+                        var fontIcon2 = new FontIcon("mdi2e-email-send");
+                        fontIcon2.setIconColor(Paint.valueOf("#afb1b3"));
+                         setGraphic(fontIcon2);
+                         break;
+                    case "trash":
+                            var fontIcon3 = new FontIcon("mdi2t-trash-can");
+                            fontIcon3.setIconColor(Paint.valueOf("#afb1b3"));
+                         setGraphic(fontIcon3);
+                         break;
+                }
+                setText(item);
+                setFont(Font.font("System", 16));
+            }
+        });
+
+        var label = new String(DataModel.getInstance().getCurrentUser().getEmail());
+        currentUserEmail.textProperty().set(label);
 
         listFolder.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             LOGGER.info("Selected item: {}", newValue);
             DataModel.getInstance().setCurrentFolder(newValue.toString().toLowerCase());
+            currentUserEmail.textProperty().set(newValue + " - " + label); // FIXME does not seem to work
         });
     }
 
