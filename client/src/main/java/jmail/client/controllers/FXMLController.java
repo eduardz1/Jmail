@@ -1,7 +1,6 @@
 package jmail.client.controllers;
 
-import java.net.URL;
-import java.util.*;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.control.*;
 import jmail.client.models.client.MailClient;
 import jmail.client.models.model.DataModel;
 import jmail.client.models.responses.ListEmailResponse;
@@ -33,6 +33,9 @@ import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.URL;
+import java.util.*;
 
 public class FXMLController implements Initializable {
 
@@ -97,8 +100,11 @@ public class FXMLController implements Initializable {
             graphic = new ImageView(avatar);
         }
         currentUserName.setGraphic(graphic);
-        
 
+
+
+
+        // Should all done in subcontroller o non so dove
         listFolder.getItems().addAll("Inbox", "Sent", "Trash");
         listFolder.setCellFactory(param -> new ListCell<>() {
             @Override
@@ -135,10 +141,30 @@ public class FXMLController implements Initializable {
         currentUserEmail.textProperty().set(label);
 
         listFolder.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            LOGGER.info("Selected item: {}", newValue);
             DataModel.getInstance().setCurrentFolder(newValue.toString().toLowerCase());
             currentUserEmail.textProperty().set(newValue + " - " + label); // FIXME does not seem to work
         });
+
+        listEmails.setCellFactory(lv -> new ListCell<Email>() {
+            @Override
+            protected void updateItem(Email item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(item == null ? null : item.getSubject() );
+            }
+        });
+
+        DataModel.getInstance().getCurrentFilteredEmails().addListener((ListChangeListener<Email>) c -> {
+            var emails = c.getList();
+            listEmails.getItems().clear();
+            listEmails.getItems().addAll(emails);
+        });
+
+        listEmails.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            DataModel.getInstance().setCurrentEmail(newValue);
+        });
+
+
+
     }
 
     private void learnWord(String trim) {

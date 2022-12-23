@@ -1,16 +1,18 @@
 package jmail.client.models.model;
 
-import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.beans.value.ObservableStringValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import jmail.lib.models.Email;
 import jmail.lib.models.User;
+
+import java.util.List;
 
 public class DataModel {
 
@@ -31,10 +33,10 @@ public class DataModel {
         currentUser = new SimpleObjectProperty<>();
         currentFolder = new SimpleStringProperty();
 
-        inbox = FXCollections.emptyObservableList();
-        sent = FXCollections.emptyObservableList();
-        trash = FXCollections.emptyObservableList();
-        currentFilteredEmails = FXCollections.emptyObservableList();
+        inbox = FXCollections.observableArrayList();
+        sent = FXCollections.observableArrayList();
+        trash = FXCollections.observableArrayList();
+        currentFilteredEmails = FXCollections.observableArrayList();
 
         currentEmail = new SimpleObjectProperty<>();
         serverStatusConnected = new SimpleBooleanProperty();
@@ -129,8 +131,8 @@ public class DataModel {
         currentEmail.set(email);
     }
 
-    public boolean isServerStatusConnected() {
-        return serverStatusConnected.get();
+    public ObservableBooleanValue isServerStatusConnected() {
+        return serverStatusConnected;
     }
 
     public void setServerStatusConnected(boolean serverStatusConnected) {
