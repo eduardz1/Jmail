@@ -2,6 +2,11 @@ package jmail.client;
 
 import io.github.mimoguz.custom_window.DwmAttribute;
 import io.github.mimoguz.custom_window.StageOps;
+import java.io.IOException;
+import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -16,99 +21,97 @@ import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.CommandPing;
 
-import java.io.IOException;
-import java.util.Objects;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 public class Main extends Application {
 
-  private static Stage primaryStage;
-  private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private static Stage primaryStage;
+    private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
-  public static void main(String[] args) throws IOException {
-    launch(args);
-  }
-
-  public static void changeScene(String fxml) {
-    Parent pane = null;
-    try {
-      pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxml)));
-    } catch (IOException e) {
-      throw new RuntimeException(e); // TODO: handle exception
+    public static void main(String[] args) {
+        launch(args);
     }
-    primaryStage.getScene().setRoot(pane);
-    primaryStage.sizeToScene();
-  }
 
-  public static void tryConnect() {
-    try {
-      MailClient.getInstance().connect("localhost", 8085);      // FIXME: hardcoded
-      System.out.println("Connected");
-    } catch (IOException e) {
-      System.out.println("Failed to connect to server");
-      DataModel.getInstance().setServerStatusConnected(false);
+    public static void changeScene(String fxml) {
+
+        Platform.runLater(() -> changeSceneImpl(fxml));
     }
-  }
 
-  public String getGreeting() {
-    return "Hello World!";
-  }
+    private static void changeSceneImpl(String fxml) {
+        Parent pane;
+        try {
+            pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxml)));
+        } catch (IOException e) {
+            throw new RuntimeException(e); // TODO: handle exception
+        }
+        primaryStage.getScene().setRoot(pane);
+        primaryStage.sizeToScene();
+        primaryStage.setResizable(true); // FIXME: setting has no effect, I'm missing something don't know what, maybe
+        // primaryStage needs to be unshown and shown again
+    }
 
-  @Override
-  public void start(Stage primaryStage) throws Exception {
-    Main.primaryStage = primaryStage;
+    public static void tryConnect() {
+        try {
+            MailClient.getInstance().connect("localhost", 8085); // FIXME: hardcoded
+            System.out.println("Connected");
+        } catch (IOException e) {
+            System.out.println("Failed to connect to server");
+            DataModel.getInstance().setServerStatusConnected(false);
+        }
+    }
 
-    FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
-    Parent root = loader.load();
+    public String getGreeting() {
+        return "Hello World!";
+    }
 
-    Scene scene = new Scene(root);
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Main.primaryStage = primaryStage;
 
-    primaryStage.setTitle("JMAIL");
-    primaryStage.getIcons().add(new Image("logo.png"));
-    primaryStage.setScene(scene);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
 
-    Platform.runLater(
-            () -> {
-              final var handle = StageOps.findWindowHandle(primaryStage);
-              // Forces Dark Mode on Windows11
-              StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
-              startCheckThread();
-            });
+        Parent root = loader.load();
 
-    primaryStage.show();
-  }
+        Scene scene = new Scene(root);
 
-  public static void showNotConnectServerErrorDialog() {
-    // FIXME: Orribile, da correggere con un dialog
-    Alert alert = new Alert(Alert.AlertType.ERROR);
-    alert.setTitle("Error");
-    alert.setHeaderText("Server not available");
-    alert.setContentText("Server is currently not available. Please try again later.");
-    alert.showAndWait();
-  }
+        primaryStage.setTitle("JMAIL");
+        primaryStage.getIcons().add(new Image("icon.png"));
+        primaryStage.setScene(scene);
 
-  public void startCheckThread() {
-    scheduler.scheduleAtFixedRate(
-            () -> sendPingForConnectionCheck()
-            , 5, 15, TimeUnit.SECONDS);
-  }
+        Platform.runLater(() -> {
+            final var handle = StageOps.findWindowHandle(primaryStage);
+            // Forces Dark Mode on Windows11
+            StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
+            startCheckThread();
+        });
 
-  public static void sendPingForConnectionCheck() {
-    var pingCmd = new CommandPing();
-    MailClient.getInstance()
-            .sendCommand(
-                    pingCmd,
-                    response -> {
-                      if (response.getStatus().equals(ServerResponseStatuses.OK)) {
-                        DataModel.getInstance().setServerStatusConnected(true);
-                      } else {
-                        tryConnect();
-                      }
-                    },
-                    ServerResponse.class);
-  }
+        primaryStage.setResizable(false);
+        primaryStage.show();
+    }
 
+    public static void showNotConnectServerErrorDialog() {
+        // FIXME: Orribile, da correggere con un dialog
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("Server not available");
+        alert.setContentText("Server is currently not available. Please try again later.");
+        alert.showAndWait();
+    }
 
+    public void startCheckThread() {
+        scheduler.scheduleAtFixedRate(() -> sendPingForConnectionCheck(), 5, 15, TimeUnit.SECONDS);
+    }
+
+    public static void sendPingForConnectionCheck() {
+        var pingCmd = new CommandPing();
+        MailClient.getInstance()
+                .sendCommand(
+                        pingCmd,
+                        response -> {
+                            if (response.getStatus().equals(ServerResponseStatuses.OK)) {
+                                DataModel.getInstance().setServerStatusConnected(true);
+                            } else {
+                                tryConnect();
+                            }
+                        },
+                        ServerResponse.class);
+    }
 }

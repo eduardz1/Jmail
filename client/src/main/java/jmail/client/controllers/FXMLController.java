@@ -1,104 +1,239 @@
 package jmail.client.controllers;
 
 import java.net.URL;
-import java.util.Calendar;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.UUID;
+import java.util.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import jmail.client.models.client.MailClient;
+import jmail.client.models.model.DataModel;
+import jmail.client.models.responses.ListEmailResponse;
+import jmail.lib.autocompletion.textfield.AutoCompletionBinding;
+import jmail.lib.autocompletion.textfield.TextFields;
+import jmail.lib.constants.ServerResponseStatuses;
+import jmail.lib.helpers.ValidatorHelper;
 import jmail.lib.models.Email;
+import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.CommandDeleteEmail;
 import jmail.lib.models.commands.CommandDeleteEmail.CommandDeleteEmailParameter;
+import jmail.lib.models.commands.CommandListEmail;
 import jmail.lib.models.commands.CommandSendEmail;
-import jmail.lib.models.commands.CommandSendEmail.CommandSendEmailParameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FXMLController implements Initializable {
 
-  @FXML private Button NewMailButton;
+    private static final Logger LOGGER = LoggerFactory.getLogger(FXMLController.class.getName());
+    private Long lastUnixTimeEmailCheck = 0L;
 
-  //  public void initializeData(MailClient client) {
-  //    this.client = client;
-  //  }
-  @FXML private Button SearchButton;
-  @FXML private Button ReplyButton;
-  @FXML private Button FwdButton;
-  @FXML private Button FwdallButton;
-  @FXML private Button TrashButton;
+    @FXML private Button newMailButton;
 
-  @Override
-  public void initialize(URL location, ResourceBundle resources) {
-    // TODO: Auto-generated method stub
-  }
+    //  public void initializeData(MailClient client) {
+    //    this.client = client;
+    //  }
+    @FXML private Button searchButton;
 
-  @FXML
-  public void buttonNewMail(javafx.event.ActionEvent e, Email email) {
-    // TODO NewMailButton function
-  }
+    @FXML private Button replyButton;
 
-  @FXML
-  public void buttonSearch(javafx.event.ActionEvent e) {
-    // TODO SearchButton function
-  }
+    @FXML private Button forwardButton;
 
-  @FXML
-  public void buttonReply(javafx.event.ActionEvent e, Email email) {
-    Calendar today = Calendar.getInstance();
-    today.set(Calendar.HOUR_OF_DAY, 0);
+    @FXML private Button forwardAllButton;
 
-    var em =
-        new Email(
-            UUID.randomUUID().toString(),
-            email.subject(),
-            email.body(),
-            "emmedeveloper@gmail.com", // FIXME: aggiungere uno User.getMail()
-            List.of(email.sender()),
-            today.getTime(),
-            false);
+    @FXML private Button trashButton;
 
-    this.buttonNewMail(e, em); // FIXME: non so se worka?
-  }
+    @FXML private TextField searchField;
 
-  @FXML // FIXME: da capire come passare un Email object
-  public void buttonFwd(javafx.event.ActionEvent e, Email email, List<String> newRecipients) {
-    Calendar today = Calendar.getInstance();
-    today.set(Calendar.HOUR_OF_DAY, 0);
+    @FXML private Label currentMailField;
 
-    var em =
-        new Email(
-            UUID.randomUUID().toString(),
-            email.subject(),
-            email.body(),
-            "emmedeveloper@gmail.com", // FIXME: aggiungere uno User.getMail()
-            newRecipients,
-            today.getTime(),
-            false);
+    @FXML private Label currentUserEmail;
 
-    var params = new CommandSendEmailParameter(em);
-    MailClient.getInstance()
-        .sendCommand(new CommandSendEmail(params), null, null); // FIXME: implement lambda
-  }
+    @FXML private ListView listEmails;
 
-  @FXML
-  public void buttonFwdall(javafx.event.ActionEvent e) {
-    // TODO FwdallButton function
-  }
+    @FXML private ListView listFolder;
 
-  @FXML // FIXME: non so se si può passare un parametro alla funzione
-  public void buttonTrash(javafx.event.ActionEvent e, String emailID) {
-    var params = new CommandDeleteEmailParameter(emailID);
-    MailClient.getInstance()
-        .sendCommand(new CommandDeleteEmail(params), null, null); // FIXME: implement lambda
-  }
+    private final Set<String> suggestions = new HashSet<>();
+    private AutoCompletionBinding<String> autoCompletionBinding;
 
-  public void buttonNewMail(ActionEvent actionEvent) {}
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        autoCompletionBinding = TextFields.bindAutoCompletion(searchField, suggestions);
 
-  public void buttonReply(ActionEvent actionEvent) {}
+        searchField.setOnKeyPressed(event -> {
+            if (event.getCode() == javafx.scene.input.KeyCode.ENTER) {
+                LOGGER.info("SearchField: {}", searchField.getText().trim());
+                // buttonSearch(e); TODO: implement
+                learnWord(searchField.getText().trim());
+            }
+        });
 
-  public void buttonFwd(ActionEvent actionEvent) {}
+        currentMailField
+                .textProperty()
+                .bind(DataModel.getInstance().getCurrentEmailProperty().map(e -> e == null ? "" : e.getSubject()));
 
-  public void buttonTrash(ActionEvent actionEvent) {}
+        currentUserEmail
+                .textProperty()
+                .bind(DataModel.getInstance().getCurrentUserProperty().map(u -> u == null ? "" : u.getEmail()));
+
+        listFolder.getItems().addAll("Inbox", "Sent", "Trash");
+
+        listFolder.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            LOGGER.info("Selected item: {}", newValue);
+            DataModel.getInstance().setCurrentFolder(newValue.toString().toLowerCase());
+        });
+    }
+
+    private void learnWord(String trim) {
+        suggestions.add(trim);
+        if (autoCompletionBinding != null) {
+            autoCompletionBinding.dispose();
+        }
+        autoCompletionBinding = TextFields.bindAutoCompletion(searchField, suggestions);
+
+        autoCompletionBinding.getAutoCompletionPopup().prefWidthProperty().bind(searchField.widthProperty());
+    }
+
+    @FXML public void buttonNewMail(ActionEvent e) {
+        var newEmail = new Email(
+                UUID.randomUUID().toString(),
+                null,
+                null,
+                DataModel.getInstance().getCurrentUser().getEmail(),
+                List.of(),
+                Calendar.getInstance().getTime(),
+                false);
+
+        DataModel.getInstance().setCurrentEmail(newEmail);
+        LOGGER.info("NewMailButton: {}", newEmail);
+    }
+
+    @FXML public void buttonSearch(ActionEvent e) {
+        // TODO SearchButton function
+    }
+
+    @FXML public void buttonReply(ActionEvent e) {
+        var email = DataModel.getInstance().getCurrentEmail();
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 0);
+
+        var newEmail = new Email(
+                UUID.randomUUID().toString(),
+                email.getSubject(),
+                email.getBody(),
+                DataModel.getInstance().getCurrentUser().getEmail(),
+                List.of(email.getSender()),
+                today.getTime(),
+                false);
+
+        DataModel.getInstance().setCurrentEmail(newEmail);
+        LOGGER.info("ReplyButton: {}", newEmail);
+    }
+
+    @FXML // FIXME: da capire come passare un Email object
+    public void buttonFwd(ActionEvent e) {
+        var email = DataModel.getInstance().getCurrentEmail();
+        var newRecipients = email.getRecipients();
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 0);
+
+        var newEmail = new Email(
+                UUID.randomUUID().toString(),
+                email.getSubject(),
+                email.getBody(),
+                DataModel.getInstance().getCurrentUser().getEmail(),
+                newRecipients,
+                today.getTime(),
+                false);
+
+        DataModel.getInstance().setCurrentEmail(newEmail);
+        LOGGER.info("FwdButton: {}", newEmail);
+    }
+
+    @FXML public void buttonFwdall(ActionEvent e) {
+        // TODO: FwdallButton function
+        // FIXME: ma come funziona il forward all?? reply all lo capisco ma forward boh
+    }
+
+    @FXML public void buttonTrash(ActionEvent e) {
+        var currEmail = DataModel.getInstance().getCurrentEmail();
+        if (currEmail != null && currEmail.getRead()) {
+            var id = currEmail.getId();
+            deleteEmail(id);
+        }
+    }
+
+    public void listEmails() {
+        // TODO: Schedule function each 15s
+
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 0);
+
+        var params = new CommandListEmail.CommandListEmailParameter(lastUnixTimeEmailCheck);
+        var command = new CommandListEmail(params);
+
+        MailClient.getInstance()
+                .sendCommand(
+                        command,
+                        response -> {
+                            if (response.getStatus().equals(ServerResponseStatuses.OK)) {
+                                var resp = (ListEmailResponse) response;
+                                DataModel.getInstance()
+                                        .addEmail(
+                                                "inbox",
+                                                resp.getEmails().stream().toArray(Email[]::new));
+                                lastUnixTimeEmailCheck = today.getTimeInMillis();
+                                LOGGER.info("Email list: {}", response);
+                            } else {
+                                LOGGER.error("Error getting email: {}", response);
+                            }
+                        },
+                        ListEmailResponse.class);
+    }
+
+    public void sendEmail(Email email) {
+
+        var valid = ValidatorHelper.isEmailValid(email);
+        if (!valid.getKey()) {
+            LOGGER.error("Email not valid: {}", valid.getValue());
+            return;
+        }
+
+        var params = new CommandSendEmail.CommandSendEmailParameter(email);
+        var command = new CommandSendEmail(params);
+
+        MailClient.getInstance()
+                .sendCommand(
+                        command,
+                        response -> {
+                            if (response.getStatus().equals(ServerResponseStatuses.OK)) {
+                                DataModel.getInstance().addEmail("sent", email);
+                                LOGGER.info("Email sent: {}", response);
+                            } else {
+                                LOGGER.error("Error sending email: {}", response);
+                            }
+                        },
+                        ServerResponse.class);
+    }
+
+    public void deleteEmail(String emailID) {
+        // TODO: Implement hard delete, with a confirmation dialog
+        var params = new CommandDeleteEmailParameter(emailID);
+        var command = new CommandDeleteEmail(params);
+
+        MailClient.getInstance()
+                .sendCommand(
+                        command,
+                        response -> {
+                            if (response.getStatus().equals(ServerResponseStatuses.OK)) {
+                                DataModel.getInstance().removeCurrentEmail();
+                                LOGGER.info("DeleteMailResponse: {}", response);
+                            } else {
+                                LOGGER.error("Error deleting email: {}", response);
+                            }
+                        },
+                        ServerResponse.class);
+    }
 }

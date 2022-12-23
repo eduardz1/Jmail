@@ -9,14 +9,17 @@ import lombok.NonNull;
 @Data
 @JsonDeserialize(using = CommandDeserializer.class)
 public class Command {
-  private CommandParameters parameter;
-  @NonNull private String action;
-  private String userEmail;
+    private CommandParameters parameter;
 
-  public boolean hasEmail() {
-    return userEmail != null && !userEmail.isEmpty();
-  }
-  public boolean requireAuth() {
-    return !action.equals(CommandActions.PING);
-  }
+    @NonNull private String action;
+
+    private String userEmail;
+
+    public boolean hasEmail() {
+        return userEmail != null && !userEmail.isEmpty();
+    }
+
+    public boolean requireAuth() {
+        return !action.equals(CommandActions.PING);
+    }
 }
