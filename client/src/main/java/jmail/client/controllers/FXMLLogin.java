@@ -47,7 +47,7 @@ public class FXMLLogin implements Initializable {
   @FXML
   public void buttonLogin(javafx.event.ActionEvent e) {
     // FIXME: remove also this
-    this.addEmails();
+//    this.addEmails();
 
     // FIXME: remove this
     login("emmedeveloper@gmail.com", "emme");
@@ -81,19 +81,20 @@ public class FXMLLogin implements Initializable {
 
   private void addEmails() {
 
-    var in = new Email[] {
-      mockEmail("inbox"),mockEmail("inbox"),mockEmail("inbox"),mockEmail("inbox"),mockEmail("inbox"),mockEmail("inbox")
+    var in = new Email[]{
+            mockEmail("inbox"),
+//            mockEmail("inbox"), mockEmail("inbox"), mockEmail("inbox"), mockEmail("inbox"), mockEmail("inbox")
     };
     DataModel.getInstance().addEmail("inbox", in);
 
-    var out = new Email[] {
-            mockEmail("out"),mockEmail("out"),mockEmail("out"),
+    var out = new Email[]{
+            mockEmail("out"), mockEmail("out"), mockEmail("out"),
     };
     DataModel.getInstance().addEmail("sent", out);
 
 
-    var tr = new Email[] {
-            mockEmail("tra"),mockEmail("tra"),mockEmail("tra"),
+    var tr = new Email[]{
+            mockEmail("tra"), mockEmail("tra"), mockEmail("tra"),
     };
     DataModel.getInstance().addEmail("trash", tr);
 

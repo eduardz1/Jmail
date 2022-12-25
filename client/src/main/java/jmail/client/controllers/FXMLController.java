@@ -5,16 +5,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import javafx.scene.control.*;
 import jmail.client.models.client.MailClient;
 import jmail.client.models.model.DataModel;
 import jmail.client.models.responses.ListEmailResponse;
@@ -28,19 +22,23 @@ import jmail.lib.models.commands.CommandDeleteEmail;
 import jmail.lib.models.commands.CommandDeleteEmail.CommandDeleteEmailParameter;
 import jmail.lib.models.commands.CommandListEmail;
 import jmail.lib.models.commands.CommandSendEmail;
-
-import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class FXMLController implements Initializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FXMLController.class.getName());
+    private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
     private Long lastUnixTimeEmailCheck = 0L;
+    private boolean editMode = false;
 
     @FXML private Button newMailButton;
 
@@ -67,6 +65,11 @@ public class FXMLController implements Initializable {
     @FXML private ListView<Email> listEmails;
 
     @FXML private ListView<String> listFolder;
+
+    public TextField subjectField;
+    public TextField recipientsField;
+    public TextArea bodyField;
+
 
     private final Set<String> suggestions = new HashSet<>();
     private AutoCompletionBinding<String> autoCompletionBinding;
@@ -100,9 +103,6 @@ public class FXMLController implements Initializable {
             graphic = new ImageView(avatar);
         }
         currentUserName.setGraphic(graphic);
-
-
-
 
         // Should all done in subcontroller o non so dove
         listFolder.getItems().addAll("Inbox", "Sent", "Trash");
@@ -161,10 +161,26 @@ public class FXMLController implements Initializable {
 
         listEmails.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             DataModel.getInstance().setCurrentEmail(newValue);
+            this.editMode = false;
         });
 
 
+        // FIXME: Non dovrebbero andare dentro i field ma label, sistemare
+        DataModel.getInstance().getCurrentEmailProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                subjectField.setText("");
+                recipientsField.setText("");
+                bodyField.setText("");
+                return;
+            }
+            subjectField.setText(newValue.getSubject());
+            recipientsField.setText(newValue.getRecipients().stream().reduce("", (a, b) -> a + ";" + b));
+            bodyField.setText(newValue.getBody());
+        });
 
+        scheduler.scheduleAtFixedRate(() -> listEmails("inbox"), 20, 20, TimeUnit.SECONDS);
+
+        syncronizeEmails();
     }
 
     private void learnWord(String trim) {
@@ -178,6 +194,7 @@ public class FXMLController implements Initializable {
     }
 
     @FXML public void buttonNewMail(ActionEvent e) {
+        this.editMode = true;
         var newEmail = new Email(
                 UUID.randomUUID().toString(),
                 null,
@@ -196,6 +213,8 @@ public class FXMLController implements Initializable {
     }
 
     @FXML public void buttonReply(ActionEvent e) {
+        this.editMode = true;
+
         var email = DataModel.getInstance().getCurrentEmail();
         Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
@@ -208,6 +227,7 @@ public class FXMLController implements Initializable {
                 List.of(email.getSender()),
                 today.getTime(),
                 false);
+
 
         DataModel.getInstance().setCurrentEmail(newEmail);
         LOGGER.info("ReplyButton: {}", newEmail);
@@ -233,26 +253,32 @@ public class FXMLController implements Initializable {
         LOGGER.info("FwdButton: {}", newEmail);
     }
 
-    @FXML public void buttonFwdall(ActionEvent e) {
-        // TODO: FwdallButton function
-        // FIXME: ma come funziona il forward all?? reply all lo capisco ma forward boh
-    }
-
     @FXML public void buttonTrash(ActionEvent e) {
         var currEmail = DataModel.getInstance().getCurrentEmail();
-        if (currEmail != null && currEmail.getRead()) {
-            var id = currEmail.getId();
-            deleteEmail(id);
+        var currFolder = DataModel.getInstance().getCurrentFolder();
+        Boolean hardDelete = true;
+        if (currEmail != null) {
+
+            if (this.editMode) {
+                // clean draft
+                DataModel.getInstance().setCurrentEmail(null);
+                this.editMode = false;
+            } else {
+                if (currFolder.equals("inbox")) {
+                    // TODO: ask user to confirm
+                    hardDelete = false;
+                };
+                var id = currEmail.fileID();
+                deleteEmail(id,currFolder,hardDelete);
+            }
         }
     }
 
-    public void listEmails() {
-        // TODO: Schedule function each 15s
-
+    public void listEmails(String folder) {
         Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
 
-        var params = new CommandListEmail.CommandListEmailParameter(lastUnixTimeEmailCheck);
+        var params = new CommandListEmail.CommandListEmailParameter(lastUnixTimeEmailCheck, folder);
         var command = new CommandListEmail(params);
 
         MailClient.getInstance()
@@ -263,7 +289,7 @@ public class FXMLController implements Initializable {
                                 var resp = (ListEmailResponse) response;
                                 DataModel.getInstance()
                                         .addEmail(
-                                                "inbox",
+                                                folder,
                                                 resp.getEmails().stream().toArray(Email[]::new));
                                 lastUnixTimeEmailCheck = today.getTimeInMillis();
                                 LOGGER.info("Email list: {}", response);
@@ -291,6 +317,8 @@ public class FXMLController implements Initializable {
                         response -> {
                             if (response.getStatus().equals(ServerResponseStatuses.OK)) {
                                 DataModel.getInstance().addEmail("sent", email);
+                                // When send an email, not add to inbox, but update it
+                                listEmails("inbox");
                                 LOGGER.info("Email sent: {}", response);
                             } else {
                                 LOGGER.error("Error sending email: {}", response);
@@ -299,9 +327,8 @@ public class FXMLController implements Initializable {
                         ServerResponse.class);
     }
 
-    public void deleteEmail(String emailID) {
-        // TODO: Implement hard delete, with a confirmation dialog
-        var params = new CommandDeleteEmailParameter(emailID);
+    public void deleteEmail(String emailID,  String folder, Boolean hardDelete) {
+        var params = new CommandDeleteEmailParameter(emailID, folder, hardDelete);
         var command = new CommandDeleteEmail(params);
 
         MailClient.getInstance()
@@ -309,6 +336,7 @@ public class FXMLController implements Initializable {
                         command,
                         response -> {
                             if (response.getStatus().equals(ServerResponseStatuses.OK)) {
+                                DataModel.getInstance().addEmail("trash", DataModel.getInstance().getCurrentEmail());
                                 DataModel.getInstance().removeCurrentEmail();
                                 LOGGER.info("DeleteMailResponse: {}", response);
                             } else {
@@ -316,5 +344,40 @@ public class FXMLController implements Initializable {
                             }
                         },
                         ServerResponse.class);
+    }
+
+    public void buttonSend(ActionEvent actionEvent) {
+
+        var currEmail = DataModel.getInstance().getCurrentEmail();
+
+        if (currEmail == null) {
+            LOGGER.error("No email selected");
+            return;
+        }
+
+        if (!this.editMode) {
+            LOGGER.error("Email not editable");
+            return;
+        }
+
+        var recipients = recipientsField.getText().split(";");
+        var subject = subjectField.getText();
+        var body = bodyField.getText();
+
+        currEmail.setRecipients(new ArrayList<>(Arrays.asList(recipients)));
+        currEmail.setSubject(subject);
+        currEmail.setBody(body);
+
+        sendEmail(currEmail);
+    }
+
+    public void buttonReplyAll(ActionEvent actionEvent) {
+    }
+
+    public void syncronizeEmails() {
+        // TODO: Gestione della sincronizzazione con la cache
+        listEmails("inbox");
+        listEmails("sent");
+        listEmails("trash");
     }
 }

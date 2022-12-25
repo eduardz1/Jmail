@@ -1,11 +1,6 @@
 package jmail.server.handlers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.exceptions.CommandNotFoundException;
 import jmail.lib.exceptions.NotAuthorizedException;
@@ -15,6 +10,12 @@ import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 public class ClientHandler implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientHandler.class.getName());
@@ -53,7 +54,7 @@ public class ClientHandler implements Runnable {
             commandHandler.executeAction();
 
         } catch (CommandNotFoundException | JsonProcessingException e) {
-            LOGGER.error("Message received not valid");
+            LOGGER.error(e.getMessage());
             sendResponse(ServerResponseStatuses.ERROR, "Message invalid");
         } catch (NotAuthorizedException e) {
             LOGGER.error(e.getMessage());

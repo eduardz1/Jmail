@@ -1,5 +1,7 @@
 package jmail.lib.helpers;
 
+import jmail.lib.models.User;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -7,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import jmail.lib.models.User;
 
 public class SystemIOHelper {
 
@@ -61,6 +62,10 @@ public class SystemIOHelper {
 
   // FIXME: non penso che dovremmo tenere due funzioni che come unica cosa
   // mascherano la option utilizzata che tra l'altro può avere solo due valori
+
+  public static void deleteFile(Path path) throws IOException {
+    Files.delete(path);
+  }
 
   public static void moveFile(Path from, Path to) throws IOException {
     Files.move(from, to, StandardCopyOption.ATOMIC_MOVE);

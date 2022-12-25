@@ -4,6 +4,7 @@ import jmail.lib.constants.CommandActions;
 
 public class CommandListEmail extends Command {
 
+  // Standard constructor for jackson
   public CommandListEmail() {
     super(CommandActions.LIST);
   }
@@ -18,5 +19,5 @@ public class CommandListEmail extends Command {
     return (CommandListEmailParameter) super.getParameter();
   }
 
-  public record CommandListEmailParameter(Long lastUnixTimeCheck) implements CommandParameters {}
+  public record CommandListEmailParameter(Long lastUnixTimeCheck, String folder) implements CommandParameters {}
 }

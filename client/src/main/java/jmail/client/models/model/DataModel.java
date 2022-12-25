@@ -141,9 +141,18 @@ public class DataModel {
 
     public void removeCurrentEmail() {
         switch (currentFolder.get()) {
-            case "inbox" -> inbox.remove(currentEmail.get());
-            case "sent" -> sent.remove(currentEmail.get());
-            case "trash" -> trash.remove(currentEmail.get());
+            case "inbox" -> {
+                inbox.remove(currentEmail.get());
+                currentFilteredEmails.setAll(inbox);
+            }
+            case "sent" -> {
+                sent.remove(currentEmail.get());
+                currentFilteredEmails.setAll(sent);
+            }
+            case "trash" -> {
+                trash.remove(currentEmail.get());
+                currentFilteredEmails.setAll(trash);
+            }
         }
         currentEmail.set(null);
     }

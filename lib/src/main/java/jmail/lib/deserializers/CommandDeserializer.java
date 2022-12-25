@@ -1,14 +1,15 @@
 package jmail.lib.deserializers;
 
-import static jmail.lib.constants.CommandActions.*;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import jmail.lib.models.commands.*;
+
+import java.io.IOException;
+
+import static jmail.lib.constants.CommandActions.*;
 
 public class CommandDeserializer extends JsonDeserializer<Command> {
     @Override
@@ -16,7 +17,8 @@ public class CommandDeserializer extends JsonDeserializer<Command> {
         JsonNode node = jp.readValueAsTree();
         var action = node.get("action").asText();
         var parameters = node.get("parameter");
-        var user = node.get("userEmail").asText();
+        var user = node.get("userEmail").asText(null);
+
 
         ObjectMapper mapper = new ObjectMapper();
         var command =

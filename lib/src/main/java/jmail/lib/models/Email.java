@@ -1,20 +1,32 @@
 package jmail.lib.models;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NonNull;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Email {
     private final String id;
     private String subject;
     private String body;
     private final @NonNull String sender;
-    private final @NonNull List<String> recipients;
+    private final @NonNull List<String> recipients = new ArrayList<>();
     private final @NonNull Date date;
     private @NonNull Boolean read;
+
+    // Void constructor for Jackson
+    public Email() {
+        this.id = UUID.randomUUID().toString();
+        this.date = new Date();
+        this.read = false;
+        this.sender = "";
+    }
 
     public Email(
             String id,
@@ -27,22 +39,25 @@ public class Email {
         if (sender.isEmpty()) {
             throw new IllegalArgumentException("Sender cannot be empty");
         }
-        if (recipients.isEmpty() || recipients.stream().anyMatch(String::isEmpty)) {
-            throw new IllegalArgumentException("Recipients cannot be empty");
-        }
         this.id = id;
         this.subject = subject;
         this.body = body;
         this.sender = sender;
-        this.recipients = recipients;
+        this.recipients.clear();
+        this.recipients.addAll(recipients);
         this.date = date;
         this.read = read;
     }
 
-    public String getFileID() {
+    public String fileID() {
         return String.format(
                 "%s_%s",
                 id == null || id.isEmpty() ? UUID.randomUUID() : id,
                 date.toInstant().getEpochSecond());
+    }
+
+    public void setRecipients(List<String> recipients) {
+        this.recipients.clear();
+        this.recipients.addAll(recipients);
     }
 }

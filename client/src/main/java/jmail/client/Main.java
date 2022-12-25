@@ -2,11 +2,6 @@ package jmail.client;
 
 import io.github.mimoguz.custom_window.DwmAttribute;
 import io.github.mimoguz.custom_window.StageOps;
-import java.io.IOException;
-import java.util.Objects;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -16,10 +11,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import jmail.client.models.client.MailClient;
-import jmail.client.models.model.DataModel;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.CommandPing;
+
+import java.io.IOException;
+import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Main extends Application {
 
@@ -46,16 +46,6 @@ public class Main extends Application {
         primaryStage.sizeToScene();
         primaryStage.setResizable(true); // FIXME: setting has no effect, I'm missing something don't know what, maybe
         // primaryStage needs to be unshown and shown again
-    }
-
-    public static void tryConnect() {
-        try {
-            MailClient.getInstance().connect("localhost", 8085); // FIXME: hardcoded
-            System.out.println("Connected");
-        } catch (IOException e) {
-            System.out.println("Failed to connect to server");
-            DataModel.getInstance().setServerStatusConnected(false);
-        }
     }
 
     public String getGreeting() {
@@ -97,7 +87,7 @@ public class Main extends Application {
     }
 
     public void startCheckThread() {
-        scheduler.scheduleAtFixedRate(() -> sendPingForConnectionCheck(), 5, 15, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(() -> sendPingForConnectionCheck(), 0, 15, TimeUnit.SECONDS);
     }
 
     public static void sendPingForConnectionCheck() {
@@ -107,9 +97,9 @@ public class Main extends Application {
                         pingCmd,
                         response -> {
                             if (response.getStatus().equals(ServerResponseStatuses.OK)) {
-                                DataModel.getInstance().setServerStatusConnected(true);
+                                System.out.println("Server is connected");
                             } else {
-                                tryConnect();
+                                System.out.println("Server is not connected");
                             }
                         },
                         ServerResponse.class);

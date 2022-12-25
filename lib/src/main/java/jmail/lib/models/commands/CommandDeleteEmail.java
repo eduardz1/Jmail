@@ -14,5 +14,5 @@ public class CommandDeleteEmail extends Command {
     return (CommandDeleteEmailParameter) super.getParameter();
   }
 
-  public record CommandDeleteEmailParameter(String emailID) implements CommandParameters {}
+  public record CommandDeleteEmailParameter(String emailID, String from, Boolean hardDelete) implements CommandParameters {}
 }

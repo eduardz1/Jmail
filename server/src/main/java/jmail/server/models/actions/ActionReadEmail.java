@@ -1,13 +1,14 @@
 package jmail.server.models.actions;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.Email;
 import jmail.lib.models.commands.CommandReadEmail;
 import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.handlers.LockHandler;
+
+import java.io.IOException;
+import java.nio.file.Files;
 
 public class ActionReadEmail implements ActionCommand {
     private final CommandReadEmail command;
@@ -30,6 +31,7 @@ public class ActionReadEmail implements ActionCommand {
 
         var handler = LockHandler.getInstance();
         var lock = handler.getWriteLock(userEmail);
+        lock.lock();
         try {
             var path = SystemIOHelper.getInboxEmailPath(userEmail, emailID);
             var json = SystemIOHelper.readJSONFile(path);

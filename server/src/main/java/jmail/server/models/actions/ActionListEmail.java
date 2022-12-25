@@ -1,11 +1,5 @@
 package jmail.server.models.actions;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.helpers.SystemIOHelper;
@@ -16,6 +10,13 @@ import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.handlers.LockHandler;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class ActionListEmail implements ActionCommand {
     private final CommandListEmail command;
@@ -28,6 +29,7 @@ public class ActionListEmail implements ActionCommand {
     public ServerResponse executeAndGetResult() throws ActionExecutionException {
         var cmd = (CommandListEmail) this.command;
         var params = cmd.getParameter();
+        var folder = params.folder();
         var userEmail = cmd.getUserEmail();
 
         if (userEmail == null || userEmail.isEmpty()) {
@@ -39,11 +41,18 @@ public class ActionListEmail implements ActionCommand {
 
         var handler = LockHandler.getInstance();
         var userLock = handler.getReadLock(userEmail);
+        userLock.lock();
 
-        var inbox = SystemIOHelper.getUserInbox(userEmail);
+        var path = switch (folder) {
+            case "inbox" -> SystemIOHelper.getUserInbox(userEmail);
+            case "sent" -> SystemIOHelper.getUserSent(userEmail);
+            case "trash" -> SystemIOHelper.getUserDeleted(userEmail);
+            default -> throw new ActionExecutionException("Invalid folder");
+        };
+
 
         var mails = new ArrayList<Email>();
-        File[] files = (new File(inbox.toUri())).listFiles();
+        File[] files = (new File(path.toUri())).listFiles();
         files = files == null ? new File[] {} : files;
         for (File file : files) {
             if (!shouldCheckUnixTime || getUnixTimeFromFilename(file) > params.lastUnixTimeCheck()) {
@@ -68,7 +77,7 @@ public class ActionListEmail implements ActionCommand {
     private Long getUnixTimeFromFilename(File file) {
         var name = file.getName();
         var last_ = name.lastIndexOf("_");
-        return Long.getLong(name.substring(last_ + 1));
+        return Long.parseLong(name.substring(last_ + 1));
     }
 
     @Getter
