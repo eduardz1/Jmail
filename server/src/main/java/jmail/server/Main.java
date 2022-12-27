@@ -23,7 +23,7 @@ public class Main extends Application {
     public static void main(String... args) throws IOException {
 
         Properties properties = new Properties();
-        properties.load(Objects.requireNonNull(Main.class.getClassLoader().getResourceAsStream("server.properties")));
+        properties.load(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResourceAsStream("server.properties")));
 
         Server server = new Server(Integer.parseInt(properties.getProperty("port")));
         server.start();

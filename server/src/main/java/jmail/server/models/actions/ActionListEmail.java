@@ -26,17 +26,16 @@ public class ActionListEmail implements ActionCommand {
 
     @Override
     public ServerResponse executeAndGetResult() throws ActionExecutionException {
-        var cmd = (CommandListEmail) this.command;
-        var params = cmd.getParameter();
+        var params = command.getParameter();
         var folder = params.folder();
-        var userEmail = cmd.getUserEmail();
+        var userEmail = command.getUserEmail();
 
         if (userEmail == null || userEmail.isEmpty()) {
             throw new ActionExecutionException("Cannot send mail: user invalid");
         }
 
         // If shouldCheckUnixTime is false means that user needs to load all emails
-        boolean shouldCheckUnixTime = params != null && params.lastUnixTimeCheck() != null;
+        boolean shouldCheckUnixTime = params.lastUnixTimeCheck() != null;
 
         var handler = LockHandler.getInstance();
         var userLock = handler.getReadLock(userEmail);

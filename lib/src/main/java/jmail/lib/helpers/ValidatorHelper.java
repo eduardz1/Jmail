@@ -10,11 +10,11 @@ public class ValidatorHelper {
             return new Pair<>(false, "Email is null");
         }
 
-        if (email.getSender() == null || email.getSender().isEmpty()) {
+        if (email.getSender().isEmpty()) {
             return new Pair<>(false, "Sender is null or empty");
         }
 
-        if (email.getRecipients() == null || email.getRecipients().isEmpty()) {
+        if (email.getRecipients().isEmpty()) {
             return new Pair<>(false, "Recipients is null or empty");
         }
 
@@ -25,6 +25,6 @@ public class ValidatorHelper {
     }
 
     public static boolean isEmailAddressValid(String address) {
-        return address != null && !address.isEmpty() && address.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+        return address != null && !address.isEmpty() && address.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
     }
 }

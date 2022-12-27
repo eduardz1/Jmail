@@ -64,7 +64,7 @@ public abstract class AutoCompletionBinding<T> implements EventTarget {
     private final Object suggestionsTaskLock = new Object();
 
     private FetchSuggestionsTask suggestionsTask = null;
-    private Callback<ISuggestionRequest, Collection<T>> suggestionProvider;
+    private final Callback<ISuggestionRequest, Collection<T>> suggestionProvider;
     private boolean ignoreInputChanges = false;
     private long delay = 250;
 
@@ -328,7 +328,7 @@ public abstract class AutoCompletionBinding<T> implements EventTarget {
      *
      * @param userText
      */
-    private final void onUserInputChanged(final String userText) {
+    private void onUserInputChanged(final String userText) {
         synchronized (suggestionsTaskLock) {
             if (suggestionsTask != null && suggestionsTask.isRunning()) {
                 // cancel the current running task
@@ -366,20 +366,20 @@ public abstract class AutoCompletionBinding<T> implements EventTarget {
      **************************************************************************/
 
     /** Represents a suggestion fetch request */
-    public static interface ISuggestionRequest {
+    public interface ISuggestionRequest {
         /**
          * Is this request canceled?
          *
          * @return {@code true} if the request is canceled, otherwise {@code false}
          */
-        public boolean isCancelled();
+        boolean isCancelled();
 
         /**
          * Get the user text to which suggestions shall be found
          *
          * @return {@link String} containing the user text
          */
-        public String getUserText();
+        String getUserText();
     }
 
     /**
@@ -449,7 +449,7 @@ public abstract class AutoCompletionBinding<T> implements EventTarget {
          * completion has been performed.
          */
         public static final EventType<AutoCompletionEvent<?>> AUTO_COMPLETED =
-                new EventType<>("AUTO_COMPLETED" + UUID.randomUUID().toString()); // $NON-NLS-1$
+                new EventType<>("AUTO_COMPLETED" + UUID.randomUUID()); // $NON-NLS-1$
 
         private final TE completion;
 

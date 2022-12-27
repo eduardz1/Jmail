@@ -73,7 +73,7 @@ public class AutoCompletePopup<T> extends PopupControl {
     @SuppressWarnings("serial")
     public static class SuggestionEvent<TE> extends Event {
         public static final EventType<SuggestionEvent<?>> SUGGESTION =
-                new EventType<>("SUGGESTION" + UUID.randomUUID().toString()); // $NON-NLS-1$
+                new EventType<>("SUGGESTION" + UUID.randomUUID()); // $NON-NLS-1$
 
         private final TE suggestion;
 

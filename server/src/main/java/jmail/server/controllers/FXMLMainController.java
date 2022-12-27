@@ -97,9 +97,7 @@ public class FXMLMainController implements Initializable {
                 .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
                 .subscribe(change -> codeArea.setStyleSpans(0, computeHighlighting(codeArea.getText())));
 
-        ObservableStreamAppender.getObservable().addListener((observable, oldValue, newValue) -> {
-            Platform.runLater(() -> codeArea.appendText(newValue + '\n'));
-        });
+        ObservableStreamAppender.getObservable().addListener((observable, oldValue, newValue) -> Platform.runLater(() -> codeArea.appendText(newValue + '\n')));
     }
 
     private StyleSpans<Collection<String>> computeHighlighting(String text) {

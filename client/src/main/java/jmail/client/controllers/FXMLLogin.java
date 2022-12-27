@@ -20,7 +20,7 @@ import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.models.Email;
 import jmail.lib.models.commands.CommandLogin;
 
-public class FXMLLogin implements Initializable {
+public class FXMLLogin {
 
     @FXML private TextField UsernameField;
 
@@ -30,13 +30,10 @@ public class FXMLLogin implements Initializable {
 
     @FXML private Label connLbl;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        DataModel.getInstance().isServerStatusConnected().addListener((observable, oldValue, newValue) -> {
-            Platform.runLater(() -> {
-                connLbl.setText(newValue ? "Connected" : "Disconnected"); // TODO: Should stay in view? Boh
-            });
-        });
+    public void initialize() {
+        DataModel.getInstance().isServerStatusConnected().addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
+            connLbl.setText(newValue ? "Connected" : "Disconnected"); // TODO: Should stay in view? Boh
+        }));
     }
 
     @FXML public void buttonLogin(javafx.event.ActionEvent e) {
@@ -46,7 +43,6 @@ public class FXMLLogin implements Initializable {
         // FIXME: remove this
         login("emmedeveloper@gmail.com", "emme");
 
-        return;
         //    login(UsernameField.getText(), PasswordField.getText());
     }
 

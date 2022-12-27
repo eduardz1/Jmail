@@ -141,6 +141,6 @@ public class AutoCompletionTextFieldBinding<T> extends AutoCompletionBinding<T> 
     };
 
     private final ChangeListener<Boolean> focusChangedListener = (obs, oldFocused, newFocused) -> {
-        if (newFocused == false) hidePopup();
+        if (!newFocused) hidePopup();
     };
 }

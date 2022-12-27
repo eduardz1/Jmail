@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.*;
+
+import javafx.application.Platform;
 import jmail.client.models.model.DataModel;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.JsonHelper;
@@ -84,7 +86,7 @@ public class MailClient {
                 // Read response
                 String response = reader.readLine();
                 var resp = JsonHelper.fromJson(response, responseClass);
-                responseFunc.run(resp);
+                Platform.runLater(() -> responseFunc.run(resp));
             } catch (JsonProcessingException e) {
                 errorMessages = "Error while parsing response";
             } catch (IOException e) {
@@ -97,12 +99,10 @@ public class MailClient {
                     responseFunc.run(new ServerResponse(ServerResponseStatuses.ERROR, errorMessages));
 
                     // Close connection
-                    if (connection != null) {
-                        try {
-                            connection.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    try {
+                        connection.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
             }
