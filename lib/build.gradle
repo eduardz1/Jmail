@@ -3,10 +3,9 @@ plugins {
     id 'io.freefair.lombok'
     id "com.diffplug.spotless"
     id 'org.openjfx.javafxplugin'
-    id 'pmd'
 }
 
-version = '30L'
+version = '30.0.1'
 
 java {
     toolchain {
