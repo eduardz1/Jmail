@@ -12,12 +12,13 @@ import java.util.UUID;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Email {
-    private final String id;
+    // TODO: final id
+    private String id;
     private String subject;
     private String body;
     private final @NonNull String sender;
     private final @NonNull List<String> recipients = new ArrayList<>();
-    private final @NonNull Date date;
+    private @NonNull Date date;
     private @NonNull Boolean read;
 
     // Void constructor for Jackson

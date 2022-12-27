@@ -81,7 +81,9 @@ public class MailClient {
         */
 
         // Set a timeout for 5seconds
-        connection.setSoTimeout(5000);
+        // FIXME: Non funziona, il thread non viene chiuso, va in errore il pianeta e mi sminchia tutto in debug
+        // connection.setSoTimeout(5000);
+
         // Read response
         String response = reader.readLine();
         var resp = JsonHelper.fromJson(response, responseClass);
@@ -99,7 +101,7 @@ public class MailClient {
 
           // Close connection
           if (connection != null) {
-            try {
+             try {
               connection.close();
             } catch (IOException e) {
               e.printStackTrace();

@@ -56,6 +56,7 @@ public class ActionListEmail implements ActionCommand {
         files = files == null ? new File[] {} : files;
         for (File file : files) {
             if (!shouldCheckUnixTime || getUnixTimeFromFilename(file) > params.lastUnixTimeCheck()) {
+                System.out.println("file " + getUnixTimeFromFilename(file) + " " + params.lastUnixTimeCheck());
                 try {
                     var json = SystemIOHelper.readJSONFile(Path.of(file.getPath()));
                     var mail = JsonHelper.fromJson(json, Email.class);
@@ -67,7 +68,7 @@ public class ActionListEmail implements ActionCommand {
                 }
             }
         }
-        mails.sort(Comparator.comparing(Email::getDate));
+        mails.sort(Comparator.comparing(Email::getDate).reversed());
 
         userLock.unlock();
         handler.removeLock(userEmail);

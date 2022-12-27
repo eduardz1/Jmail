@@ -31,6 +31,7 @@
                <font>
                   <Font size="16.0" />
                </font></Label>
+            <Label fx:id="connLbl"  layoutX="14.0" layoutY="14.0" prefHeight="18.0" prefWidth="165.0"/>
             </children>
         </AnchorPane>
         <AnchorPane minHeight="0.0" minWidth="200.0" prefHeight="555.0" prefWidth="213.0">
