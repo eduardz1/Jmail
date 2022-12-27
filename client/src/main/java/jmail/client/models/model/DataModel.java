@@ -3,7 +3,6 @@ package jmail.client.models.model;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;

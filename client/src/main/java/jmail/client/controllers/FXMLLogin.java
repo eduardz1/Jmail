@@ -1,13 +1,10 @@
 package jmail.client.controllers;
 
 import com.google.common.hash.Hashing;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -31,9 +28,11 @@ public class FXMLLogin {
     @FXML private Label connLbl;
 
     public void initialize() {
-        DataModel.getInstance().isServerStatusConnected().addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
-            connLbl.setText(newValue ? "Connected" : "Disconnected"); // TODO: Should stay in view? Boh
-        }));
+        DataModel.getInstance()
+                .isServerStatusConnected()
+                .addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
+                    connLbl.setText(newValue ? "Connected" : "Disconnected"); // TODO: Should stay in view? Boh
+                }));
     }
 
     @FXML public void buttonLogin(javafx.event.ActionEvent e) {

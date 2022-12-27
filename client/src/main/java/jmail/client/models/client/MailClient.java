@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.*;
-
 import javafx.application.Platform;
 import jmail.client.models.model.DataModel;
 import jmail.lib.constants.ServerResponseStatuses;
