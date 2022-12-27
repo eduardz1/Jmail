@@ -1,13 +1,10 @@
 package jmail.client.controllers;
 
 import com.google.common.hash.Hashing;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -20,7 +17,7 @@ import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.models.Email;
 import jmail.lib.models.commands.CommandLogin;
 
-public class FXMLLogin implements Initializable {
+public class FXMLLogin {
 
     @FXML private TextField UsernameField;
 
@@ -30,13 +27,12 @@ public class FXMLLogin implements Initializable {
 
     @FXML private Label connLbl;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        DataModel.getInstance().isServerStatusConnected().addListener((observable, oldValue, newValue) -> {
-            Platform.runLater(() -> {
-                connLbl.setText(newValue ? "Connected" : "Disconnected"); // TODO: Should stay in view? Boh
-            });
-        });
+    public void initialize() {
+        DataModel.getInstance()
+                .isServerStatusConnected()
+                .addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
+                    connLbl.setText(newValue ? "Connected" : "Disconnected"); // TODO: Should stay in view? Boh
+                }));
     }
 
     @FXML public void buttonLogin(javafx.event.ActionEvent e) {
@@ -46,7 +42,6 @@ public class FXMLLogin implements Initializable {
         // FIXME: remove this
         login("emmedeveloper@gmail.com", "emme");
 
-        return;
         //    login(UsernameField.getText(), PasswordField.getText());
     }
 

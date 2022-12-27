@@ -2,6 +2,7 @@ package jmail.client.models.model;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -113,8 +114,8 @@ public class DataModel {
         return currentEmail;
     }
 
-    public Email getCurrentEmail() {
-        return currentEmail.get();
+    public Optional<Email> getCurrentEmail() {
+        return Optional.ofNullable(currentEmail.get());
     }
 
     public void setCurrentEmail(Email email) {
@@ -141,7 +142,7 @@ public class DataModel {
 
     public void addEmail(String folder, Email... emails) {
         // isEmpty
-        if (!Arrays.stream(emails).findAny().isPresent()) {
+        if (Arrays.stream(emails).findAny().isEmpty()) {
             return;
         }
 

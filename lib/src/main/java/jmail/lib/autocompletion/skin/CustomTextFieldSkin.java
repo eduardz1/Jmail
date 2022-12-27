@@ -36,9 +36,7 @@ public abstract class CustomTextFieldSkin extends TextFieldSkin {
     private static final PseudoClass HAS_LEFT_NODE = PseudoClass.getPseudoClass("left-node-visible"); // $NON-NLS-1$
     private static final PseudoClass HAS_RIGHT_NODE = PseudoClass.getPseudoClass("right-node-visible"); // $NON-NLS-1$
 
-    private Node left;
     private StackPane leftPane;
-    private Node right;
     private StackPane rightPane;
 
     private final TextField control;
@@ -61,6 +59,7 @@ public abstract class CustomTextFieldSkin extends TextFieldSkin {
         Node newLeft = leftProperty().get();
         // Remove leftPane in any case
         getChildren().remove(leftPane);
+        Node left;
         if (newLeft != null) {
             leftPane = new StackPane(newLeft);
             leftPane.setManaged(false);
@@ -76,6 +75,7 @@ public abstract class CustomTextFieldSkin extends TextFieldSkin {
         Node newRight = rightProperty().get();
         // Remove rightPane in anycase
         getChildren().remove(rightPane);
+        Node right;
         if (newRight != null) {
             rightPane = new StackPane(newRight);
             rightPane.setManaged(false);

@@ -36,7 +36,7 @@ public class ActionReadEmail implements ActionCommand {
             var json = SystemIOHelper.readJSONFile(path);
             var mail = JsonHelper.fromJson(json, Email.class);
 
-            if (mail.getRead() != params.setAsRead()) {
+            if (!mail.getRead().equals(params.setAsRead())) {
                 var email = new Email(
                         emailID,
                         mail.getSubject(),

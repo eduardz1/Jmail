@@ -43,7 +43,6 @@ public class Email {
         this.subject = subject;
         this.body = body;
         this.sender = sender;
-        this.recipients.clear();
         this.recipients.addAll(recipients);
         this.date = date;
         this.read = read;

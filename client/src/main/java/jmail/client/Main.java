@@ -30,17 +30,18 @@ public class Main extends Application {
     }
 
     public static void changeScene(String fxml) {
-
-        Platform.runLater(() -> changeSceneImpl(fxml));
+        Platform.runLater(() -> {
+            try {
+                changeSceneImpl(fxml);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
     }
 
-    private static void changeSceneImpl(String fxml) {
-        Parent pane;
-        try {
-            pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxml)));
-        } catch (IOException e) {
-            throw new RuntimeException(e); // TODO: handle exception
-        }
+    private static void changeSceneImpl(String fxml) throws IOException {
+        Parent pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxml)));
         primaryStage.getScene().setRoot(pane);
         primaryStage.sizeToScene();
         primaryStage.setResizable(true); // FIXME: setting has no effect, I'm missing something don't know what, maybe
@@ -86,7 +87,7 @@ public class Main extends Application {
     }
 
     public void startCheckThread() {
-        scheduler.scheduleAtFixedRate(() -> sendPingForConnectionCheck(), 0, 15, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(Main::sendPingForConnectionCheck, 0, 15, TimeUnit.SECONDS);
     }
 
     public static void sendPingForConnectionCheck() {

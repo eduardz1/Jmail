@@ -3,10 +3,9 @@ plugins {
     id 'io.freefair.lombok'
     id "com.diffplug.spotless"
     id 'org.openjfx.javafxplugin'
-    id 'pmd'
 }
 
-version = '30L'
+version = '30.0.1'
 
 java {
     toolchain {
@@ -56,14 +55,6 @@ javafx {
     ]
 }
 
-tasks.named('configJavafxRun').configure {
-    notCompatibleWithConfigurationCache('issue tracked https://github.com/openjfx/javafx-gradle-plugin/issues/136')
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
-}
-
 spotless {
     ratchetFrom 'origin/main'
 
@@ -90,4 +81,12 @@ spotless {
         eclipseWtp('xml')
         indentWithSpaces()
     }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.named('configJavafxRun').configure {
+    notCompatibleWithConfigurationCache('issue tracked https://github.com/openjfx/javafx-gradle-plugin/issues/136')
 }

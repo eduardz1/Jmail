@@ -1,6 +1,5 @@
 package jmail.client.controllers;
 
-import java.net.URL;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -10,7 +9,6 @@ import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -33,7 +31,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FXMLController implements Initializable {
+public class FXMLController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FXMLController.class.getName());
     private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -44,9 +42,6 @@ public class FXMLController implements Initializable {
 
     @FXML private Label connLbl;
 
-    //  public void initializeData(MailClient client) {
-    //    this.client = client;
-    //  }
     @FXML private Button searchButton;
 
     @FXML private Button replyButton;
@@ -74,12 +69,11 @@ public class FXMLController implements Initializable {
     public TextArea bodyField;
 
     private final Set<String> suggestions = new HashSet<>();
-    private AutoCompletionBinding<String> autoCompletionBinding;
+    private transient AutoCompletionBinding<String> autoCompletionBinding;
 
     // TODO: Qualcosa viene aggiornata e causa un eccezione sul thread UI, ma non ho capito cosa, fixare
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize() {
         autoCompletionBinding = TextFields.bindAutoCompletion(searchField, suggestions);
 
         searchField.setOnKeyPressed(event -> {
@@ -142,7 +136,7 @@ public class FXMLController implements Initializable {
             currentUserEmail.textProperty().set(newValue + " - " + label); // FIXME does not seem to work
         });
 
-        listEmails.setCellFactory(lv -> new ListCell<Email>() {
+        listEmails.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Email item, boolean empty) {
                 super.updateItem(item, empty);
@@ -150,12 +144,11 @@ public class FXMLController implements Initializable {
             }
         });
 
-        DataModel.getInstance().getCurrentFilteredEmails().addListener((ListChangeListener<Email>) c -> {
-            Platform.runLater(() -> {
-                listEmails.getItems().clear();
-                listEmails.getItems().addAll(c.getList());
-            });
-        });
+        DataModel.getInstance().getCurrentFilteredEmails().addListener((ListChangeListener<Email>)
+                c -> Platform.runLater(() -> {
+                    listEmails.getItems().clear();
+                    listEmails.getItems().addAll(c.getList());
+                }));
 
         listEmails.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             DataModel.getInstance().setCurrentEmail(newValue);
@@ -163,26 +156,26 @@ public class FXMLController implements Initializable {
         });
 
         // FIXME: Non dovrebbero andare dentro i field ma label, sistemare
-        DataModel.getInstance().getCurrentEmailProperty().addListener((observable, oldValue, newValue) -> {
-            Platform.runLater(() -> {
-                if (newValue == null) {
-                    subjectField.setText("");
-                    recipientsField.setText("");
-                    bodyField.setText("");
-                } else {
-                    subjectField.setText(newValue.getSubject());
-                    recipientsField.setText(newValue.getRecipients().stream()
-                            .reduce("", (a, b) -> a + ";" + b)); // FIXME: non popola correttamente
-                    bodyField.setText(newValue.getBody());
-                }
-            });
-        });
+        DataModel.getInstance()
+                .getCurrentEmailProperty()
+                .addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
+                    if (newValue == null) {
+                        subjectField.setText("");
+                        recipientsField.setText("");
+                        bodyField.setText("");
+                    } else {
+                        subjectField.setText(newValue.getSubject());
+                        recipientsField.setText(newValue.getRecipients().stream()
+                                .reduce("", (a, b) -> a + ";" + b)); // FIXME: non popola correttamente
+                        bodyField.setText(newValue.getBody());
+                    }
+                }));
 
-        DataModel.getInstance().isServerStatusConnected().addListener((observable, oldValue, newValue) -> {
-            Platform.runLater(() -> {
-                connLbl.setText(newValue ? "Connected" : "Disconnected"); // TODO: Bel pallino verde rosso
-            });
-        });
+        DataModel.getInstance()
+                .isServerStatusConnected()
+                .addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
+                    connLbl.setText(newValue ? "Connected" : "Disconnected"); // TODO: Bel pallino verde rosso
+                }));
 
         scheduler.scheduleAtFixedRate(() -> listEmails("inbox"), 20, 20, TimeUnit.SECONDS);
 
@@ -220,65 +213,71 @@ public class FXMLController implements Initializable {
     }
 
     @FXML public void buttonReply(ActionEvent e) {
-        this.editMode = true;
+        DataModel.getInstance()
+                .getCurrentEmail()
+                .ifPresentOrElse(
+                        email -> {
+                            this.editMode = true;
+                            Calendar today = Calendar.getInstance();
+                            today.set(Calendar.HOUR_OF_DAY, 0);
 
-        var email = DataModel.getInstance().getCurrentEmail();
-        Calendar today = Calendar.getInstance();
-        today.set(Calendar.HOUR_OF_DAY, 0);
+                            var newEmail = new Email(
+                                    UUID.randomUUID().toString(),
+                                    email.getSubject(),
+                                    email.getBody(),
+                                    DataModel.getInstance().getCurrentUser().getEmail(),
+                                    List.of(email.getSender()),
+                                    today.getTime(),
+                                    false);
 
-        var newEmail = new Email(
-                UUID.randomUUID().toString(),
-                email.getSubject(),
-                email.getBody(),
-                DataModel.getInstance().getCurrentUser().getEmail(),
-                List.of(email.getSender()),
-                today.getTime(),
-                false);
-
-        DataModel.getInstance().setCurrentEmail(newEmail);
-        LOGGER.info("ReplyButton: {}", newEmail);
+                            DataModel.getInstance().setCurrentEmail(newEmail);
+                            LOGGER.info("ReplyButton: {}", newEmail);
+                        },
+                        () -> LOGGER.info("ReplyButton: No email selected"));
     }
 
     @FXML // FIXME: da capire come passare un Email object
     public void buttonFwd(ActionEvent e) {
-        var email = DataModel.getInstance().getCurrentEmail();
-        var newRecipients = email.getRecipients();
-        Calendar today = Calendar.getInstance();
-        today.set(Calendar.HOUR_OF_DAY, 0);
+        DataModel.getInstance()
+                .getCurrentEmail()
+                .ifPresentOrElse(
+                        email -> {
+                            var newRecipients = email.getRecipients();
+                            Calendar today = Calendar.getInstance();
+                            today.set(Calendar.HOUR_OF_DAY, 0);
 
-        var newEmail = new Email(
-                UUID.randomUUID().toString(),
-                email.getSubject(),
-                email.getBody(),
-                DataModel.getInstance().getCurrentUser().getEmail(),
-                newRecipients,
-                today.getTime(),
-                false);
+                            var newEmail = new Email(
+                                    UUID.randomUUID().toString(),
+                                    email.getSubject(),
+                                    email.getBody(),
+                                    DataModel.getInstance().getCurrentUser().getEmail(),
+                                    newRecipients,
+                                    today.getTime(),
+                                    false);
 
-        DataModel.getInstance().setCurrentEmail(newEmail);
-        LOGGER.info("FwdButton: {}", newEmail);
+                            DataModel.getInstance().setCurrentEmail(newEmail);
+                            LOGGER.info("FwdButton: {}", newEmail);
+                        },
+                        () -> LOGGER.info("No email selected"));
     }
 
     @FXML public void buttonTrash(ActionEvent e) {
-        var currEmail = DataModel.getInstance().getCurrentEmail();
-        var currFolder = DataModel.getInstance().getCurrentFolder();
-        Boolean hardDelete = true;
-        if (currEmail != null) {
+        DataModel.getInstance()
+                .getCurrentEmail()
+                .ifPresentOrElse(
+                        email -> {
+                            var currFolder = DataModel.getInstance().getCurrentFolder();
 
-            if (this.editMode) {
-                // clean draft
-                DataModel.getInstance().setCurrentEmail(null);
-                this.editMode = false;
-            } else {
-                if (currFolder.equals("inbox")) {
-                    // TODO: ask user to confirm
-                    hardDelete = false;
-                }
-                ;
-                var id = currEmail.fileID();
-                deleteEmail(id, currFolder, hardDelete);
-            }
-        }
+                            if (this.editMode) { // clean draft
+                                DataModel.getInstance().setCurrentEmail(null);
+                                this.editMode = false;
+                            } else {
+                                boolean hardDelete = !currFolder.equals("inbox");
+                                // TODO: ask user to confirmation
+                                deleteEmail(email.fileID(), currFolder, hardDelete);
+                            }
+                        },
+                        () -> LOGGER.info("TrashButton: no email selected"));
     }
 
     public void listEmails(String folder) {
@@ -293,9 +292,9 @@ public class FXMLController implements Initializable {
                                 var resp = (ListEmailResponse) response;
 
                                 // Already sorted by date in the server
-                                var emails = resp.getEmails().stream().toArray(Email[]::new);
+                                var emails = resp.getEmails().toArray(Email[]::new);
 
-                                if (!Arrays.stream(emails).findAny().isPresent()) {
+                                if (Arrays.stream(emails).findAny().isEmpty()) {
                                     return;
                                 }
 
@@ -361,7 +360,10 @@ public class FXMLController implements Initializable {
                             if (response.getStatus().equals(ServerResponseStatuses.OK)) {
                                 DataModel.getInstance()
                                         .addEmail(
-                                                "trash", DataModel.getInstance().getCurrentEmail());
+                                                "trash",
+                                                DataModel.getInstance()
+                                                        .getCurrentEmail()
+                                                        .orElseThrow());
                                 DataModel.getInstance().removeCurrentEmail();
                                 LOGGER.info("DeleteMailResponse: {}", response);
                             } else {
@@ -372,33 +374,34 @@ public class FXMLController implements Initializable {
     }
 
     public void buttonSend() {
+        DataModel.getInstance()
+                .getCurrentEmail()
+                .ifPresentOrElse(
+                        email -> {
+                            if (!this.editMode) {
+                                LOGGER.error("Email not editable");
+                                return;
+                            }
 
-        var currEmail = DataModel.getInstance().getCurrentEmail();
+                            Calendar today = Calendar.getInstance();
+                            today.set(Calendar.HOUR_OF_DAY, 0);
 
-        if (currEmail == null) {
-            LOGGER.error("No email selected");
-            return;
-        }
+                            // Create a new email in order to add a new Object without reference to list
+                            var newEmail = new Email(
+                                    UUID.randomUUID().toString(),
+                                    subjectField.getText(),
+                                    bodyField.getText(),
+                                    email.getSender(),
+                                    new ArrayList<>(Arrays.asList(
+                                            recipientsField.getText().split(";"))),
+                                    today.getTime(),
+                                    false);
 
-        if (!this.editMode) {
-            LOGGER.error("Email not editable");
-            return;
-        }
-
-        Calendar today = Calendar.getInstance();
-        today.set(Calendar.HOUR_OF_DAY, 0);
-
-        // Create a new email in order to add a new Object without reference to list
-        var newEmail = new Email(
-                UUID.randomUUID().toString(),
-                subjectField.getText(),
-                bodyField.getText(),
-                currEmail.getSender(),
-                new ArrayList<>(Arrays.asList(recipientsField.getText().split(";"))),
-                today.getTime(),
-                false);
-
-        sendEmail(newEmail);
+                            sendEmail(newEmail);
+                            DataModel.getInstance().setCurrentEmail(null);
+                            this.editMode = false;
+                        },
+                        () -> LOGGER.error("No email to send"));
     }
 
     public void buttonReplyAll(ActionEvent actionEvent) {}
