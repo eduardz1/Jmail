@@ -1,8 +1,8 @@
 pluginManagement {
     plugins {
-        id 'io.freefair.lombok' version "${lombokPluginVersion}"
-        id 'com.diffplug.spotless' version "${spotlessPluginVersion}"
-        id 'org.openjfx.javafxplugin' version "${javafxPluginVersion}"
+        id 'io.freefair.lombok' version '6.5.1'
+        id 'com.diffplug.spotless' version '6.11.0'
+        id 'org.openjfx.javafxplugin' version '0.0.13'
     }
 }
 
