@@ -1,5 +1,11 @@
 package jmail.server.models.actions;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.helpers.SystemIOHelper;
@@ -10,13 +16,6 @@ import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.handlers.LockHandler;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 public class ActionListEmail implements ActionCommand {
     private final CommandListEmail command;
@@ -43,13 +42,13 @@ public class ActionListEmail implements ActionCommand {
         var userLock = handler.getReadLock(userEmail);
         userLock.lock();
 
-        var path = switch (folder) {
-            case "inbox" -> SystemIOHelper.getUserInbox(userEmail);
-            case "sent" -> SystemIOHelper.getUserSent(userEmail);
-            case "trash" -> SystemIOHelper.getUserDeleted(userEmail);
-            default -> throw new ActionExecutionException("Invalid folder");
-        };
-
+        var path =
+                switch (folder) {
+                    case "inbox" -> SystemIOHelper.getUserInbox(userEmail);
+                    case "sent" -> SystemIOHelper.getUserSent(userEmail);
+                    case "trash" -> SystemIOHelper.getUserDeleted(userEmail);
+                    default -> throw new ActionExecutionException("Invalid folder");
+                };
 
         var mails = new ArrayList<Email>();
         File[] files = (new File(path.toUri())).listFiles();

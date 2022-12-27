@@ -1,11 +1,10 @@
 package jmail.server.models.actions;
 
+import java.io.IOException;
 import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.commands.CommandDeleteEmail;
 import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.handlers.LockHandler;
-
-import java.io.IOException;
 
 public class ActionDeleteMail implements ActionCommand {
     private final CommandDeleteEmail command;
@@ -27,14 +26,14 @@ public class ActionDeleteMail implements ActionCommand {
         var handler = LockHandler.getInstance();
         var lock = handler.getWriteLock(userEmail);
 
-
         try {
-            var fromPath = switch (from) {
-                case "inbox" -> SystemIOHelper.getInboxEmailPath(userEmail, emailID);
-                case "sent" -> SystemIOHelper.getSentEmailPath(userEmail, emailID);
-                case "deleted" -> SystemIOHelper.getDeletedEmailPath(userEmail, emailID);
-                default -> throw new ActionExecutionException("Cannot delete mail: invalid from");
-            };
+            var fromPath =
+                    switch (from) {
+                        case "inbox" -> SystemIOHelper.getInboxEmailPath(userEmail, emailID);
+                        case "sent" -> SystemIOHelper.getSentEmailPath(userEmail, emailID);
+                        case "deleted" -> SystemIOHelper.getDeletedEmailPath(userEmail, emailID);
+                        default -> throw new ActionExecutionException("Cannot delete mail: invalid from");
+                    };
             lock.lock();
             if (hardDelete) {
                 SystemIOHelper.deleteFile(fromPath);
@@ -48,5 +47,4 @@ public class ActionDeleteMail implements ActionCommand {
             handler.removeLock(userEmail);
         }
     }
-
 }

@@ -1,13 +1,12 @@
 package jmail.server.models.actions;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.commands.CommandSendEmail;
 import jmail.server.exceptions.ActionExecutionException;
 import jmail.server.handlers.LockHandler;
-
-import java.io.IOException;
-import java.nio.file.Path;
 
 public class ActionSendEmail implements ActionCommand {
     private final CommandSendEmail command;
