@@ -12,7 +12,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import jmail.lib.logger.ObservableStreamAppender;
 import jmail.server.controllers.FXMLMainController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +36,6 @@ public class Main extends Application {
         Parent root = loader.load();
 
         FXMLMainController mainController = loader.getController();
-
-        ObservableStreamAppender.getObservable()
-                .addListener((observable, oldValue, newValue) -> mainController.setTopText(newValue));
         Scene newScene = new Scene(root);
 
         primaryStage.setScene(newScene);

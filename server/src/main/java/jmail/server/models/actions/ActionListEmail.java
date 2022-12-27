@@ -28,6 +28,7 @@ public class ActionListEmail implements ActionCommand {
     public ServerResponse executeAndGetResult() throws ActionExecutionException {
         var cmd = (CommandListEmail) this.command;
         var params = cmd.getParameter();
+        var folder = params.folder();
         var userEmail = cmd.getUserEmail();
 
         if (userEmail == null || userEmail.isEmpty()) {
@@ -39,14 +40,22 @@ public class ActionListEmail implements ActionCommand {
 
         var handler = LockHandler.getInstance();
         var userLock = handler.getReadLock(userEmail);
+        userLock.lock();
 
-        var inbox = SystemIOHelper.getUserInbox(userEmail);
+        var path =
+                switch (folder) {
+                    case "inbox" -> SystemIOHelper.getUserInbox(userEmail);
+                    case "sent" -> SystemIOHelper.getUserSent(userEmail);
+                    case "trash" -> SystemIOHelper.getUserDeleted(userEmail);
+                    default -> throw new ActionExecutionException("Invalid folder");
+                };
 
         var mails = new ArrayList<Email>();
-        File[] files = (new File(inbox.toUri())).listFiles();
+        File[] files = (new File(path.toUri())).listFiles();
         files = files == null ? new File[] {} : files;
         for (File file : files) {
             if (!shouldCheckUnixTime || getUnixTimeFromFilename(file) > params.lastUnixTimeCheck()) {
+                System.out.println("file " + getUnixTimeFromFilename(file) + " " + params.lastUnixTimeCheck());
                 try {
                     var json = SystemIOHelper.readJSONFile(Path.of(file.getPath()));
                     var mail = JsonHelper.fromJson(json, Email.class);
@@ -58,7 +67,7 @@ public class ActionListEmail implements ActionCommand {
                 }
             }
         }
-        mails.sort(Comparator.comparing(Email::getDate));
+        mails.sort(Comparator.comparing(Email::getDate).reversed());
 
         userLock.unlock();
         handler.removeLock(userEmail);
@@ -68,7 +77,7 @@ public class ActionListEmail implements ActionCommand {
     private Long getUnixTimeFromFilename(File file) {
         var name = file.getName();
         var last_ = name.lastIndexOf("_");
-        return Long.getLong(name.substring(last_ + 1));
+        return Long.parseLong(name.substring(last_ + 1));
     }
 
     @Getter

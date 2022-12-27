@@ -1,10 +1,12 @@
 package jmail.client.models.model;
 
+import java.util.Arrays;
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.beans.value.ObservableStringValue;
 import javafx.collections.FXCollections;
@@ -31,10 +33,10 @@ public class DataModel {
         currentUser = new SimpleObjectProperty<>();
         currentFolder = new SimpleStringProperty();
 
-        inbox = FXCollections.emptyObservableList();
-        sent = FXCollections.emptyObservableList();
-        trash = FXCollections.emptyObservableList();
-        currentFilteredEmails = FXCollections.emptyObservableList();
+        inbox = FXCollections.observableArrayList();
+        sent = FXCollections.observableArrayList();
+        trash = FXCollections.observableArrayList();
+        currentFilteredEmails = FXCollections.observableArrayList();
 
         currentEmail = new SimpleObjectProperty<>();
         serverStatusConnected = new SimpleBooleanProperty();
@@ -76,17 +78,7 @@ public class DataModel {
 
     public void setCurrentFolder(String folder) {
         currentFolder.set(folder);
-        switch (folder) {
-            case "inbox":
-                currentFilteredEmails.setAll(inbox);
-                break;
-            case "sent":
-                currentFilteredEmails.setAll(sent);
-                break;
-            case "trash":
-                currentFilteredEmails.setAll(trash);
-                break;
-        }
+        syncFilteredEmails();
     }
 
     public ObservableList<Email> getInbox() {
@@ -129,8 +121,8 @@ public class DataModel {
         currentEmail.set(email);
     }
 
-    public boolean isServerStatusConnected() {
-        return serverStatusConnected.get();
+    public ObservableBooleanValue isServerStatusConnected() {
+        return serverStatusConnected;
     }
 
     public void setServerStatusConnected(boolean serverStatusConnected) {
@@ -143,16 +135,34 @@ public class DataModel {
             case "sent" -> sent.remove(currentEmail.get());
             case "trash" -> trash.remove(currentEmail.get());
         }
+        syncFilteredEmails();
         currentEmail.set(null);
     }
 
     public void addEmail(String folder, Email... emails) {
-        for (Email email : emails) {
-            switch (folder) {
-                case "inbox" -> inbox.add(email);
-                case "sent" -> sent.add(email);
-                case "trash" -> trash.add(email);
-            }
+        // isEmpty
+        if (!Arrays.stream(emails).findAny().isPresent()) {
+            return;
+        }
+
+        // append array to start of list
+        switch (folder) {
+            case "inbox" -> inbox.addAll(0, Arrays.asList(emails));
+            case "sent" -> sent.addAll(0, Arrays.asList(emails));
+            case "trash" -> trash.addAll(0, Arrays.asList(emails));
+        }
+
+        if (folder.equalsIgnoreCase(getCurrentFolder())) {
+            syncFilteredEmails();
+        }
+    }
+
+    private void syncFilteredEmails() {
+        // TODO: implement search filter logic
+        switch (currentFolder.get()) {
+            case "inbox" -> currentFilteredEmails.setAll(inbox);
+            case "sent" -> currentFilteredEmails.setAll(sent);
+            case "trash" -> currentFilteredEmails.setAll(trash);
         }
     }
 }

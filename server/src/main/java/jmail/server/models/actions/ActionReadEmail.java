@@ -30,6 +30,7 @@ public class ActionReadEmail implements ActionCommand {
 
         var handler = LockHandler.getInstance();
         var lock = handler.getWriteLock(userEmail);
+        lock.lock();
         try {
             var path = SystemIOHelper.getInboxEmailPath(userEmail, emailID);
             var json = SystemIOHelper.readJSONFile(path);

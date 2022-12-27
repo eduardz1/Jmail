@@ -48,7 +48,7 @@ public class ActionSendEmail implements ActionCommand {
 
         var sent = SystemIOHelper.getUserSent(userEmail);
         Path sentPath;
-        var fileName = email.getFileID();
+        var fileName = email.fileID();
 
         try {
             userLock.lock();

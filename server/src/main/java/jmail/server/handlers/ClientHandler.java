@@ -36,25 +36,28 @@ public class ClientHandler implements Runnable {
 
             var cmd = JsonHelper.fromJson(request, Command.class);
             if (cmd == null) {
-                System.out.println("Command is null");
                 throw new CommandNotFoundException();
             }
-            if (!cmd.hasEmail()) throw new NotAuthorizedException("User not provided");
+            if (cmd.requireAuth()) {
+                if (!cmd.hasEmail()) {
+                    throw new NotAuthorizedException("User not provided");
+                }
 
-            var userEmail = cmd.getUserEmail();
-            if (SystemIOHelper.userExists(userEmail)) {
-                SystemIOHelper.createUserFolderIfNotExists(userEmail);
+                var userEmail = cmd.getUserEmail();
+                if (SystemIOHelper.userExists(userEmail)) {
+                    SystemIOHelper.createUserFolderIfNotExists(userEmail);
+                }
             }
 
             var commandHandler = new CommandHandler(cmd, writer);
             commandHandler.executeAction();
 
         } catch (CommandNotFoundException | JsonProcessingException e) {
-            LOGGER.error("Message received not valid");
+            LOGGER.error(e.getMessage());
             sendResponse(ServerResponseStatuses.ERROR, "Message invalid");
         } catch (NotAuthorizedException e) {
-            LOGGER.error(e.getLocalizedMessage());
-            sendResponse(ServerResponseStatuses.ERROR, e.getLocalizedMessage());
+            LOGGER.error(e.getMessage());
+            sendResponse(ServerResponseStatuses.ERROR, e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
         }
