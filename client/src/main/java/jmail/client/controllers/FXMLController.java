@@ -1,5 +1,9 @@
 package jmail.client.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -20,6 +24,8 @@ import jmail.client.models.responses.ListEmailResponse;
 import jmail.lib.autocompletion.textfield.AutoCompletionBinding;
 import jmail.lib.autocompletion.textfield.TextFields;
 import jmail.lib.constants.ServerResponseStatuses;
+import jmail.lib.helpers.JsonHelper;
+import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.helpers.ValidatorHelper;
 import jmail.lib.models.Email;
 import jmail.lib.models.ServerResponse;
@@ -299,7 +305,7 @@ public class FXMLController {
                                 }
 
                                 System.out.println("sono arrivate email");
-                                DataModel.getInstance().addEmail(folder, emails);
+                                addEmail(folder, emails);
 
                                 // Aggiorniamo lastUnixTimeEmailCheck con la data più recente tra le email ricevute
                                 // Non utilizziamo il tempo corrente per evitare problemi di sincronizzazione:
@@ -339,7 +345,7 @@ public class FXMLController {
                         response -> {
                             if (response.getStatus().equals(ServerResponseStatuses.OK)) {
                                 LOGGER.info("Email sent: {}", response);
-                                DataModel.getInstance().addEmail("sent", email);
+                                addEmail("sent", email);
                                 // When send an email, not add to inbox, but update it
                                 listEmails("inbox");
                             } else {
@@ -358,12 +364,11 @@ public class FXMLController {
                         command,
                         response -> {
                             if (response.getStatus().equals(ServerResponseStatuses.OK)) {
-                                DataModel.getInstance()
-                                        .addEmail(
-                                                "trash",
-                                                DataModel.getInstance()
-                                                        .getCurrentEmail()
-                                                        .orElseThrow());
+                                addEmail(
+                                        "trash",
+                                        DataModel.getInstance()
+                                                .getCurrentEmail()
+                                                .orElseThrow());
                                 DataModel.getInstance().removeCurrentEmail();
                                 LOGGER.info("DeleteMailResponse: {}", response);
                             } else {
@@ -407,9 +412,67 @@ public class FXMLController {
     public void buttonReplyAll(ActionEvent actionEvent) {}
 
     public void syncronizeEmails() {
-        // TODO: Gestione della sincronizzazione con la cache
+
+        // Sincronizzazione email con cache locale al login
+        var userEmail = DataModel.getInstance().getCurrentUser().getEmail();
+        var paths = new ArrayList<Path>() {
+            {
+                add(SystemIOHelper.getUserInbox(userEmail));
+                add(SystemIOHelper.getUserSent(userEmail));
+                add(SystemIOHelper.getUserDeleted(userEmail));
+            }
+        };
+
+        var folders = new ArrayList<String>() {
+            {
+                add("inbox");
+                add("sent");
+                add("trash");
+            }
+        };
+
+        for (int i = 0; i < paths.size(); i++) {
+            var mails = new ArrayList<Email>();
+            File[] files = (new File(paths.get(i).toUri())).listFiles();
+            files = files == null ? new File[] {} : files;
+            for (File file : files) {
+                try {
+                    var json = SystemIOHelper.readJSONFile(Path.of(file.getPath()));
+                    var mail = JsonHelper.fromJson(json, Email.class);
+                    mails.add(mail);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            mails.sort(Comparator.comparing(Email::getDate).reversed());
+            DataModel.getInstance().addEmail(folders.get(i), mails.toArray(Email[]::new));
+        }
         listEmails("inbox");
         listEmails("sent");
         listEmails("trash");
+    }
+
+    public void addEmail(String folder, Email... emails) {
+
+        var userEmail = DataModel.getInstance().getCurrentUser().getEmail();
+        var path =
+                switch (folder) {
+                    case "inbox" -> SystemIOHelper.getUserInbox(userEmail);
+                    case "sent" -> SystemIOHelper.getUserSent(userEmail);
+                    case "trash" -> SystemIOHelper.getUserDeleted(userEmail);
+                    default -> throw new IllegalStateException("Unexpected value: " + folder);
+                };
+
+        for (Email email : emails) {
+            try {
+                SystemIOHelper.writeJSONFile(path, email.getId(), JsonHelper.toJson(email));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        DataModel.getInstance().addEmail(folder, emails);
     }
 }

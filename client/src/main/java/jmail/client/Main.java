@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import jmail.client.models.client.MailClient;
 import jmail.lib.constants.ServerResponseStatuses;
+import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.CommandPing;
 
@@ -71,6 +72,12 @@ public class Main extends Application {
             // Forces Dark Mode on Windows11
             StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
             startCheckThread();
+
+            try {
+                SystemIOHelper.createBaseFoldersIfNotExists();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
 
         primaryStage.setResizable(false);
