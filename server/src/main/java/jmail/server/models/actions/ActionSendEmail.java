@@ -6,7 +6,7 @@ import jmail.lib.helpers.JsonHelper;
 import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.commands.CommandSendEmail;
 import jmail.server.exceptions.ActionExecutionException;
-import jmail.server.handlers.LockHandler;
+import jmail.lib.handlers.LockHandler;
 
 public class ActionSendEmail implements ActionCommand {
     private final CommandSendEmail command;

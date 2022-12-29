@@ -1,12 +1,13 @@
 package jmail.lib.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+import lombok.NonNull;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import lombok.Data;
-import lombok.NonNull;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -58,5 +59,13 @@ public class Email {
     public void setRecipients(List<String> recipients) {
         this.recipients.clear();
         this.recipients.addAll(recipients);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Email email = (Email) o;
+        return id.equals(email.id);
     }
 }

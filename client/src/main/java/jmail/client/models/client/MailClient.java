@@ -1,18 +1,20 @@
 package jmail.client.models.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.util.concurrent.*;
 import javafx.application.Platform;
 import jmail.client.models.model.DataModel;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.Command;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MailClient {
     //  private final ThreadPoolExecutor threadPool;
@@ -50,6 +52,8 @@ public class MailClient {
 
     public <T extends ServerResponse> void sendCommand(
             Command cmd, ResponseFunction responseFunc, Class<T> responseClass) {
+
+        System.out.println("Sending command: " + cmd.getClass().getSimpleName());
 
         // Add additional data to command
         var user = DataModel.getInstance().getCurrentUser();

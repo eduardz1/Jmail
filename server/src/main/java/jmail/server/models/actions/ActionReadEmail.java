@@ -7,7 +7,7 @@ import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.Email;
 import jmail.lib.models.commands.CommandReadEmail;
 import jmail.server.exceptions.ActionExecutionException;
-import jmail.server.handlers.LockHandler;
+import jmail.lib.handlers.LockHandler;
 
 public class ActionReadEmail implements ActionCommand {
     private final CommandReadEmail command;
