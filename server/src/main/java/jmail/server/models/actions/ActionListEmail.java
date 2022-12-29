@@ -13,7 +13,7 @@ import jmail.lib.models.Email;
 import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.CommandListEmail;
 import jmail.server.exceptions.ActionExecutionException;
-import jmail.server.handlers.LockHandler;
+import jmail.lib.handlers.LockHandler;
 import lombok.Getter;
 import lombok.Setter;
 

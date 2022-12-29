@@ -4,7 +4,7 @@ import java.io.IOException;
 import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.commands.CommandRestoreEmail;
 import jmail.server.exceptions.ActionExecutionException;
-import jmail.server.handlers.LockHandler;
+import jmail.lib.handlers.LockHandler;
 
 public class ActionRestoreEmail implements ActionCommand {
   private final CommandRestoreEmail command;
