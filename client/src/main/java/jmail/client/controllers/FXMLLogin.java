@@ -1,6 +1,7 @@
 package jmail.client.controllers;
 
 import com.google.common.hash.Hashing;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import javafx.application.Platform;
@@ -14,6 +15,7 @@ import jmail.client.models.client.MailClient;
 import jmail.client.models.model.DataModel;
 import jmail.client.models.responses.LoginResponse;
 import jmail.lib.constants.ServerResponseStatuses;
+import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.Email;
 import jmail.lib.models.commands.CommandLogin;
 
@@ -60,6 +62,12 @@ public class FXMLLogin {
                                 var resp = (LoginResponse) response;
                                 DataModel.getInstance().setCurrentUser(resp.getUser());
                                 System.out.println("Login successful"); // TODO: use LOGGER here
+                                try {
+                                    SystemIOHelper.createUserFolderIfNotExists(
+                                            resp.getUser().getEmail());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                                 Main.changeScene("client.fxml");
                             } else {
                                 Main.showNotConnectServerErrorDialog();
