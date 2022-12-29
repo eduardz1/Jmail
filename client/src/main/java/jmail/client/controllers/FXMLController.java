@@ -1,6 +1,14 @@
 package jmail.client.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
@@ -28,15 +36,6 @@ import jmail.lib.models.commands.CommandSendEmail;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.time.Instant;
-import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class FXMLController {
 
@@ -440,7 +439,8 @@ public class FXMLController {
                 try {
                     var json = SystemIOHelper.readJSONFile(Path.of(file.getPath()));
                     var mail = JsonHelper.fromJson(json, Email.class);
-                    lastUnixTimeEmailCheck = Math.max(mail.getDate().toInstant().getEpochSecond(), lastUnixTimeEmailCheck);
+                    lastUnixTimeEmailCheck =
+                            Math.max(mail.getDate().toInstant().getEpochSecond(), lastUnixTimeEmailCheck);
                     mails.add(mail);
                 } catch (IOException e) {
                     e.printStackTrace();
