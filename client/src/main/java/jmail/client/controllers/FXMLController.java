@@ -77,6 +77,8 @@ public class FXMLController {
     private final Set<String> suggestions = new HashSet<>();
     private transient AutoCompletionBinding<String> autoCompletionBinding;
 
+    Map<String, Path> paths = new HashMap<>();
+
     // TODO: Qualcosa viene aggiornata e causa un eccezione sul thread UI, ma non ho capito cosa, fixare
 
     public void initialize() {
@@ -185,7 +187,16 @@ public class FXMLController {
 
         scheduler.scheduleAtFixedRate(() -> listEmails("inbox"), 20, 20, TimeUnit.SECONDS);
 
-        syncronizeEmails();
+        DataModel.getInstance().getCurrentUserProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                throw new IllegalStateException("Current user cannot be null");
+            }
+            paths.put("inbox", SystemIOHelper.getUserInbox(newValue.getEmail()));
+            paths.put("sent", SystemIOHelper.getUserSent(newValue.getEmail()));
+            paths.put("trash", SystemIOHelper.getUserDeleted(newValue.getEmail()));
+        });
+
+        synchronizeEmails();
     }
 
     private void learnWord(String trim) {
@@ -411,30 +422,16 @@ public class FXMLController {
 
     public void buttonReplyAll(ActionEvent actionEvent) {}
 
-    public void syncronizeEmails() {
+    public void synchronizeEmails() {
+        // TODO: ? (già fatto no?) Sincronizzazione email con cache locale al login
 
-        // Sincronizzazione email con cache locale al login
-        var userEmail = DataModel.getInstance().getCurrentUser().getEmail();
-        var paths = new ArrayList<Path>() {
-            {
-                add(SystemIOHelper.getUserInbox(userEmail));
-                add(SystemIOHelper.getUserSent(userEmail));
-                add(SystemIOHelper.getUserDeleted(userEmail));
-            }
-        };
-
-        var folders = new ArrayList<String>() {
-            {
-                add("inbox");
-                add("sent");
-                add("trash");
-            }
-        };
-
-        for (int i = 0; i < paths.size(); i++) {
+        for (String folder : paths.keySet()) {
             var mails = new ArrayList<Email>();
-            File[] files = (new File(paths.get(i).toUri())).listFiles();
-            files = files == null ? new File[] {} : files;
+            var files = (new File(paths.get(folder).toUri())).listFiles();
+            if (files == null) {
+                continue;
+            }
+
             for (File file : files) {
                 try {
                     var json = SystemIOHelper.readJSONFile(Path.of(file.getPath()));
@@ -447,8 +444,9 @@ public class FXMLController {
                 }
             }
             mails.sort(Comparator.comparing(Email::getDate).reversed());
-            DataModel.getInstance().addEmail(folders.get(i), mails.toArray(Email[]::new));
+            DataModel.getInstance().addEmail(folder, mails.toArray(Email[]::new));
         }
+
         listEmails("inbox");
         listEmails("sent");
         listEmails("trash");
@@ -456,18 +454,9 @@ public class FXMLController {
 
     public void addEmail(String folder, Email... emails) {
 
-        var userEmail = DataModel.getInstance().getCurrentUser().getEmail();
-        var path =
-                switch (folder) {
-                    case "inbox" -> SystemIOHelper.getUserInbox(userEmail);
-                    case "sent" -> SystemIOHelper.getUserSent(userEmail);
-                    case "trash" -> SystemIOHelper.getUserDeleted(userEmail);
-                    default -> throw new IllegalStateException("Unexpected value: " + folder);
-                };
-
         for (Email email : emails) {
             try {
-                SystemIOHelper.writeJSONFile(path, email.getId(), JsonHelper.toJson(email));
+                SystemIOHelper.writeJSONFile(paths.get(folder), email.getId(), JsonHelper.toJson(email));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
