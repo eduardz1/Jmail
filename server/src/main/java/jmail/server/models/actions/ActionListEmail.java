@@ -45,7 +45,7 @@ public class ActionListEmail implements ActionCommand {
                 switch (folder) {
                     case "inbox" -> SystemIOHelper.getUserInbox(userEmail);
                     case "sent" -> SystemIOHelper.getUserSent(userEmail);
-                    case "trash" -> SystemIOHelper.getUserDeleted(userEmail);
+                    case "trash" -> SystemIOHelper.getUserTrash(userEmail);
                     default -> throw new ActionExecutionException("Invalid folder");
                 };
 

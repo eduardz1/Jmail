@@ -37,7 +37,9 @@
 
 /* TextField */
 .text-field {
-  -fx-background-radius: 0;
+  -fx-border-radius: 8;
+  border-radius: 8;
+  -fx-background-radius: 8;
   -fx-border-width: 1;
   border-width: 1;
   -fx-border-color: #222222;
@@ -132,21 +134,28 @@
 
 /* ListCell */
 .list-cell {
-  -fx-background-radius: 0;
+  -fx-border-radius: 8;
+  border-radius: 8;
+  -fx-background-radius: 8;
   -fx-border-width: 0;
   border-width: 0;
   -fx-text-fill: #afb1b3;
   -fx-background-color: #1a1a1a;
   background-color: #1a1a1a;
-  -fx-padding: 0 0 0 3;
-  padding: 0 0 0 3;
+  -fx-padding: 3;
+  padding: 3;
 }
 
 .list-cell:hover {
-  -fx-background-color: #3e3e40;
-  background-color: #3e3e40;
+  -fx-background-color: #252525;
+  background-color: #252525;
   -fx-cursor: HAND;
   cursor: HAND;
+}
+
+.list-cell:empty {
+  -fx-background-color: transparent;
+  background-color: transparent;
 }
 
 .list-cell:pressed {
@@ -159,15 +168,16 @@
   background-color: #3e3e40;
 }
 
-/* ListView */
 .list-view {
-  -fx-background-radius: 0;
+  -fx-border-radius: 13;
+  border-radius: 13;
+  -fx-background-radius: 13;
   -fx-background-color: #1a1a1a;
   background-color: #1a1a1a;
   -fx-border-width: 1;
   border-width: 1;
-  -fx-padding: 1;
-  padding: 1;
+  -fx-padding: 3;
+  padding: 3;
 }
 
 .list-view .scroll-bar {
@@ -181,9 +191,6 @@
 .list-view:hover {
   -fx-border-color: #3e3e40;
   border-color: #3e3e40;
-  -fx-padding: 0;
-  padding: 0;
-  -fx-background-insets: 1 1 0 1;
 }
 
 .list-view:focused {
@@ -191,14 +198,13 @@
   background-color: #1a1a1a;
   -fx-border-color: #4e4e4e;
   border-color: #4e4e4e;
-  -fx-padding: 0 0 1 0;
-  padding: 0 0 1 0;
-  -fx-background-insets: 1;
 }
 
 /* Button */
 .button {
-  -fx-background-radius: 0;
+  -fx-border-radius: 13;
+  border-radius: 13;
+  -fx-background-radius: 13;
   -fx-border-insets: 0 0 -1 0;
   -fx-border-width: 1;
   border-width: 1;
@@ -293,7 +299,9 @@
 
 /* TextArea */
 .text-area {
-  -fx-background-radius: 0;
+  -fx-background-radius: 8;
+  -fx-border-radius: 8;
+  border-radius: 8;
   -fx-border-width: 1;
   border-width: 1;
   -fx-border-color: #222222;
@@ -652,8 +660,8 @@
   background-color: #202020;
   -fx-border-color: #3e3e42;
   border-color: #3e3e42;
-  -fx-border-radius: 0;
-  border-radius: 0;
+  -fx-border-radius: 13;
+  border-radius: 13;
   -fx-border-width: 3 2 2 2;
   border-width: 3 2 2 2;
 }
@@ -662,8 +670,8 @@
 .table-view {
   -fx-border-width: 1;
   border-width: 1;
-  -fx-border-radius: 0;
-  border-radius: 0;
+  -fx-border-radius: 13;
+  border-radius: 13;
   -fx-border-color: #222222;
   border-color: #222222;
   -fx-background-radius: 0;
@@ -675,8 +683,8 @@
 .table-view:focused {
   -fx-border-width: 1;
   border-width: 1;
-  -fx-border-radius: 0;
-  border-radius: 0;
+  -fx-border-radius: 13;
+  border-radius: 13;
   -fx-border-color: #4e4e4e;
   border-color: #4e4e4e;
   -fx-background-insets: 1;
@@ -757,9 +765,9 @@
 
 /* Tooltip */
 .tooltip {
-  -fx-background-radius: 0;
-  -fx-border-radius: 0;
-  border-radius: 0;
+  -fx-background-radius: 8;
+  -fx-border-radius: 8;
+  border-radius: 8;
   -fx-text-fill: #afb1b3;
   -fx-padding: 5;
   padding: 5;
@@ -874,13 +882,11 @@
   -fx-effect: null;
 }
 
-/* .auto-complete-popup .list-view .virtual-flow .clipped-container .sheet .list-cell {
-  -fx-background-color: #1a1a1a;
-  background-color: #1a1a1a;
-  -fx-text-fill: #afb1b3;
-  -fx-padding: 0;
-  padding: 0;
-} */
+.auto-complete-popup .list-view .virtual-flow .clipped-container .sheet .list-cell { /* TODO: fix */
+  -fx-background-radius: 0;
+  -fx-border-radius: 0;
+  border-radius: 0;
+}
 
 /*  ****************************************************
     *                                                  *

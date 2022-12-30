@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import jmail.client.models.client.MailClient;
@@ -15,6 +16,7 @@ import jmail.client.models.model.DataModel;
 import jmail.client.models.responses.ListEmailResponse;
 import jmail.lib.autocompletion.textfield.AutoCompletionBinding;
 import jmail.lib.autocompletion.textfield.TextFields;
+import jmail.lib.constants.ColorPalette;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.handlers.LockHandler;
 import jmail.lib.helpers.JsonHelper;
@@ -27,6 +29,9 @@ import jmail.lib.models.commands.CommandDeleteEmail.CommandDeleteEmailParameter;
 import jmail.lib.models.commands.CommandListEmail;
 import jmail.lib.models.commands.CommandReadEmail;
 import jmail.lib.models.commands.CommandSendEmail;
+import me.xdrop.fuzzywuzzy.FuzzySearch;
+import me.xdrop.fuzzywuzzy.model.BoundExtractedResult;
+import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +43,9 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.stream.Collectors;
 
 public class FXMLController {
-
   private static final Logger LOGGER = LoggerFactory.getLogger(FXMLController.class.getName());
   private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
   private Long lastUnixTimeEmailCheck = 0L;
@@ -50,7 +55,7 @@ public class FXMLController {
   private Button newMailButton;
 
   @FXML
-  private Label connLbl;
+  private Label connectionLabel;
 
   @FXML
   private Button searchButton;
@@ -92,7 +97,7 @@ public class FXMLController {
     private final Set<String> suggestions = new HashSet<>();
     private transient AutoCompletionBinding<String> autoCompletionBinding;
 
-    Map<String, Path> paths = new HashMap<>();
+    Map<String, Path> paths;
 
   // TODO: Qualcosa viene aggiornata e causa un eccezione sul thread UI, ma non ho capito cosa, fixare
 
@@ -102,8 +107,14 @@ public class FXMLController {
     searchField.setOnKeyPressed(event -> {
       if (event.getCode() == javafx.scene.input.KeyCode.ENTER) {
         LOGGER.info("SearchField: {}", searchField.getText().trim());
-        // buttonSearch(e); TODO: implement
+        buttonSearch(null);
         learnWord(searchField.getText().trim());
+      }
+    });
+
+    searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue.isEmpty()) { // FIXME: non funziona ma basta cambiare folder per ripristinare la lista
+        listEmails(DataModel.getInstance().getCurrentFolder());
       }
     });
 
@@ -119,14 +130,108 @@ public class FXMLController {
     Node graphic;
     if (avatar == null) {
       var fontIcon = new FontIcon("mdi2a-account");
-      fontIcon.setIconColor(Paint.valueOf("#afb1b3"));
+      fontIcon.setIconColor(Paint.valueOf(ColorPalette.TEXT.getHexValue()));
       graphic = fontIcon;
     } else {
       graphic = new ImageView(avatar);
     }
     currentUserName.setGraphic(graphic);
 
-    // Should all done in subcontroller o non so dove
+    foldersInit();
+
+    var label = DataModel.getInstance().getCurrentUser().getEmail();
+    currentUserEmail.textProperty().set(label);
+
+    listFolder.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+      DataModel.getInstance().setCurrentFolder(newValue.toLowerCase());
+      currentUserEmail.textProperty().set(newValue + " - " + label);
+    });
+
+    listEmailsInit();
+
+    DataModel.getInstance()
+            .getCurrentEmailProperty()
+            .addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
+              if (newValue == null) {
+                subjectField.setPromptText("Subject");
+                recipientsField.setPromptText("Recipients");
+                bodyField.setPromptText("Body");
+              } else {
+                subjectField.setText(newValue.getSubject());
+                recipientsField.setText(String.join(";", newValue.getRecipients()));
+                bodyField.setText(newValue.getBody());
+              }
+            }));
+    
+    var fontIcon = new FontIcon("mdi2w-web-box");
+    fontIcon.setIconColor(Paint.valueOf(ColorPalette.GREEN.getHexValue()));
+    connectionLabel.setGraphic(fontIcon);
+    DataModel.getInstance()
+            .isServerStatusConnected()
+            .addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
+                var newFontIcon = new FontIcon("mdi2w-web-box");
+                newFontIcon.setIconColor(newValue ? Paint.valueOf(ColorPalette.GREEN.getHexValue()) : Paint.valueOf(ColorPalette.RED.getHexValue()));
+              connectionLabel.setGraphic(newFontIcon);
+            }));
+
+
+        synchronizeEmails();
+  }
+
+private void listEmailsInit() {
+    listEmails.setCellFactory(lv -> new ListCell<>() {
+      @Override
+      protected void updateItem(Email item, boolean empty) {
+        super.updateItem(item, empty);
+        if (empty || item == null) {
+          setText(null);
+          return;
+        }
+
+        var fontIcon = new FontIcon("mdi2c-checkbox-blank-circle");
+        fontIcon.setIconColor(item.getRead() ? Color.TRANSPARENT : Paint.valueOf(ColorPalette.BLUE.getHexValue()));
+        setGraphic(fontIcon);
+        setText(item.getSubject());
+      }
+    });
+
+    DataModel.getInstance().getCurrentFilteredEmails().addListener((ListChangeListener<Email>)
+            c -> Platform.runLater(() -> {
+              listEmails.getItems().clear();
+              var list = c.getList();
+              listEmails.getItems().addAll(list);
+
+              list.stream().map(Email::getSubject).forEach(this::learnWord);
+              DataModel.getInstance().getCurrentEmail().ifPresentOrElse(
+                      email -> listEmails.getSelectionModel().select(email),
+                      () -> listEmails.getSelectionModel().selectFirst());
+            }));
+
+    listEmails.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+      DataModel.getInstance().setCurrentEmail(newValue);
+      readEmail(newValue);
+      this.editMode = false;
+    });
+}
+
+  private void foldersInit() {
+      paths = new HashMap<>(
+        Map.of(
+            "inbox", SystemIOHelper.getUserInbox(DataModel.getInstance().getCurrentUser().getEmail()),
+            "sent", SystemIOHelper.getUserSent(DataModel.getInstance().getCurrentUser().getEmail()),
+            "trash", SystemIOHelper.getUserTrash(DataModel.getInstance().getCurrentUser().getEmail())
+        )
+    );
+
+    DataModel.getInstance().getCurrentUserProperty().addListener((observable, oldValue, newValue) -> {
+        if (newValue == null) {
+            throw new IllegalStateException("Current user cannot be null");
+        }
+        paths.put("inbox", SystemIOHelper.getUserInbox(newValue.getEmail()));
+        paths.put("sent", SystemIOHelper.getUserSent(newValue.getEmail()));
+        paths.put("trash", SystemIOHelper.getUserTrash(newValue.getEmail()));
+    });
+
     listFolder.getItems().addAll("Inbox", "Sent", "Trash");
     listFolder.setCellFactory(param -> new ListCell<>() {
       @Override
@@ -150,93 +255,12 @@ public class FXMLController {
         setFont(Font.font("System", 16));
       }
     });
-
-    var label = DataModel.getInstance().getCurrentUser().getEmail();
-    currentUserEmail.textProperty().set(label);
-
-    listFolder.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-      DataModel.getInstance().setCurrentFolder(newValue.toLowerCase());
-      currentUserEmail.textProperty().set(newValue + " - " + label); // FIXME does not seem to work
-    });
-
-    listEmails.setCellFactory(lv -> new ListCell<>() {
-      @Override
-      protected void updateItem(Email item, boolean empty) {
-        super.updateItem(item, empty);
-
-        // FIXME: Fare grafica decente
-        if (empty || item == null) {
-          setText(null);
-          return;
-        }
-        setText((item.getRead() ? "read" : "unread") + " - " + item.getSubject());
-      }
-    });
-
-    DataModel.getInstance().getCurrentFilteredEmails().addListener((ListChangeListener<Email>)
-            c -> {
-              Platform.runLater(() -> {
-                listEmails.getItems().clear();
-                var list = c.getList();
-                listEmails.getItems().addAll(list);
-
-                if (!list.isEmpty()) {
-                  DataModel.getInstance().getCurrentEmail().ifPresentOrElse((email) -> {
-                    for (int i = 0; i < list.size(); i++) {
-                      if (list.get(i).getId().equals(email.getId())) {
-                        listEmails.getSelectionModel().select(i);
-                        break;
-                      }
-                    }
-                  }, () -> list.get(0).getId());
-                }
-              });
-            });
-
-    listEmails.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-      DataModel.getInstance().setCurrentEmail(newValue);
-      readEmail(newValue);
-      this.editMode = false;
-    });
-
-    // FIXME: Non dovrebbero andare dentro i field ma label, sistemare
-    DataModel.getInstance()
-            .getCurrentEmailProperty()
-            .addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
-              if (newValue == null) {
-                subjectField.setText("");
-                recipientsField.setText("");
-                bodyField.setText("");
-              } else {
-                subjectField.setText(newValue.getSubject());
-                recipientsField.setText(newValue.getRecipients().stream()
-                        .reduce("", (a, b) -> a + ";" + b)); // FIXME: non popola correttamente
-                bodyField.setText(newValue.getBody());
-              }
-            }));
-
-    DataModel.getInstance()
-            .isServerStatusConnected()
-            .addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
-              connLbl.setText(newValue ? "Connected" : "Disconnected"); // TODO: Bel pallino verde rosso
-            }));
-
-    DataModel.getInstance().getCurrentUserProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == null) {
-                throw new IllegalStateException("Current user cannot be null");
-            }
-            paths.put("inbox", SystemIOHelper.getUserInbox(newValue.getEmail()));
-            paths.put("sent", SystemIOHelper.getUserSent(newValue.getEmail()));
-            paths.put("trash", SystemIOHelper.getUserDeleted(newValue.getEmail()));
-        });
-
-        synchronizeEmails();
   }
 
   private void readEmail(Email email) {
-    if (email == null) return;
-    if (email.getRead()) return;
-    if (!DataModel.getInstance().getCurrentFolder().equals("inbox")) return;
+    if (email == null || email.getRead() || !DataModel.getInstance().getCurrentFolder().equals("inbox")) {
+        return;
+    }
 
     var params = new CommandReadEmail.CommandReadEmailParameter(email.fileID(), true);
     var cmd = new CommandReadEmail(params);
@@ -246,18 +270,14 @@ public class FXMLController {
                     cmd,
                     response -> {
                       if (response.getStatus().equals(ServerResponseStatuses.OK)) {
-                        LOGGER.info("Email {} marked as read", email.fileID());
                         email.setRead(true);
                         DataModel.getInstance().syncFilteredEmails();
-
-                        // Update localCache
-                        var path = SystemIOHelper.getUserInbox(DataModel.getInstance().getCurrentUser().getEmail());
+                        LOGGER.info("Email {} marked as read", email.fileID());
                         try {
-                          SystemIOHelper.writeJSONFile(path, email.fileID(), JsonHelper.toJson(email));
+                          SystemIOHelper.writeJSONFile(paths.get("inbox"), email.fileID(), JsonHelper.toJson(email));
                         } catch (IOException e) {
                           e.printStackTrace();
                         }
-
                       } else {
                         LOGGER.error("Error marking email {} as read", email.fileID());
                       }
@@ -270,8 +290,8 @@ public class FXMLController {
     if (autoCompletionBinding != null) {
       autoCompletionBinding.dispose();
     }
-    autoCompletionBinding = TextFields.bindAutoCompletion(searchField, suggestions);
 
+    autoCompletionBinding = TextFields.bindAutoCompletion(searchField, suggestions);
     autoCompletionBinding.getAutoCompletionPopup().prefWidthProperty().bind(searchField.widthProperty());
   }
 
@@ -281,20 +301,36 @@ public class FXMLController {
 
     var newEmail = new Email(
             UUID.randomUUID().toString(),
-            "1", // FIXME: remove
-            "bla bla bla", // FIXME: remove
+            "",
+            "",
             DataModel.getInstance().getCurrentUser().getEmail(),
-            List.of("emmedeveloper@gmail.com"), // FIXME: remove
+            new ArrayList<>(),
             Calendar.getInstance().getTime(),
             false);
 
+    subjectField.setPromptText("Subject");
+    recipientsField.setPromptText("Recipients");
+    bodyField.setPromptText("Body");
     DataModel.getInstance().setCurrentEmail(newEmail);
     LOGGER.info("NewMailButton: {}", newEmail);
   }
 
   @FXML
   public void buttonSearch(ActionEvent e) {
-    // TODO SearchButton function
+    var text = searchField.textProperty().getValueSafe();
+    var currentFolder = DataModel.getInstance().getCurrentFolder();
+    var emails = switch (currentFolder) {
+      case "inbox" -> DataModel.getInstance().getInbox();
+      case "sent" -> DataModel.getInstance().getSent();
+      case "trash" -> DataModel.getInstance().getTrash();
+      default -> throw new IllegalStateException("Unexpected value: " + currentFolder);
+    };
+    if (text.isBlank()) {
+      return;
+    }
+
+    var filtered = FuzzySearch.extractTop(text, emails, email -> email.getSubject() + " " + email.getSender() + " " + email.getBody(), 5);
+    DataModel.getInstance().setFilteredEmails(filtered.stream().map(BoundExtractedResult::getReferent).collect(Collectors.toList()));
   }
 
   @FXML
@@ -322,7 +358,7 @@ public class FXMLController {
                     () -> LOGGER.info("ReplyButton: No email selected"));
   }
 
-  @FXML // FIXME: da capire come passare un Email object
+  @FXML
   public void buttonFwd(ActionEvent e) {
     DataModel.getInstance()
             .getCurrentEmail()
@@ -368,7 +404,6 @@ public class FXMLController {
   }
 
   public void listEmails(String folder) {
-
     // Prevents concurrent write of new email to the list
     var lock = LockHandler.getInstance().getWriteLock(folder);
     lock.lock();
@@ -387,7 +422,6 @@ public class FXMLController {
 
                         // Already sorted by date in the server
                         var emails = resp.getEmails().toArray(Email[]::new);
-                        System.out.println("sono arrivate email");
                         addEmail(folder, emails);
 
                         // Aggiorniamo lastUnixTimeEmailCheck con la data più recente tra le email ricevute
@@ -415,7 +449,6 @@ public class FXMLController {
   }
 
   public void sendEmail(Email email) {
-
     var valid = ValidatorHelper.isEmailValid(email);
     if (!valid.getKey()) {
       LOGGER.error("Email not valid: {}", valid.getValue());
@@ -430,10 +463,10 @@ public class FXMLController {
                     command,
                     response -> {
                       if (response.getStatus().equals(ServerResponseStatuses.OK)) {
-                        LOGGER.info("Email sent: {}", response);
-                        addEmail("sent", email);
-                        // When send an email, not add to inbox, but update it
-                        listEmails("inbox");
+                          addEmail("sent", email);
+                          // When send an email, not add to inbox, but update it
+                          listEmails("inbox");
+                          LOGGER.info("Email sent: {}", response);
                       } else {
                         LOGGER.error("Error sending email: {}", response);
                       }
@@ -537,7 +570,7 @@ public class FXMLController {
 //    scheduler.scheduleAtFixedRate(() -> listEmails("inbox"), 20, 20, TimeUnit.SECONDS);
     }
 
-    public void addEmail(String folder, Email... emails) {
+public void addEmail(String folder, Email... emails) {
 
     for (Email email : emails) {
       try {

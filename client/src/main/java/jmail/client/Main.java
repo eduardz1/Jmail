@@ -49,10 +49,6 @@ public class Main extends Application {
         // primaryStage needs to be unshown and shown again
     }
 
-    public String getGreeting() {
-        return "Hello World!";
-    }
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         Main.primaryStage = primaryStage;

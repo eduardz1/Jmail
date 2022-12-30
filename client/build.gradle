@@ -36,6 +36,8 @@ dependencies {
         because 'customization of Windows 11 window, no effect on other OS'
     }
 
+    implementation 'me.xdrop:fuzzywuzzy:1.4.0'
+
     implementation project(':lib')
 }
 

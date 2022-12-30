@@ -33,7 +33,7 @@ public class SystemIOHelper {
         return Paths.get(userpath + "/" + s[1] + "/" + s[0]);
     }
 
-    public static Path getUserDeleted(String userEmail) {
+    public static Path getUserTrash(String userEmail) {
         return getUserSpecificPath(userEmail, "deleted");
     }
 
@@ -80,7 +80,7 @@ public class SystemIOHelper {
     }
 
     public static Path getDeletedEmailPath(String userEmail, String emailID) {
-        return Path.of(getUserDeleted(userEmail) + "/" + emailID);
+        return Path.of(getUserTrash(userEmail) + "/" + emailID);
     }
 
     public static Path getSentEmailPath(String userEmail, String emailID) {
