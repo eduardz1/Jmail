@@ -1,13 +1,6 @@
 package jmail.client.models.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import javafx.application.Platform;
-import jmail.client.models.model.DataModel;
-import jmail.lib.constants.ServerResponseStatuses;
-import jmail.lib.helpers.JsonHelper;
-import jmail.lib.models.ServerResponse;
-import jmail.lib.models.commands.Command;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,6 +8,12 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javafx.application.Platform;
+import jmail.client.models.model.DataModel;
+import jmail.lib.constants.ServerResponseStatuses;
+import jmail.lib.helpers.JsonHelper;
+import jmail.lib.models.ServerResponse;
+import jmail.lib.models.commands.Command;
 
 public class MailClient {
     //  private final ThreadPoolExecutor threadPool;

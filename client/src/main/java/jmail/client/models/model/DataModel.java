@@ -1,5 +1,8 @@
 package jmail.client.models.model;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -11,10 +14,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import jmail.lib.models.Email;
 import jmail.lib.models.User;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 public class DataModel {
 
@@ -42,7 +41,6 @@ public class DataModel {
 
         currentEmail = new SimpleObjectProperty<>();
         serverStatusConnected = new SimpleBooleanProperty();
-
     }
 
     public static DataModel getInstance() {
