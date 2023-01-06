@@ -18,5 +18,4 @@
         layoutY="82.0" mnemonicParsing="false" onAction="#buttonLogin"
         prefWidth="89.0" text="Login" />
     <Label fx:id="connectionLabel" layoutX="14.0" layoutY="86.0" />
-
 </AnchorPane>

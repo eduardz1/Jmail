@@ -29,6 +29,7 @@ public class DataModel {
 
     // TODO: Preferiti, bozze, etichette
     private final SimpleBooleanProperty serverStatusConnected;
+    private final SimpleBooleanProperty editingMode;
 
     private DataModel() {
         currentUser = new SimpleObjectProperty<>();
@@ -41,6 +42,7 @@ public class DataModel {
 
         currentEmail = new SimpleObjectProperty<>();
         serverStatusConnected = new SimpleBooleanProperty();
+        editingMode = new SimpleBooleanProperty();
     }
 
     public static DataModel getInstance() {
@@ -167,4 +169,16 @@ public class DataModel {
     public void setFilteredEmails(List<Email> collect) {
         currentFilteredEmails.setAll(collect);
     }
+
+    public boolean isEditingMode() {
+        return editingMode.get();
+    }
+
+    public ObservableBooleanValue isEditingModeProperty() {
+      return serverStatusConnected;
+  }
+
+  public void setEditingMode(boolean editingMode) {
+      this.editingMode.set(editingMode);
+  } 
 }

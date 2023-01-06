@@ -3,7 +3,6 @@ package jmail.client.controllers;
 import com.google.common.hash.Hashing;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -18,7 +17,6 @@ import jmail.client.models.responses.LoginResponse;
 import jmail.lib.constants.ColorPalette;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.SystemIOHelper;
-import jmail.lib.models.Email;
 import jmail.lib.models.commands.CommandLogin;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -51,7 +49,8 @@ public class FXMLLogin {
     }
 
     @FXML public void buttonLogin(javafx.event.ActionEvent e) {
-        login(UsernameField.getText(), PasswordField.getText());
+        // login(UsernameField.getText(), PasswordField.getText());
+        login("emmedeveloper@gmail.com", "emme"); // TODO: Remove this
     }
 
     public void login(String username, String password) {
@@ -81,36 +80,5 @@ public class FXMLLogin {
                             }
                         },
                         LoginResponse.class);
-    }
-
-    private void addEmails() {
-
-        var in = new Email[] {
-            mockEmail("inbox"),
-            //            mockEmail("inbox"), mockEmail("inbox"), mockEmail("inbox"), mockEmail("inbox"),
-            // mockEmail("inbox")
-        };
-        DataModel.getInstance().addEmail("inbox", in);
-
-        var out = new Email[] {
-            mockEmail("out"), mockEmail("out"), mockEmail("out"),
-        };
-        DataModel.getInstance().addEmail("sent", out);
-
-        var tr = new Email[] {
-            mockEmail("tra"), mockEmail("tra"), mockEmail("tra"),
-        };
-        DataModel.getInstance().addEmail("trash", tr);
-    }
-
-    private Email mockEmail(String sub) {
-        return new Email(
-                java.util.UUID.randomUUID().toString(),
-                sub + " Oggetto " + java.util.UUID.randomUUID(),
-                "Buongiorno,\nAvrebbe due minuti per parlare del Nostro signore?",
-                "mario@yahoo.it",
-                List.of("emmedeveloper@gmail.com"),
-                java.util.Calendar.getInstance().getTime(),
-                false);
     }
 }

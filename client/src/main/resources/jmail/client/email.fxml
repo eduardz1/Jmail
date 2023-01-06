@@ -1,0 +1,50 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import org.kordamp.ikonli.javafx.*?>
+
+<AnchorPane minHeight="0.0" minWidth="365.0" prefHeight="554.0" prefWidth="350.0" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css"
+  xmlns="http://javafx.com/javafx/17.0.2-ea"
+  xmlns:fx="http://javafx.com/fxml/1" fx:id="root">
+  <ButtonBar buttonMinWidth="48.0" layoutX="14.0" layoutY="35.0" prefHeight="25.0" prefWidth="180.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="35.0">
+    <buttons>
+      <Button fx:id="replyButton" layoutY="14.0" minWidth="21.0" mnemonicParsing="false" onAction="#buttonReply" prefHeight="21.0" prefWidth="64.0">
+        <graphic>
+          <FontIcon iconColor="#afb1b3" iconLiteral="mdi2r-reply" iconSize="20" />
+        </graphic>
+      </Button>
+      <Button fx:id="replyAllButton" layoutY="14.0" minWidth="21.0" mnemonicParsing="false" onAction="#buttonReplyAll" prefHeight="21.0" prefWidth="64.0">
+        <graphic>
+          <FontIcon iconColor="#afb1b3" iconLiteral="mdi2r-reply-all" iconSize="20" />
+        </graphic>
+      </Button>
+      <Button fx:id="forwardButton" layoutY="14.0" minWidth="21.0" mnemonicParsing="false" onAction="#buttonFwd" prefHeight="21.0" prefWidth="64.0">
+        <graphic>
+          <FontIcon iconColor="#afb1b3" iconLiteral="mdi2s-share" iconSize="20" />
+        </graphic>
+      </Button>
+    </buttons>
+  </ButtonBar>
+  <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="5.0" layoutY="66.0" prefHeight="489.0" prefWidth="365.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="70.0">
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+      <TextField fx:id="subjectField" layoutX="25.0" layoutY="55.0" />
+      <TextField fx:id="recipientsField" layoutX="26.0" layoutY="96.0" />
+      <TextArea fx:id="bodyField" layoutX="25.0" layoutY="146.0" prefHeight="200.0" prefWidth="200.0" />
+    </AnchorPane>
+  </ScrollPane>
+  <ButtonBar buttonMinWidth="48.0" layoutX="397.0" layoutY="8.0" prefHeight="25.0" prefWidth="99.0" AnchorPane.leftAnchor="397.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="35.0">
+    <buttons>
+      <Button fx:id="trashButton" accessibleHelp="trash" accessibleText="trash" graphicTextGap="0.0" minWidth="48.0" mnemonicParsing="false" onAction="#buttonTrash" prefHeight="48.0">
+        <graphic>
+          <FontIcon iconColor="#afb1b3" iconLiteral="mdi2d-delete" iconSize="20" />
+        </graphic>
+      </Button>
+      <Button fx:id="sendButton" accessibleHelp="send" accessibleText="send" graphicTextGap="0.0" minWidth="48.0" mnemonicParsing="false" onAction="#buttonSend" prefHeight="48.0">
+        <graphic>
+          <FontIcon iconColor="#afb1b3" iconLiteral="mdi2s-send" iconSize="20" />
+        </graphic>
+      </Button>
+    </buttons>
+  </ButtonBar>
+  <Label fx:id="currentMailField" alignment="CENTER" layoutX="36.0" layoutY="6.0" prefHeight="17.0" prefWidth="454.0" />
+</AnchorPane>
