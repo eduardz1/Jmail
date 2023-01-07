@@ -35,15 +35,11 @@ public class FXMLController {
   private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
   private Long lastUnixTimeEmailCheck = 0L;
 
-  @FXML
-  private FXMLFolderController folderController;
-  @FXML
-  private FXMLListEmailController listEmailController;
-  @FXML
-  private FXMLEmailController emailController;
+  @FXML private FXMLFolderController folderController;
+  @FXML private FXMLListEmailController listEmailController;
+  @FXML private FXMLEmailController emailController;
 
-  @FXML
-  private SplitPane root;
+  @FXML private SplitPane root;
 
   Map<String, Path> paths;
 
@@ -69,16 +65,10 @@ public class FXMLController {
   private void foldersInit() {
 
     // Mappa di default con i path delle cartelle
-    paths = new HashMap<>(Map.of(
-        Folders.INBOX,
-        SystemIOHelper.getUserInbox(
-            DataModel.getInstance().getCurrentUser().getEmail()),
-        Folders.SENT,
-        SystemIOHelper.getUserSent(
-            DataModel.getInstance().getCurrentUser().getEmail()),
-        Folders.TRASH,
-        SystemIOHelper.getUserTrash(
-            DataModel.getInstance().getCurrentUser().getEmail())));
+    paths = new HashMap<>(
+        Map.of(Folders.INBOX, SystemIOHelper.getUserInbox(DataModel.getInstance().getCurrentUser().getEmail()),
+            Folders.SENT, SystemIOHelper.getUserSent(DataModel.getInstance().getCurrentUser().getEmail()),
+            Folders.TRASH, SystemIOHelper.getUserTrash(DataModel.getInstance().getCurrentUser().getEmail())));
 
     // Aggiorniamo la mappa ogni volta che cambia l'utente
     DataModel.getInstance().getCurrentUserProperty().addListener((observable, oldValue, newValue) -> {
@@ -99,42 +89,34 @@ public class FXMLController {
     var params = new CommandListEmail.CommandListEmailParameter(lastUnixTimeEmailCheck, folder);
     var command = new CommandListEmail(params);
 
-    MailClient.getInstance()
-        .sendCommand(
-            command,
-            response -> {
-              if (response.getStatus().equals(ServerResponseStatuses.OK)) {
-                var resp = (ListEmailResponse) response;
+    MailClient.getInstance().sendCommand(command, response -> {
+      if (response.getStatus().equals(ServerResponseStatuses.OK)) {
+        var resp = (ListEmailResponse) response;
 
-                if (resp.getEmails().isEmpty())
-                  return;
+        if (resp.getEmails().isEmpty())
+          return;
 
-                // Already sorted by date in the server
-                var emails = resp.getEmails().toArray(Email[]::new);
-                addEmail(folder, emails);
+        // Already sorted by date in the server
+        var emails = resp.getEmails().toArray(Email[]::new);
+        addEmail(folder, emails);
 
-                // Aggiorniamo lastUnixTimeEmailCheck con la data più recente tra le email
-                // ricevute
-                // Non utilizziamo il tempo corrente per evitare problemi di sincronizzazione:
-                // se viene inviata una email tra il momento in cui viene richiesta la lista di
-                // email
-                // e il momento in cui viene ricevuta la risposta, questa email non verrà mai
-                // ricevuta
-                // in quanto avrà la data nel momento in cui viene spedita
-                lastUnixTimeEmailCheck = Arrays.stream(emails)
-                    .findFirst()
-                    .map(Email::getDate)
-                    .map(Date::toInstant)
-                    .map(Instant::getEpochSecond)
-                    .orElse(lastUnixTimeEmailCheck);
+        // Aggiorniamo lastUnixTimeEmailCheck con la data più recente tra le email
+        // ricevute
+        // Non utilizziamo il tempo corrente per evitare problemi di sincronizzazione:
+        // se viene inviata una email tra il momento in cui viene richiesta la lista di
+        // email
+        // e il momento in cui viene ricevuta la risposta, questa email non verrà mai
+        // ricevuta
+        // in quanto avrà la data nel momento in cui viene spedita
+        lastUnixTimeEmailCheck = Arrays.stream(emails).findFirst().map(Email::getDate).map(Date::toInstant)
+            .map(Instant::getEpochSecond).orElse(lastUnixTimeEmailCheck);
 
-                System.out.println(lastUnixTimeEmailCheck);
-                LOGGER.info("Email list: {}", response);
-              } else {
-                LOGGER.error("Error getting email: {}", response);
-              }
-            },
-            ListEmailResponse.class);
+        System.out.println(lastUnixTimeEmailCheck);
+        LOGGER.info("Email list: {}", response);
+      } else {
+        LOGGER.error("Error getting email: {}", response);
+      }
+    }, ListEmailResponse.class);
 
     lock.unlock();
     LockHandler.getInstance().getReadLock(folder);
@@ -150,51 +132,38 @@ public class FXMLController {
     var params = new CommandSendEmail.CommandSendEmailParameter(email);
     var command = new CommandSendEmail(params);
 
-    MailClient.getInstance()
-        .sendCommand(
-            command,
-            response -> {
-              if (response.getStatus().equals(ServerResponseStatuses.OK)) {
-                addEmail(Folders.SENT, email);
-                // When send an email, not add to inbox, but update it
-                listEmails(Folders.INBOX);
-                LOGGER.info("Email sent: {}", response);
-              } else {
-                LOGGER.error("Error sending email: {}", response);
-              }
-            },
-            ServerResponse.class);
+    MailClient.getInstance().sendCommand(command, response -> {
+      if (response.getStatus().equals(ServerResponseStatuses.OK)) {
+        addEmail(Folders.SENT, email);
+        // When send an email, not add to inbox, but update it
+        listEmails(Folders.INBOX);
+        LOGGER.info("Email sent: {}", response);
+      } else {
+        LOGGER.error("Error sending email: {}", response);
+      }
+    }, ServerResponse.class);
   }
 
   public void deleteEmail(String emailID, String folder, Boolean hardDelete) {
     var params = new CommandDeleteEmailParameter(emailID, folder, hardDelete);
     var command = new CommandDeleteEmail(params);
 
-    MailClient.getInstance()
-        .sendCommand(
-            command,
-            response -> {
-              if (response.getStatus().equals(ServerResponseStatuses.OK)) {
-                if (!hardDelete) {
-                  addEmail(
-                      Folders.TRASH,
-                      DataModel.getInstance()
-                          .getCurrentEmail()
-                          .orElseThrow());
-                }
-                DataModel.getInstance().removeCurrentEmail();
-                try {
-                  SystemIOHelper.deleteFile(
-                      SystemIOHelper.getInboxEmailPath(command.getUserEmail(), params.emailID()));
-                } catch (IOException e) {
-                  e.printStackTrace();
-                }
-                LOGGER.info("DeleteMailResponse: {}", response);
-              } else {
-                LOGGER.error("Error deleting email: {}", response);
-              }
-            },
-            ServerResponse.class);
+    MailClient.getInstance().sendCommand(command, response -> {
+      if (response.getStatus().equals(ServerResponseStatuses.OK)) {
+        if (!hardDelete) {
+          addEmail(Folders.TRASH, DataModel.getInstance().getCurrentEmail().orElseThrow());
+        }
+        DataModel.getInstance().removeCurrentEmail();
+        try {
+          SystemIOHelper.deleteFile(SystemIOHelper.getInboxEmailPath(command.getUserEmail(), params.emailID()));
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        LOGGER.info("DeleteMailResponse: {}", response);
+      } else {
+        LOGGER.error("Error deleting email: {}", response);
+      }
+    }, ServerResponse.class);
   }
 
   public void synchronizeEmails() {
@@ -244,33 +213,26 @@ public class FXMLController {
   }
 
   public void readEmail(Email email) {
-    if (email == null
-        || email.getRead()
-        || !DataModel.getInstance().getCurrentFolder().equals(Folders.INBOX)) {
+    if (email == null || email.getRead() || !DataModel.getInstance().getCurrentFolder().equals(Folders.INBOX)) {
       return;
     }
 
     var params = new CommandReadEmail.CommandReadEmailParameter(email.fileID(), true);
     var cmd = new CommandReadEmail(params);
 
-    MailClient.getInstance()
-        .sendCommand(
-            cmd,
-            response -> {
-              if (response.getStatus().equals(ServerResponseStatuses.OK)) {
-                email.setRead(true);
-                DataModel.getInstance().syncFilteredEmails();
-                LOGGER.info("Email {} marked as read", email.fileID());
-                try {
-                  SystemIOHelper.writeJSONFile(
-                      paths.get(Folders.INBOX), email.fileID(), JsonHelper.toJson(email));
-                } catch (IOException e) {
-                  e.printStackTrace();
-                }
-              } else {
-                LOGGER.error("Error marking email {} as read", email.fileID());
-              }
-            },
-            ServerResponse.class);
+    MailClient.getInstance().sendCommand(cmd, response -> {
+      if (response.getStatus().equals(ServerResponseStatuses.OK)) {
+        email.setRead(true);
+        DataModel.getInstance().syncFilteredEmails();
+        LOGGER.info("Email {} marked as read", email.fileID());
+        try {
+          SystemIOHelper.writeJSONFile(paths.get(Folders.INBOX), email.fileID(), JsonHelper.toJson(email));
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      } else {
+        LOGGER.error("Error marking email {} as read", email.fileID());
+      }
+    }, ServerResponse.class);
   }
 }

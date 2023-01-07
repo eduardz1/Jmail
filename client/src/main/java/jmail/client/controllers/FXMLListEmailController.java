@@ -143,9 +143,6 @@ public class FXMLListEmailController extends AnchorPane {
         setText(item.getSubject());
       }
     });
-
-    // Set autocompletation popup width
-    autoCompletionBinding.getAutoCompletionPopup().prefWidthProperty().bind(searchField.widthProperty());
   }
 
   @FXML
@@ -176,5 +173,8 @@ public class FXMLListEmailController extends AnchorPane {
     }
 
     autoCompletionBinding = TextFields.bindAutoCompletion(searchField, suggestions);
+    
+    // Set autocompletation popup width
+    autoCompletionBinding.getAutoCompletionPopup().prefWidthProperty().bind(searchField.widthProperty());
   }
 }

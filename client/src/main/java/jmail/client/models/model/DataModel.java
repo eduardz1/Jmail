@@ -3,6 +3,8 @@ package jmail.client.models.model;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -20,7 +22,7 @@ public class DataModel {
 
     private static final DataModel instance = new DataModel();
     private final ObjectProperty<User> currentUser;
-    private final SimpleStringProperty currentFolder; // TODO: Enum: inbox, sent, trash
+    private final SimpleStringProperty currentFolder;
     private final ObservableList<Email> inbox;
     private final ObservableList<Email> sent;
     private final ObservableList<Email> trash;
@@ -176,7 +178,7 @@ public class DataModel {
     }
 
     public ObservableBooleanValue isEditingModeProperty() {
-      return serverStatusConnected;
+      return editingMode;
   }
 
   public void setEditingMode(boolean editingMode) {
