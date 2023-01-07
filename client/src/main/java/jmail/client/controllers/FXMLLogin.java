@@ -4,16 +4,21 @@ import com.google.common.hash.Hashing;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
+import org.kordamp.ikonli.javafx.FontIcon;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Paint;
 import jmail.client.Main;
 import jmail.client.models.client.MailClient;
 import jmail.client.models.model.DataModel;
 import jmail.client.models.responses.LoginResponse;
+import jmail.lib.constants.ColorPalette;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.Email;
@@ -27,24 +32,25 @@ public class FXMLLogin {
 
     @FXML private Button LoginButton;
 
-    @FXML private Label connLbl;
+    @FXML private Label connectionLabel;
 
     public void initialize() {
+        var fontIcon = new FontIcon("mdi2w-web-box");
+        fontIcon.setIconColor(Paint.valueOf(ColorPalette.GREEN.getHexValue()));
+        connectionLabel.setGraphic(fontIcon);
+        connectionLabel.setText("connected");
         DataModel.getInstance()
                 .isServerStatusConnected()
                 .addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
-                    connLbl.setText(newValue ? "Connected" : "Disconnected"); // TODO: Should stay in view? Boh
+                    var newFontIcon = new FontIcon("mdi2w-web-box");
+                 newFontIcon.setIconColor(newValue ? Paint.valueOf(ColorPalette.GREEN.getHexValue()) : Paint.valueOf(ColorPalette.RED.getHexValue()));
+                 connectionLabel.setGraphic(newFontIcon); // TODO: Should stay in view? Boh
+                    connectionLabel.setText(newValue ? "connected" : "not connected");
                 }));
     }
 
     @FXML public void buttonLogin(javafx.event.ActionEvent e) {
-        // FIXME: remove also this
-        //    this.addEmails();
-
-        // FIXME: remove this
-        login("emmedeveloper@gmail.com", "emme");
-
-        //    login(UsernameField.getText(), PasswordField.getText());
+        login(UsernameField.getText(), PasswordField.getText());
     }
 
     public void login(String username, String password) {

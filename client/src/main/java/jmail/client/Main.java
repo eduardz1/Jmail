@@ -2,11 +2,6 @@ package jmail.client;
 
 import io.github.mimoguz.custom_window.DwmAttribute;
 import io.github.mimoguz.custom_window.StageOps;
-import java.io.IOException;
-import java.util.Objects;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -20,6 +15,11 @@ import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.CommandPing;
+
+import java.io.IOException;
+import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class Main extends Application {
 
@@ -47,10 +47,6 @@ public class Main extends Application {
         primaryStage.sizeToScene();
         primaryStage.setResizable(true); // FIXME: setting has no effect, I'm missing something don't know what, maybe
         // primaryStage needs to be unshown and shown again
-    }
-
-    public String getGreeting() {
-        return "Hello World!";
     }
 
     @Override
@@ -94,7 +90,7 @@ public class Main extends Application {
     }
 
     public void startCheckThread() {
-        scheduler.scheduleAtFixedRate(Main::sendPingForConnectionCheck, 0, 15, TimeUnit.SECONDS);
+//        scheduler.scheduleAtFixedRate(Main::sendPingForConnectionCheck, 0, 15, TimeUnit.SECONDS);
     }
 
     public static void sendPingForConnectionCheck() {

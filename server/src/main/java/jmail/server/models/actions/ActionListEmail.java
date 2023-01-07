@@ -13,7 +13,7 @@ import jmail.lib.models.Email;
 import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.CommandListEmail;
 import jmail.server.exceptions.ActionExecutionException;
-import jmail.server.handlers.LockHandler;
+import jmail.lib.handlers.LockHandler;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -45,7 +45,7 @@ public class ActionListEmail implements ActionCommand {
                 switch (folder) {
                     case "inbox" -> SystemIOHelper.getUserInbox(userEmail);
                     case "sent" -> SystemIOHelper.getUserSent(userEmail);
-                    case "trash" -> SystemIOHelper.getUserDeleted(userEmail);
+                    case "trash" -> SystemIOHelper.getUserTrash(userEmail);
                     default -> throw new ActionExecutionException("Invalid folder");
                 };
 

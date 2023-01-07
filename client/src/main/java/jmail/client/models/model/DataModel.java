@@ -1,8 +1,5 @@
 package jmail.client.models.model;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -14,6 +11,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import jmail.lib.models.Email;
 import jmail.lib.models.User;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 public class DataModel {
 
@@ -42,15 +43,6 @@ public class DataModel {
         currentEmail = new SimpleObjectProperty<>();
         serverStatusConnected = new SimpleBooleanProperty();
 
-        // FIXME: remove
-        currentEmail.set(new Email(
-                java.util.UUID.randomUUID().toString(),
-                "Oggetto prova",
-                "Buongiorno,\nAvrebbe due minuti per parlare del Nostro signore?",
-                "mario@yahoo.it",
-                List.of("emmedeveloper@gmail.com"),
-                java.util.Calendar.getInstance().getTime(),
-                false));
     }
 
     public static DataModel getInstance() {
@@ -146,6 +138,13 @@ public class DataModel {
             return;
         }
 
+        // Make sure the email in sent/trash folder are marked as read
+        if (folder.equals("sent") || folder.equals("trash")) {
+            for (Email email : emails) {
+                email.setRead(true);
+            }
+        }
+
         // append array to start of list
         switch (folder) {
             case "inbox" -> inbox.addAll(0, Arrays.asList(emails));
@@ -158,12 +157,16 @@ public class DataModel {
         }
     }
 
-    private void syncFilteredEmails() {
+    public void syncFilteredEmails() {
         // TODO: implement search filter logic
         switch (currentFolder.get()) {
             case "inbox" -> currentFilteredEmails.setAll(inbox);
             case "sent" -> currentFilteredEmails.setAll(sent);
             case "trash" -> currentFilteredEmails.setAll(trash);
         }
+    }
+
+    public void setFilteredEmails(List<Email> collect) {
+        currentFilteredEmails.setAll(collect);
     }
 }
