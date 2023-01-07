@@ -4,9 +4,6 @@ import com.google.common.hash.Hashing;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-
-import org.kordamp.ikonli.javafx.FontIcon;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -23,6 +20,7 @@ import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.Email;
 import jmail.lib.models.commands.CommandLogin;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 public class FXMLLogin {
 
@@ -43,8 +41,11 @@ public class FXMLLogin {
                 .isServerStatusConnected()
                 .addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
                     var newFontIcon = new FontIcon("mdi2w-web-box");
-                 newFontIcon.setIconColor(newValue ? Paint.valueOf(ColorPalette.GREEN.getHexValue()) : Paint.valueOf(ColorPalette.RED.getHexValue()));
-                 connectionLabel.setGraphic(newFontIcon); // TODO: Should stay in view? Boh
+                    newFontIcon.setIconColor(
+                            newValue
+                                    ? Paint.valueOf(ColorPalette.GREEN.getHexValue())
+                                    : Paint.valueOf(ColorPalette.RED.getHexValue()));
+                    connectionLabel.setGraphic(newFontIcon); // TODO: Should stay in view? Boh
                     connectionLabel.setText(newValue ? "connected" : "not connected");
                 }));
     }

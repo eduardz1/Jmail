@@ -2,12 +2,12 @@ package jmail.server.models.actions;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import jmail.lib.handlers.LockHandler;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.Email;
 import jmail.lib.models.commands.CommandReadEmail;
 import jmail.server.exceptions.ActionExecutionException;
-import jmail.lib.handlers.LockHandler;
 
 public class ActionReadEmail implements ActionCommand {
     private final CommandReadEmail command;

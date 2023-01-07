@@ -1,13 +1,12 @@
 package jmail.lib.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
-import lombok.NonNull;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import lombok.Data;
+import lombok.NonNull;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import jmail.lib.constants.ServerResponseStatuses;
+import jmail.lib.handlers.LockHandler;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.Email;
 import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.CommandListEmail;
 import jmail.server.exceptions.ActionExecutionException;
-import jmail.lib.handlers.LockHandler;
 import lombok.Getter;
 import lombok.Setter;
 
