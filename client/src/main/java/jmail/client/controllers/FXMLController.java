@@ -14,6 +14,7 @@ import javafx.scene.control.*;
 import jmail.client.models.client.MailClient;
 import jmail.client.models.model.DataModel;
 import jmail.client.models.responses.ListEmailResponse;
+import jmail.lib.constants.Folders;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.handlers.LockHandler;
 import jmail.lib.helpers.JsonHelper;
@@ -34,10 +35,12 @@ public class FXMLController {
   private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
   private Long lastUnixTimeEmailCheck = 0L;
 
-
-  @FXML private FXMLFolderController folderController;
-  @FXML private FXMLListEmailController listEmailController;
-  @FXML private FXMLEmailController emailController;
+  @FXML
+  private FXMLFolderController folderController;
+  @FXML
+  private FXMLListEmailController listEmailController;
+  @FXML
+  private FXMLEmailController emailController;
 
   @FXML
   private SplitPane root;
@@ -54,33 +57,37 @@ public class FXMLController {
     emailController.setMainController(this);
 
     // Load sub controllers in view
+    root.getItems().clear();
     root.getItems().add(folderController.root);
     root.getItems().add(listEmailController.root);
     root.getItems().add(emailController.root);
-    
+
     foldersInit();
     synchronizeEmails();
   }
 
   private void foldersInit() {
+
+    // Mappa di default con i path delle cartelle
     paths = new HashMap<>(Map.of(
-        "inbox",
+        Folders.INBOX,
         SystemIOHelper.getUserInbox(
             DataModel.getInstance().getCurrentUser().getEmail()),
-        "sent",
+        Folders.SENT,
         SystemIOHelper.getUserSent(
             DataModel.getInstance().getCurrentUser().getEmail()),
-        "trash",
+        Folders.TRASH,
         SystemIOHelper.getUserTrash(
             DataModel.getInstance().getCurrentUser().getEmail())));
 
+    // Aggiorniamo la mappa ogni volta che cambia l'utente
     DataModel.getInstance().getCurrentUserProperty().addListener((observable, oldValue, newValue) -> {
       if (newValue == null) {
         throw new IllegalStateException("Current user cannot be null");
       }
-      paths.put("inbox", SystemIOHelper.getUserInbox(newValue.getEmail()));
-      paths.put("sent", SystemIOHelper.getUserSent(newValue.getEmail()));
-      paths.put("trash", SystemIOHelper.getUserTrash(newValue.getEmail()));
+      paths.put(Folders.INBOX, SystemIOHelper.getUserInbox(newValue.getEmail()));
+      paths.put(Folders.SENT, SystemIOHelper.getUserSent(newValue.getEmail()));
+      paths.put(Folders.TRASH, SystemIOHelper.getUserTrash(newValue.getEmail()));
     });
   }
 
@@ -148,9 +155,9 @@ public class FXMLController {
             command,
             response -> {
               if (response.getStatus().equals(ServerResponseStatuses.OK)) {
-                addEmail("sent", email);
+                addEmail(Folders.SENT, email);
                 // When send an email, not add to inbox, but update it
-                listEmails("inbox");
+                listEmails(Folders.INBOX);
                 LOGGER.info("Email sent: {}", response);
               } else {
                 LOGGER.error("Error sending email: {}", response);
@@ -170,7 +177,7 @@ public class FXMLController {
               if (response.getStatus().equals(ServerResponseStatuses.OK)) {
                 if (!hardDelete) {
                   addEmail(
-                      "trash",
+                      Folders.TRASH,
                       DataModel.getInstance()
                           .getCurrentEmail()
                           .orElseThrow());
@@ -188,9 +195,6 @@ public class FXMLController {
               }
             },
             ServerResponse.class);
-  }
-
-  public void buttonReplyAll(ActionEvent actionEvent) {
   }
 
   public void synchronizeEmails() {
@@ -215,12 +219,12 @@ public class FXMLController {
       DataModel.getInstance().addEmail(folder, mails.toArray(Email[]::new));
     }
 
-    listEmails("inbox");
-    listEmails("sent");
-    listEmails("trash");
+    listEmails(Folders.INBOX);
+    listEmails(Folders.SENT);
+    listEmails(Folders.TRASH);
     // Make sure that the lastUnixTimeEmailCheck is updated, so scheduler start
     // after first check
-    // scheduler.scheduleAtFixedRate(() -> listEmails("inbox"), 20, 20,
+    // scheduler.scheduleAtFixedRate(() -> listEmails(Folders.INBOX), 20, 20,
     // TimeUnit.SECONDS);
   }
 
@@ -242,7 +246,7 @@ public class FXMLController {
   public void readEmail(Email email) {
     if (email == null
         || email.getRead()
-        || !DataModel.getInstance().getCurrentFolder().equals("inbox")) {
+        || !DataModel.getInstance().getCurrentFolder().equals(Folders.INBOX)) {
       return;
     }
 
@@ -256,15 +260,15 @@ public class FXMLController {
               if (response.getStatus().equals(ServerResponseStatuses.OK)) {
                 email.setRead(true);
                 DataModel.getInstance().syncFilteredEmails();
-                // LOGGER.info("Email {} marked as read", email.fileID());
+                LOGGER.info("Email {} marked as read", email.fileID());
                 try {
                   SystemIOHelper.writeJSONFile(
-                      paths.get("inbox"), email.fileID(), JsonHelper.toJson(email));
+                      paths.get(Folders.INBOX), email.fileID(), JsonHelper.toJson(email));
                 } catch (IOException e) {
                   e.printStackTrace();
                 }
               } else {
-                // LOGGER.error("Error marking email {} as read", email.fileID());
+                LOGGER.error("Error marking email {} as read", email.fileID());
               }
             },
             ServerResponse.class);

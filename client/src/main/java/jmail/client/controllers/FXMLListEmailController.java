@@ -25,6 +25,7 @@ import jmail.client.models.model.DataModel;
 import jmail.lib.autocompletion.textfield.AutoCompletionBinding;
 import jmail.lib.autocompletion.textfield.TextFields;
 import jmail.lib.constants.ColorPalette;
+import jmail.lib.constants.Folders;
 import jmail.lib.models.Email;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.BoundExtractedResult;
@@ -143,6 +144,8 @@ public class FXMLListEmailController extends AnchorPane {
       }
     });
 
+    // Set autocompletation popup width
+    autoCompletionBinding.getAutoCompletionPopup().prefWidthProperty().bind(searchField.widthProperty());
   }
 
   @FXML
@@ -150,9 +153,9 @@ public class FXMLListEmailController extends AnchorPane {
     var text = searchField.textProperty().getValueSafe();
     var currentFolder = DataModel.getInstance().getCurrentFolder();
     var emails = switch (currentFolder) {
-      case "inbox" -> DataModel.getInstance().getInbox();
-      case "sent" -> DataModel.getInstance().getSent();
-      case "trash" -> DataModel.getInstance().getTrash();
+      case Folders.INBOX -> DataModel.getInstance().getInbox();
+      case Folders.SENT -> DataModel.getInstance().getSent();
+      case Folders.TRASH -> DataModel.getInstance().getTrash();
       default -> throw new IllegalStateException("Unexpected value: " + currentFolder);
     };
     if (text.isBlank()) {
@@ -173,6 +176,5 @@ public class FXMLListEmailController extends AnchorPane {
     }
 
     autoCompletionBinding = TextFields.bindAutoCompletion(searchField, suggestions);
-    autoCompletionBinding.getAutoCompletionPopup().prefWidthProperty().bind(searchField.widthProperty());
   }
 }

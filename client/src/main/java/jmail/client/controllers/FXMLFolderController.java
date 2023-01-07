@@ -19,6 +19,7 @@ import javafx.scene.paint.Paint;
 import jmail.client.Main;
 import jmail.client.models.model.DataModel;
 import jmail.lib.constants.ColorPalette;
+import jmail.lib.constants.Folders;
 import jmail.lib.models.Email;
 import javafx.scene.text.Font;
 import org.slf4j.Logger;
@@ -84,9 +85,9 @@ public class FXMLFolderController extends AnchorPane {
 
         var fontIcon = new FontIcon(
             switch (item.toLowerCase()) {
-              case "inbox" -> "mdi2i-inbox";
-              case "sent" -> "mdi2e-email-send";
-              case "trash" -> "mdi2t-trash-can";
+              case Folders.INBOX -> "mdi2i-inbox";
+              case Folders.SENT -> "mdi2e-email-send";
+              case Folders.TRASH -> "mdi2t-trash-can";
               default -> "mdi2a-folder";
             });
         fontIcon.setIconColor(Paint.valueOf("#afb1b3"));

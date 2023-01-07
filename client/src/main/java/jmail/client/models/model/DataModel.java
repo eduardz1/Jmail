@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import jmail.lib.models.Email;
 import jmail.lib.models.User;
+import jmail.lib.constants.*;
 
 public class DataModel {
 
@@ -124,9 +125,9 @@ public class DataModel {
 
     public void removeCurrentEmail() {
         switch (currentFolder.get()) {
-            case "inbox" -> inbox.remove(currentEmail.get());
-            case "sent" -> sent.remove(currentEmail.get());
-            case "trash" -> trash.remove(currentEmail.get());
+            case Folders.INBOX -> inbox.remove(currentEmail.get());
+            case Folders.SENT -> sent.remove(currentEmail.get());
+            case Folders.TRASH -> trash.remove(currentEmail.get());
         }
         syncFilteredEmails();
         currentEmail.set(null);
@@ -139,7 +140,7 @@ public class DataModel {
         }
 
         // Make sure the email in sent/trash folder are marked as read
-        if (folder.equals("sent") || folder.equals("trash")) {
+        if (folder.equals(Folders.SENT) || folder.equals(Folders.TRASH)) {
             for (Email email : emails) {
                 email.setRead(true);
             }
@@ -147,9 +148,9 @@ public class DataModel {
 
         // append array to start of list
         switch (folder) {
-            case "inbox" -> inbox.addAll(0, Arrays.asList(emails));
-            case "sent" -> sent.addAll(0, Arrays.asList(emails));
-            case "trash" -> trash.addAll(0, Arrays.asList(emails));
+            case Folders.INBOX -> inbox.addAll(0, Arrays.asList(emails));
+            case Folders.SENT -> sent.addAll(0, Arrays.asList(emails));
+            case Folders.TRASH -> trash.addAll(0, Arrays.asList(emails));
         }
 
         if (folder.equalsIgnoreCase(getCurrentFolder())) {
@@ -160,9 +161,9 @@ public class DataModel {
     public void syncFilteredEmails() {
         // TODO: implement search filter logic
         switch (currentFolder.get()) {
-            case "inbox" -> currentFilteredEmails.setAll(inbox);
-            case "sent" -> currentFilteredEmails.setAll(sent);
-            case "trash" -> currentFilteredEmails.setAll(trash);
+            case Folders.INBOX -> currentFilteredEmails.setAll(inbox);
+            case Folders.SENT -> currentFilteredEmails.setAll(sent);
+            case Folders.TRASH -> currentFilteredEmails.setAll(trash);
         }
     }
 

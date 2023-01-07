@@ -7,6 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+
+import jmail.lib.constants.Folders;
 import jmail.lib.models.User;
 
 public class SystemIOHelper {
@@ -23,9 +25,9 @@ public class SystemIOHelper {
         Path user = getUserDirectory(userEmail);
         Files.createDirectories(user);
 
-        Files.createDirectories(Paths.get(user + "/" + "sent"));
-        Files.createDirectories(Paths.get(user + "/" + "inbox"));
-        Files.createDirectories(Paths.get(user + "/" + "deleted"));
+        Files.createDirectories(Paths.get(user + "/" + Folders.SENT));
+        Files.createDirectories(Paths.get(user + "/" + Folders.INBOX));
+        Files.createDirectories(Paths.get(user + "/" + Folders.TRASH));
     }
 
     public static Path getUserDirectory(String userEmail) {
@@ -34,15 +36,15 @@ public class SystemIOHelper {
     }
 
     public static Path getUserTrash(String userEmail) {
-        return getUserSpecificPath(userEmail, "deleted");
+        return getUserSpecificPath(userEmail, Folders.TRASH);
     }
 
     public static Path getUserSent(String userEmail) {
-        return getUserSpecificPath(userEmail, "sent");
+        return getUserSpecificPath(userEmail, Folders.SENT);
     }
 
     public static Path getUserInbox(String userEmail) {
-        return getUserSpecificPath(userEmail, "inbox");
+        return getUserSpecificPath(userEmail, Folders.INBOX);
     }
 
     private static Path getUserSpecificPath(String userEmail, String folder) {

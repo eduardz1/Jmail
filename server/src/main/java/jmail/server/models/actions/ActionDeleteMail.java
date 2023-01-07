@@ -1,6 +1,8 @@
 package jmail.server.models.actions;
 
 import java.io.IOException;
+
+import jmail.lib.constants.Folders;
 import jmail.lib.handlers.LockHandler;
 import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.commands.CommandDeleteEmail;
@@ -29,9 +31,9 @@ public class ActionDeleteMail implements ActionCommand {
         try {
             var fromPath =
                     switch (from) {
-                        case "inbox" -> SystemIOHelper.getInboxEmailPath(userEmail, emailID);
-                        case "sent" -> SystemIOHelper.getSentEmailPath(userEmail, emailID);
-                        case "deleted" -> SystemIOHelper.getDeletedEmailPath(userEmail, emailID);
+                        case Folders.INBOX -> SystemIOHelper.getInboxEmailPath(userEmail, emailID);
+                        case Folders.SENT -> SystemIOHelper.getSentEmailPath(userEmail, emailID);
+                        case Folders.TRASH -> SystemIOHelper.getDeletedEmailPath(userEmail, emailID);
                         default -> throw new ActionExecutionException("Cannot delete mail: invalid from");
                     };
             lock.lock();

@@ -18,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import jmail.client.Main;
 import jmail.client.models.model.DataModel;
+import jmail.lib.constants.Folders;
 import jmail.lib.models.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -155,7 +156,7 @@ public class FXMLEmailController extends AnchorPane {
                 DataModel.getInstance().setCurrentEmail(null);
                 DataModel.getInstance().setEditingMode(false);
               } else {
-                boolean hardDelete = !currFolder.equals("inbox");
+                boolean hardDelete = !currFolder.equals(Folders.INBOX);
                 // TODO: ask user to confirmation
                 mainController.deleteEmail(email.fileID(), currFolder, hardDelete);
               }
@@ -194,5 +195,10 @@ public class FXMLEmailController extends AnchorPane {
             },
             () -> LOGGER.error("No email to send"));
   }
+
+  @FXML
+  public void buttonReplyAll(ActionEvent actionEvent) {
+  }
+
   
 }
