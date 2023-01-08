@@ -31,3 +31,17 @@
   -fx-border-color: #444;
   -fx-border-width: 0 0 1 0;
 }
+
+.badge {
+  -fx-hgap: 20px;
+  -fx-padding: 8px;
+  -fx-background-color: teal;
+  -fx-background-radius: 50px;
+  -fx-font-weight: bold; 
+  -fx-text-fill: #fff;
+  -fx-border-insets: 4px;
+}
+
+.p8{
+  -fx-padding: 8px;
+}

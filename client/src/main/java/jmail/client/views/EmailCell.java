@@ -47,7 +47,7 @@ public class EmailCell extends ListCell<Email> {
       subjectLabel.setText(email.getSubject());
       
       Calendar today = Calendar.getInstance();
-      today.set(Calendar.HOUR_OF_DAY, 0);
+      
       Calendar date = Calendar.getInstance();
       date.setTime(email.getDate());
       DateFormat df;
@@ -60,7 +60,7 @@ public class EmailCell extends ListCell<Email> {
       dateLabel.setText(df.format(email.getDate()));
 
       bodyLabel.setText(email.getBody());
-      readMarker.setStyle("-fx-background-color:" + (email.getRead() ? Color.TRANSPARENT : Color.TEAL) + ";");
+      readMarker.setStyle("-fx-background-color:" + (email.getRead() ? "#00000000;" : "#009688FF;"));
       setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
     }
   }

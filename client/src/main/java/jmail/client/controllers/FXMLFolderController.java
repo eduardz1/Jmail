@@ -18,11 +18,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Paint;
 import jmail.client.Main;
+import jmail.client.factory.FolderCellFactory;
 import jmail.client.models.model.DataModel;
 import jmail.lib.constants.ColorPalette;
-import jmail.lib.constants.Folders;
 import jmail.lib.models.Email;
-import javafx.scene.text.Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,28 +74,29 @@ public class FXMLFolderController extends AnchorPane {
     listFolder.getItems().addAll("Inbox", "Sent", "Trash");
 
     // Set graphic for each item
-    listFolder.setCellFactory(param -> new ListCell<>() {
-      @Override
-      protected void updateItem(String item, boolean empty) {
-        super.updateItem(item, empty);
-        if (empty || item == null) {
-          setText(null);
-          return;
-        }
+    listFolder.setCellFactory(new FolderCellFactory());
+    // listFolder.setCellFactory(param -> new ListCell<>() {
+    //   @Override
+    //   protected void updateItem(String item, boolean empty) {
+    //     super.updateItem(item, empty);
+    //     if (empty || item == null) {
+    //       setText(null);
+    //       return;
+    //     }
 
-        var fontIcon = new FontIcon(
-            switch (item.toLowerCase()) {
-              case Folders.INBOX -> "mdi2i-inbox";
-              case Folders.SENT -> "mdi2e-email-send";
-              case Folders.TRASH -> "mdi2t-trash-can";
-              default -> "mdi2a-folder";
-            });
-        fontIcon.setIconColor(Paint.valueOf("#afb1b3"));
-        setGraphic(fontIcon);
-        setText(item);
-        setFont(Font.font("System", 16));
-      }
-    });
+    //     var fontIcon = new FontIcon(
+    //         switch (item.toLowerCase()) {
+    //           case Folders.INBOX -> "mdi2i-inbox";
+    //           case Folders.SENT -> "mdi2e-email-send";
+    //           case Folders.TRASH -> "mdi2t-trash-can";
+    //           default -> "mdi2a-folder";
+    //         });
+    //     fontIcon.setIconColor(Paint.valueOf("#afb1b3"));
+    //     setGraphic(fontIcon);
+    //     setText(item);
+    //     setFont(Font.font("System", 16));
+    //   }
+    // });
   }
 
   private void initListeners() {

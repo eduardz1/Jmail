@@ -106,7 +106,7 @@ public class FXMLEmailController extends AnchorPane {
 
             // Check if date is today and set the date format accordingly
             Calendar today = Calendar.getInstance();
-            today.set(Calendar.HOUR_OF_DAY, 0);
+            
             Calendar date = Calendar.getInstance();
             date.setTime(newValue.getDate());
             DateFormat df;
@@ -150,7 +150,7 @@ public class FXMLEmailController extends AnchorPane {
     DataModel.getInstance().getCurrentEmail().ifPresentOrElse(email -> {
       DataModel.getInstance().setEditingMode(true);
       Calendar today = Calendar.getInstance();
-      today.set(Calendar.HOUR_OF_DAY, 0);
+      
 
       var newEmail = new Email(UUID.randomUUID().toString(), email.getSubject(), email.getBody(),
           DataModel.getInstance().getCurrentUser().getEmail(), List.of(email.getSender()), today.getTime(), false);
@@ -165,7 +165,7 @@ public class FXMLEmailController extends AnchorPane {
     DataModel.getInstance().getCurrentEmail().ifPresentOrElse(email -> {
       var newRecipients = email.getRecipients();
       Calendar today = Calendar.getInstance();
-      today.set(Calendar.HOUR_OF_DAY, 0);
+      
 
       var newEmail = new Email(UUID.randomUUID().toString(), email.getSubject(), email.getBody(),
           DataModel.getInstance().getCurrentUser().getEmail(), newRecipients, today.getTime(), false);
@@ -200,7 +200,7 @@ public class FXMLEmailController extends AnchorPane {
       }
 
       Calendar today = Calendar.getInstance();
-      today.set(Calendar.HOUR_OF_DAY, 0);
+      
 
       // Create a new email in order to add a new Object without reference to list
       var newEmail = new Email(UUID.randomUUID().toString(), subjectField.getText(), bodyField.getText(),

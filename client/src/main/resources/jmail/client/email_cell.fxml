@@ -16,8 +16,8 @@
   <graphic>
     <HBox spacing="8.0" styleClass="cell-separator">
       <children>
-        <Region fx:id="readMarker" style="-fx-background-color: #009688;" minWidth="4.0" prefWidth= "4.0" maxWidth="4.0"/>
-        <VBox spacing="8.0" style="-fx-padding: 16 8 16 12;">
+        <Region fx:id="readMarker" minWidth="4.0" prefWidth= "4.0" maxWidth="4.0"/>
+        <VBox spacing="8.0" style="-fx-padding: 16 8 16 12;" HBox.hgrow="ALWAYS">
           <children>
             <!-- Sender & date -->
             <HBox spacing="8.0">

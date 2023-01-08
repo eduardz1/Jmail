@@ -20,7 +20,6 @@ public class EmailCellFactory implements Callback<ListView<Email>, ListCell<Emai
     var cell = new EmailCell();  
     cell.prefWidthProperty().bind(parent.widthProperty().subtract(30));
     cell.maxWidthProperty().bind(parent.widthProperty().subtract(30));
-    // cell.setBorder(new Border(new BorderStroke(ColorPalette.TEXT.getColor(), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
     return cell;
   }
 }
