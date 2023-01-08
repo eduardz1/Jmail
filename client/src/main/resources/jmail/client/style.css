@@ -1,0 +1,33 @@
+.f14 {
+  -fx-font-size: 14px;
+}
+
+.f15 {
+  -fx-font-size: 15px;
+}
+
+.f16 {
+  -fx-font-size: 16px;
+}
+
+.f20 {
+  -fx-font-size: 20px;
+}
+
+
+.fwb {
+  -fx-font-weight: bold; 
+}
+
+.fc666 {
+  -fx-text-fill: #666;
+}
+
+.fc999 {
+  -fx-text-fill: #999;
+}
+
+.cell-separator {
+  -fx-border-color: #444;
+  -fx-border-width: 0 0 1 0;
+}

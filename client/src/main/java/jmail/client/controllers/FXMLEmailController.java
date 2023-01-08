@@ -103,7 +103,19 @@ public class FXMLEmailController extends AnchorPane {
             subjectLabel.setText(newValue.getSubject());
             bodyLabel.setText(newValue.getBody());
             toLabel.setText(recsText);
-            DateFormat df = new SimpleDateFormat("dd MMM yy HH:mm");
+
+            // Check if date is today and set the date format accordingly
+            Calendar today = Calendar.getInstance();
+            today.set(Calendar.HOUR_OF_DAY, 0);
+            Calendar date = Calendar.getInstance();
+            date.setTime(newValue.getDate());
+            DateFormat df;
+            if (date.get(Calendar.YEAR) == today.get(Calendar.YEAR)
+                && date.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
+              df = new SimpleDateFormat("HH:mm");
+            } else {
+              df = new SimpleDateFormat("dd MMM yy, HH:mm");
+            }
             dateLabel.setText(df.format(newValue.getDate()));
           }
         }));

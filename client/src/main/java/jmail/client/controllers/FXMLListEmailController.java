@@ -10,6 +10,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -21,6 +22,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import jmail.client.Main;
+import jmail.client.factory.EmailCellFactory;
 import jmail.client.models.model.DataModel;
 import jmail.lib.autocompletion.textfield.AutoCompletionBinding;
 import jmail.lib.autocompletion.textfield.TextFields;
@@ -127,22 +129,10 @@ public class FXMLListEmailController extends AnchorPane {
   public void initViews() {
 
     // Set listEmails view graphic
-    listEmails.setCellFactory(lv -> new ListCell<>() {
-      @Override
-      protected void updateItem(Email item, boolean empty) {
-        super.updateItem(item, empty);
-        if (empty || item == null) {
-          setText(null);
-          return;
-        }
+    listEmails.setCellFactory(new EmailCellFactory(listEmails));
+    listEmails.setStyle("-fx-background-insets: 1 ;");
 
-        var fontIcon = new FontIcon("mdi2c-checkbox-blank-circle");
-        fontIcon.setIconColor(
-            item.getRead() ? Color.TRANSPARENT : Paint.valueOf(ColorPalette.BLUE.getHexValue()));
-        setGraphic(fontIcon);
-        setText(item.getSubject());
-      }
-    });
+    // listEmails.set
   }
 
   @FXML

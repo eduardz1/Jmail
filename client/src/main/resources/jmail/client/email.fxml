@@ -5,10 +5,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import java.net.*?>
 
-<AnchorPane fx:id="root" minHeight="0.0" minWidth="365.0" prefHeight="554.0" prefWidth="350.0" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css"
+<AnchorPane fx:id="root" minHeight="0.0" minWidth="365.0" prefHeight="554.0" prefWidth="350.0" 
   xmlns="http://javafx.com/javafx/19"
   xmlns:fx="http://javafx.com/fxml/1">
+  <stylesheets>
+    <URL value="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
+    <URL value="@../../../../../../client/src/main/resources/jmail/client/style.css" />
+  </stylesheets>
   <ButtonBar buttonMinWidth="48.0" layoutX="14.0" layoutY="35.0" prefHeight="25.0" prefWidth="180.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="35.0">
     <buttons>
       <Button fx:id="replyButton" layoutY="14.0" minWidth="21.0" mnemonicParsing="false" onAction="#buttonReply" prefHeight="21.0" prefWidth="64.0">
@@ -37,18 +42,11 @@
               <VBox>
                 <!-- Region helps to center label -->
                 <Region VBox.vgrow="ALWAYS"/>
-                <Label text="Recipients" minWidth="96.0" style="-fx-font-weight: bold; -fx-text-fill: #666">
-                  <font>
-                    <Font size="15.0"/>
-                  </font>
+                <Label text="Recipients" minWidth="96.0" styleClass="fwb,f15,fc666">
                 </Label>
                 <Region VBox.vgrow="ALWAYS"/>
               </VBox>
-              <TextField fx:id="recipientsField" HBox.hgrow="ALWAYS" promptText="..;.." minHeight="54.0">
-                <font>
-                  <Font size="15.0"/>
-                </font>
-              </TextField>
+              <TextField fx:id="recipientsField" HBox.hgrow="ALWAYS" promptText="..;.." minHeight="54.0" styleClass="f15"/>
             </children>
           </HBox>
           <HBox spacing="16.0">
@@ -56,25 +54,13 @@
               <VBox>
                 <!-- Region helps to center label -->
                 <Region VBox.vgrow="ALWAYS"/>
-                <Label text="Subject" minWidth="96.0" style="-fx-font-weight: bold; -fx-text-fill: #666">
-                  <font>
-                    <Font size="15.0"/>
-                  </font>
-                </Label>
+                <Label text="Subject" minWidth="96.0" styleClass="f15,fwb,fc666"/>
                 <Region VBox.vgrow="ALWAYS"/>
               </VBox>
-              <TextField fx:id="subjectField" HBox.hgrow="ALWAYS" promptText=".." minHeight="54.0" >
-                <font>
-                  <Font size="15.0"/>
-                </font>
-              </TextField>
+              <TextField fx:id="subjectField" HBox.hgrow="ALWAYS" promptText=".." minHeight="54.0" styleClass="f15"/>
             </children>
           </HBox>
-          <TextArea fx:id="bodyField" VBox.vgrow="ALWAYS" promptText="Corpo" wrapText="true">
-            <font>
-              <Font size="15.0"/>
-            </font>
-          </TextArea>
+          <TextArea fx:id="bodyField" VBox.vgrow="ALWAYS" promptText="Corpo" wrapText="true" styleClass="f15"/>
         </children>
       </VBox>
       <VBox fx:id="viewPane" spacing="16.0" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="32.0" AnchorPane.rightAnchor="32.0" AnchorPane.topAnchor="32.0">
@@ -84,52 +70,24 @@
               <VBox spacing="16.0" HBox.hgrow="ALWAYS">
                 <HBox spacing="8.0">
                   <children>
-                    <Label text="From:" minWidth="40.0" style="-fx-font-weight: bold">
-                      <font>
-                        <Font size="15.0"/>
-                      </font>
-                    </Label>
-                    <Label fx:id="fromLabel">
-                      <font>
-                        <Font size="15.0"/>
-                      </font>
-                    </Label>
+                    <Label text="From:" minWidth="40.0" styleClass="fwb,f15"/>
+                    <Label fx:id="fromLabel" styleClass="f15"/>
                     <Region HBox.hgrow="ALWAYS"/>
-                    <Label fx:id="dateLabel" minWidth="40.0" VBox.vgrow="ALWAYS" text="Data" style="-fx-text-fill: #999">
-                      <font>
-                        <Font size="15.0"/>
-                      </font>
-                    </Label>
+                    <Label fx:id="dateLabel" minWidth="40.0" VBox.vgrow="ALWAYS" text="Data" styleClass="fc999,f15"/>
                   </children>
                 </HBox>
                 <HBox spacing="8.0">
                   <children>
-                    <Label text="To:" minWidth="40.0" style="-fx-font-weight: bold">
-                      <font>
-                        <Font size="15.0"/>
-                      </font>
-                    </Label>
-                    <Label fx:id="toLabel">
-                      <font>
-                        <Font size="15.0"/>
-                      </font>
-                    </Label>
+                    <Label text="To:" minWidth="40.0" styleClass="fwb,f15" />
+                    <Label fx:id="toLabel" styleClass="f15"/>
                   </children>
                 </HBox>
               </VBox>
 
             </children>
           </HBox>
-          <Label fx:id="subjectLabel" wrapText="true" style="-fx-font-weight: bold">
-            <font>
-              <Font size="20.0"/>
-            </font>
-          </Label>
-          <Label fx:id="bodyLabel" VBox.vgrow="ALWAYS" wrapText="true">
-            <font>
-              <Font size="16.0"/>
-            </font>
-          </Label>
+          <Label fx:id="subjectLabel" wrapText="true" styleClass="fwb,f20"/>
+          <Label fx:id="bodyLabel" VBox.vgrow="ALWAYS" wrapText="true" styleClass="f16"/>
         </children>
       </VBox>
     </AnchorPane>
