@@ -75,28 +75,6 @@ public class FXMLFolderController extends AnchorPane {
 
     // Set graphic for each item
     listFolder.setCellFactory(new FolderCellFactory());
-    // listFolder.setCellFactory(param -> new ListCell<>() {
-    //   @Override
-    //   protected void updateItem(String item, boolean empty) {
-    //     super.updateItem(item, empty);
-    //     if (empty || item == null) {
-    //       setText(null);
-    //       return;
-    //     }
-
-    //     var fontIcon = new FontIcon(
-    //         switch (item.toLowerCase()) {
-    //           case Folders.INBOX -> "mdi2i-inbox";
-    //           case Folders.SENT -> "mdi2e-email-send";
-    //           case Folders.TRASH -> "mdi2t-trash-can";
-    //           default -> "mdi2a-folder";
-    //         });
-    //     fontIcon.setIconColor(Paint.valueOf("#afb1b3"));
-    //     setGraphic(fontIcon);
-    //     setText(item);
-    //     setFont(Font.font("System", 16));
-    //   }
-    // });
   }
 
   private void initListeners() {

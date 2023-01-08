@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import jmail.client.models.client.MailClient;
 import jmail.lib.constants.ServerResponseStatuses;
@@ -43,8 +44,11 @@ public class Main extends Application {
     private static void changeSceneImpl(String fxml) throws IOException {
         Parent pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxml)));
         primaryStage.getScene().setRoot(pane);
-        primaryStage.sizeToScene();
-        primaryStage.setResizable(true); // FIXME: setting has no effect, I'm missing something don't know what, maybe
+        // primaryStage.sizeToScene();
+        primaryStage.setMaximized(true);
+        primaryStage.setWidth(Screen.getPrimary().getBounds().getWidth());
+        primaryStage.setHeight(Screen.getPrimary().getBounds().getHeight());
+        primaryStage.setResizable(true);
         // primaryStage needs to be unshown and shown again
     }
 

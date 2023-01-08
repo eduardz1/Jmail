@@ -30,26 +30,42 @@ public class EmailCell extends ListCell<Email> {
       loader.setController(this);
       loader.setRoot(this);
       loader.load();
+
+      initListeners();
     } catch (IOException exception) {
       throw new RuntimeException(exception);
     }
   }
 
+  
   @Override
-  protected void updateItem(Email email, boolean empty) {
-    super.updateItem(email, empty);
-
-    if (empty || email == null) {
+  protected void updateItem(Email item, boolean empty) {
+    super.updateItem(item, empty);
+    if (empty || item == null) {
       setText(null);
       setContentDisplay(ContentDisplay.TEXT_ONLY);
-    } else {
-      fromLabel.setText(email.getSender());
-      subjectLabel.setText(email.getSubject());
+      setDisable(true);
+      return;
+    }
+    setDisable(false);
+    setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+  }
+
+  public void initListeners() {
+    itemProperty().addListener((obs, oldValue, newValue) -> {
+
+      // Empty cell
+      if (newValue == null) {
+        return;
+      }
+
+      fromLabel.setText(newValue.getSender());
+      subjectLabel.setText(newValue.getSubject());
       
       Calendar today = Calendar.getInstance();
       
       Calendar date = Calendar.getInstance();
-      date.setTime(email.getDate());
+      date.setTime(newValue.getDate());
       DateFormat df;
       if (date.get(Calendar.YEAR) == today.get(Calendar.YEAR)
           && date.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
@@ -57,12 +73,12 @@ public class EmailCell extends ListCell<Email> {
       } else {
         df = new SimpleDateFormat("dd MMM yy, HH:mm");
       }
-      dateLabel.setText(df.format(email.getDate()));
+      dateLabel.setText(df.format(newValue.getDate()));
 
-      bodyLabel.setText(email.getBody());
-      readMarker.setStyle("-fx-background-color:" + (email.getRead() ? "#00000000;" : "#009688FF;"));
+      bodyLabel.setText(newValue.getBody());
+      readMarker.setStyle("-fx-background-color:" + (newValue.getRead() ? "#00000000;" : "#009688FF;"));
       setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-    }
+    });
   }
-  
+
 }

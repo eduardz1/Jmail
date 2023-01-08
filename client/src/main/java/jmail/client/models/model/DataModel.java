@@ -163,7 +163,9 @@ public class DataModel {
 
     if (folder.equalsIgnoreCase(getCurrentFolder())) {
       syncFilteredEmails();
-    }
+    } else 
+      syncNewEmailCount();
+    
   }
 
   public void syncFilteredEmails() {
@@ -175,6 +177,10 @@ public class DataModel {
       case Folders.TRASH -> currentFilteredEmails.setAll(trash);
     }
 
+    syncNewEmailCount();
+  }
+
+  public void syncNewEmailCount() {
     setNewEmailCount(inbox.stream().filter(email -> !email.getRead()).count());
   }
 
