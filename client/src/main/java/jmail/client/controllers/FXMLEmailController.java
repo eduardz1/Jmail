@@ -1,6 +1,9 @@
 package jmail.client.controllers;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,6 +11,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
+
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -18,11 +22,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.SVGPath;
 import jmail.client.Main;
 import jmail.client.models.model.DataModel;
 import jmail.lib.constants.Folders;
 import jmail.lib.models.Email;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +54,8 @@ public class FXMLEmailController extends AnchorPane {
   @FXML private Button sendButton;
   // @FXML private Label currentMailField;
 
+  @FXML private AnchorPane emailPane;
+  
   // Edit layout
   @FXML private TextField subjectField;
   @FXML private TextField recipientsField;
@@ -58,6 +70,10 @@ public class FXMLEmailController extends AnchorPane {
   @FXML private Label subjectLabel;
   @FXML private Label bodyLabel;
 
+  // Logo
+  @FXML private BorderPane logoPane;
+
+  
   public FXMLEmailController() {
     // Load
     FXMLLoader loader = new FXMLLoader(Main.class.getResource("email.fxml"));
@@ -86,6 +102,8 @@ public class FXMLEmailController extends AnchorPane {
             subjectField.setText("");
             recipientsField.setText("");
             bodyField.setText("");
+            // emailPane.setVisible(false);
+            // logoPane.setVisible(true);
           } else {
 
             var recsText = switch (newValue.getRecipients().size()) {
@@ -117,6 +135,9 @@ public class FXMLEmailController extends AnchorPane {
               df = new SimpleDateFormat("dd MMM yy, HH:mm");
             }
             dateLabel.setText(df.format(newValue.getDate()));
+
+            // emailPane.setVisible(true);
+            // logoPane.setVisible(false);
           }
         }));
 
@@ -132,13 +153,25 @@ public class FXMLEmailController extends AnchorPane {
 
     // Set the initial layout
     updateLayout(DataModel.getInstance().isEditingMode());
+
+    // Set the logo
+    Platform.runLater(() -> {
+      Image image = new Image(getClass().getResourceAsStream("/logo-transaprent.png"));
+      var logo = new ImageView(image);
+      logo.setImage(image);
+      logo.fitHeightProperty().bind(logoPane.heightProperty().divide(2.5));
+      logo.fitWidthProperty().bind(logoPane.widthProperty().divide(2.5));
+      logo.setPreserveRatio(true);
+      logoPane.setCenter(logo);
+    });
+    
+    emailPane.setVisible(false);
+    logoPane.setVisible(true);
   }
 
   private void updateLayout(boolean isEditing) {
     editPane.setVisible(isEditing);
-    editPane.setManaged(isEditing);
     viewPane.setVisible(!isEditing);
-    viewPane.setManaged(!isEditing);
     replyButton.setDisable(isEditing);
     forwardButton.setDisable(isEditing);
     replyAllButton.setDisable(isEditing);
