@@ -8,7 +8,7 @@
 <?import java.net.*?>
 <?import javafx.scene.image.ImageView?>
 
-<AnchorPane fx:id="root" minHeight="0.0" minWidth="365.0" prefHeight="554.0" prefWidth="350.0" 
+<AnchorPane fx:id="root" minHeight="0.0" minWidth="365.0" prefHeight="554.0" prefWidth="350.0"
   xmlns="http://javafx.com/javafx/19"
   xmlns:fx="http://javafx.com/fxml/1">
   <stylesheets>
@@ -16,27 +16,49 @@
     <URL value="@../../../../../../client/src/main/resources/jmail/client/style.css" />
   </stylesheets>
   <AnchorPane fx:id="emailPane">
-      <ButtonBar buttonMinWidth="48.0" layoutX="14.0" layoutY="35.0" prefHeight="25.0" prefWidth="180.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="35.0">
-        <buttons>
-          <Button fx:id="replyButton" layoutY="14.0" minWidth="21.0" mnemonicParsing="false" onAction="#buttonReply" prefHeight="21.0" prefWidth="64.0">
-            <graphic>
-              <FontIcon iconColor="#afb1b3" iconLiteral="mdi2r-reply" iconSize="20" />
-            </graphic>
-          </Button>
-          <Button fx:id="replyAllButton" layoutY="14.0" minWidth="21.0" mnemonicParsing="false" onAction="#buttonReplyAll" prefHeight="21.0" prefWidth="64.0">
-            <graphic>
-              <FontIcon iconColor="#afb1b3" iconLiteral="mdi2r-reply-all" iconSize="20" />
-            </graphic>
-          </Button>
-          <Button fx:id="forwardButton" layoutY="14.0" minWidth="21.0" mnemonicParsing="false" onAction="#buttonFwd" prefHeight="21.0" prefWidth="64.0">
-            <graphic>
-              <FontIcon iconColor="#afb1b3" iconLiteral="mdi2s-share" iconSize="20" />
-            </graphic>
-          </Button>
-        </buttons>
-      </ButtonBar>
-      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="5.0" layoutY="66.0" prefHeight="489.0" prefWidth="365.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="70.0">
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+    <children>
+      <VBox fx:id="topPane" prefHeight="96.0" style="-fx-padding: 8;">
+        <Region VBox.vgrow="ALWAYS"/>
+        <HBox spacing="8.0">
+          <children>
+            <Button fx:id="backButton" layoutX="14.0" mnemonicParsing="false" onAction="#buttonBack" styleClass="button">
+              <graphic>
+                <FontIcon iconColor="#afb1b3" iconLiteral="mdi2k-keyboard-backspace" iconSize="20" />
+              </graphic>
+            </Button>
+            <Button fx:id="replyButton" layoutY="14.0" mnemonicParsing="false" onAction="#buttonReply" styleClass="button">
+              <graphic>
+                <FontIcon iconColor="#afb1b3" iconLiteral="mdi2r-reply" iconSize="20" />
+              </graphic>
+            </Button>
+            <Button fx:id="replyAllButton" layoutY="14.0" mnemonicParsing="false" onAction="#buttonReplyAll" styleClass="button">
+              <graphic>
+                <FontIcon iconColor="#afb1b3" iconLiteral="mdi2r-reply-all" iconSize="20" />
+              </graphic>
+            </Button>
+            <Button fx:id="forwardButton" layoutY="14.0" mnemonicParsing="false" onAction="#buttonFwd" styleClass="button">
+              <graphic>
+                <FontIcon iconColor="#afb1b3" iconLiteral="mdi2s-share" iconSize="20" />
+              </graphic>
+            </Button>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="trashButton" accessibleHelp="trash" accessibleText="trash" graphicTextGap="0.0" mnemonicParsing="false" onAction="#buttonTrash" styleClass="button">
+              <graphic>
+                <FontIcon iconColor="#afb1b3" iconLiteral="mdi2d-delete" iconSize="20" />
+              </graphic>
+            </Button>
+            <Button fx:id="sendButton" accessibleHelp="send" accessibleText="send" graphicTextGap="0.0" mnemonicParsing="false" onAction="#buttonSend" styleClass="button">
+              <graphic>
+                <FontIcon iconColor="#afb1b3" iconLiteral="mdi2s-send" iconSize="20" />
+              </graphic>
+            </Button>
+          </children>
+        </HBox>
+      </VBox>
+    </children>
+    <ScrollPane fx:id="bottomPane" fitToWidth="true" hbarPolicy="NEVER" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="96.0" styleClass="scrollpane,radius">
+      <content>
+        <AnchorPane fx:id="scrollContentPane" styleClass="radius">
           <VBox fx:id="editPane" spacing="16.0" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="32.0" AnchorPane.rightAnchor="32.0" AnchorPane.topAnchor="32.0">
             <children>
               <HBox spacing="16.0">
@@ -85,7 +107,7 @@
                       </children>
                     </HBox>
                   </VBox>
-    
+
                 </children>
               </HBox>
               <Label fx:id="subjectLabel" wrapText="true" styleClass="fwb,f20"/>
@@ -93,21 +115,8 @@
             </children>
           </VBox>
         </AnchorPane>
-      </ScrollPane>
-      <ButtonBar buttonMinWidth="48.0" layoutX="397.0" layoutY="8.0" prefHeight="25.0" prefWidth="99.0" AnchorPane.leftAnchor="397.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="35.0">
-        <buttons>
-          <Button fx:id="trashButton" accessibleHelp="trash" accessibleText="trash" graphicTextGap="0.0" minWidth="48.0" mnemonicParsing="false" onAction="#buttonTrash" prefHeight="48.0">
-            <graphic>
-              <FontIcon iconColor="#afb1b3" iconLiteral="mdi2d-delete" iconSize="20" />
-            </graphic>
-          </Button>
-          <Button fx:id="sendButton" accessibleHelp="send" accessibleText="send" graphicTextGap="0.0" minWidth="48.0" mnemonicParsing="false" onAction="#buttonSend" prefHeight="48.0">
-            <graphic>
-              <FontIcon iconColor="#afb1b3" iconLiteral="mdi2s-send" iconSize="20" />
-            </graphic>
-          </Button>
-        </buttons>
-      </ButtonBar>
+      </content>
+    </ScrollPane>
   </AnchorPane>
   <BorderPane fx:id="logoPane" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="16.0"/>
 </AnchorPane>

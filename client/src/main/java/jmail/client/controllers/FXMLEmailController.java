@@ -19,10 +19,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
@@ -55,6 +57,12 @@ public class FXMLEmailController extends AnchorPane {
   // @FXML private Label currentMailField;
 
   @FXML private AnchorPane emailPane;
+  @FXML private VBox topPane;
+  @FXML private ScrollPane bottomPane;
+  @FXML private AnchorPane scrollContentPane;
+
+  
+  
   
   // Edit layout
   @FXML private TextField subjectField;
@@ -102,8 +110,8 @@ public class FXMLEmailController extends AnchorPane {
             subjectField.setText("");
             recipientsField.setText("");
             bodyField.setText("");
-            // emailPane.setVisible(false);
-            // logoPane.setVisible(true);
+            emailPane.setVisible(false);
+            logoPane.setVisible(true);
           } else {
 
             var recsText = switch (newValue.getRecipients().size()) {
@@ -136,8 +144,8 @@ public class FXMLEmailController extends AnchorPane {
             }
             dateLabel.setText(df.format(newValue.getDate()));
 
-            // emailPane.setVisible(true);
-            // logoPane.setVisible(false);
+            emailPane.setVisible(true);
+            logoPane.setVisible(false);
           }
         }));
 
@@ -150,6 +158,10 @@ public class FXMLEmailController extends AnchorPane {
     // Need to set the width of the labels to the width of the viewPane to make the
     // text wrap
     bodyLabel.prefWidthProperty().bind(viewPane.widthProperty());
+    topPane.prefWidthProperty().bind(root.widthProperty());
+    bottomPane.prefWidthProperty().bind(root.widthProperty().subtract(16));
+    bottomPane.prefHeightProperty().bind(root.heightProperty().subtract(104));
+    scrollContentPane.minHeightProperty().bind(bottomPane.heightProperty().subtract(4));
 
     // Set the initial layout
     updateLayout(DataModel.getInstance().isEditingMode());
@@ -248,6 +260,12 @@ public class FXMLEmailController extends AnchorPane {
 
   @FXML
   public void buttonReplyAll(ActionEvent actionEvent) {
+  }
+
+  @FXML
+  public void buttonBack(ActionEvent actionEvent) {
+    DataModel.getInstance().setEditingMode(false);
+    DataModel.getInstance().setCurrentEmail(null);
   }
 
 }

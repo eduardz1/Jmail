@@ -2,41 +2,35 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import org.kordamp.ikonli.javafx.*?>
+<?import java.net.*?>
 
-
-<AnchorPane minHeight="0.0" minWidth="170.0"
-        prefHeight="766.0" prefWidth="184.0"
-        stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css"
-        xmlns="http://javafx.com/javafx/17.0.2-ea"
-        xmlns:fx="http://javafx.com/fxml/1"
-        fx:id="root">
-        <ButtonBar buttonMinWidth="48.0" layoutX="145.0"
-            layoutY="33.0" minWidth="48.0" prefHeight="25.0" prefWidth="69.0"
-            AnchorPane.leftAnchor="145.0" AnchorPane.rightAnchor="14.0"
-            AnchorPane.topAnchor="33.0">
-            <buttons>
-                <Button fx:id="newMailButton" minWidth="48.0"
-                    mnemonicParsing="false" onAction="#buttonNewMail" prefHeight="48.0"
-                    prefWidth="48.0">
-                    <graphic>
-                        <FontIcon iconColor="#afb1b3"
-                            iconLiteral="mdi2e-email-plus" iconSize="20" />
-                    </graphic>
-                </Button>
-            </buttons>
-        </ButtonBar>
-        <HBox layoutX="3.0" layoutY="67.0" prefHeight="696.0"
-            prefWidth="192.0" AnchorPane.bottomAnchor="5"
-            AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5"
-            AnchorPane.topAnchor="70">
-            <ListView fx:id="listFolder" HBox.hgrow="ALWAYS" />
-        </HBox>
-        <Label fx:id="currentUserName" layoutX="14.0" layoutY="33.0"
-            prefHeight="25.0" prefWidth="132.0">
-            <font>
-                <Font size="16.0" />
-            </font>
-        </Label>
-        <Label fx:id="connectionLabel" layoutX="14.0" layoutY="14.0"
-            prefHeight="18.0" prefWidth="165.0" />
-    </AnchorPane>
+<AnchorPane minHeight="0.0" minWidth="170.0" prefHeight="766.0" prefWidth="184.0" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css"
+  xmlns="http://javafx.com/javafx/17.0.2-ea"
+  xmlns:fx="http://javafx.com/fxml/1" fx:id="root">
+  <stylesheets>
+    <URL value="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
+    <URL value="@../../../../../../client/src/main/resources/jmail/client/style.css" />
+  </stylesheets>
+  <VBox AnchorPane.leftAnchor="8" AnchorPane.rightAnchor="8" spacing="8.0" style="-fx-padding: 8;" prefHeight="96.0">
+    <Label fx:id="connectionLabel" prefHeight="18.0" prefWidth="165.0" />
+    <Region VBox.vgrow="ALWAYS"/>
+    <HBox HBox.hgrow="ALWAYS">
+      <VBox>
+        <Label fx:id="currentUserName" prefHeight="25.0" prefWidth="132.0" styleClass="f20,fwb"/>
+        <Label fx:id="currentUserEmail" prefHeight="25.0" prefWidth="285.0" styleClass="fc999" text="emmedeveloper@gmail.com"/>
+      </VBox>
+      <Region HBox.hgrow="ALWAYS"/>
+      <VBox>
+        <Region VBox.vgrow="ALWAYS"/>
+        <Button fx:id="newMailButton" minWidth="48.0" mnemonicParsing="false" onAction="#buttonNewMail" prefHeight="48.0" prefWidth="48.0">
+          <graphic>
+            <FontIcon iconColor="#afb1b3" iconLiteral="mdi2e-email-plus" iconSize="20" />
+          </graphic>
+        </Button>
+      </VBox>
+    </HBox>
+  </VBox>
+  <HBox AnchorPane.bottomAnchor="8" AnchorPane.leftAnchor="8" AnchorPane.rightAnchor="8" AnchorPane.topAnchor="96">
+    <ListView fx:id="listFolder" HBox.hgrow="ALWAYS" />
+  </HBox>
+</AnchorPane>

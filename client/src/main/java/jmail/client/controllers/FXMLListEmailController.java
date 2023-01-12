@@ -34,22 +34,17 @@ import me.xdrop.fuzzywuzzy.model.BoundExtractedResult;
 
 public class FXMLListEmailController extends AnchorPane {
 
-  @FXML
-  public AnchorPane root;
+  @FXML public AnchorPane root;
 
   private FXMLController mainController;
 
   /*
    * Email views
    */
-  @FXML
-  private ListView<Email> listEmails;
-  @FXML
-  private Button searchButton;
-  @FXML
-  private Label currentUserEmail;
-  @FXML
-  private TextField searchField;
+  @FXML private ListView<Email> listEmails;
+  @FXML private Button searchButton;
+  @FXML private Label currentFolder;
+  @FXML private TextField searchField;
 
   /*
    * Search suggestions
@@ -100,30 +95,31 @@ public class FXMLListEmailController extends AnchorPane {
           listEmails.getItems().addAll(list);
 
           list.stream().map(Email::getSubject).forEach(this::learnWord);
-          DataModel.getInstance()
-              .getCurrentEmail()
-              .ifPresentOrElse(
-                  email -> listEmails.getSelectionModel().select(email),
-                  () -> listEmails.getSelectionModel().selectFirst());
+          DataModel.getInstance().getCurrentEmail().ifPresent(email -> listEmails.getSelectionModel().select(email));
         }));
 
     listEmails.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+
+      if (newValue == null || newValue.equals(oldValue)) {
+        return;
+      }
       DataModel.getInstance().setCurrentEmail(newValue);
-      mainController.readEmail(newValue);
       DataModel.getInstance().setEditingMode(false);
+
+      if (!newValue.getRead()) {
+        mainController.readEmail(newValue);
+      }
     });
 
-    DataModel
-        .getInstance()
-        .getCurrentFolderProperty()
-        .addListener((observable, oldValue, newValue) -> {
-          var label = DataModel.getInstance().getCurrentUser().getEmail();
-          if (newValue != null) {
-            currentUserEmail.textProperty().set(newValue + " - " + label);
-          } else {
-            currentUserEmail.textProperty().set(label);
-          }
-        });
+    DataModel.getInstance().getCurrentEmailProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue == null || !listEmails.getSelectionModel().getSelectedItem().equals(newValue)) {
+        listEmails.getSelectionModel().clearSelection();
+      }
+    });
+
+    DataModel.getInstance().getCurrentFolderProperty().addListener((observable, oldValue, newValue) -> {
+      currentFolder.textProperty().set(newValue.toUpperCase());
+    });
   }
 
   public void initViews() {
@@ -140,20 +136,19 @@ public class FXMLListEmailController extends AnchorPane {
     var text = searchField.textProperty().getValueSafe();
     var currentFolder = DataModel.getInstance().getCurrentFolder();
     var emails = switch (currentFolder) {
-      case Folders.INBOX -> DataModel.getInstance().getInbox();
-      case Folders.SENT -> DataModel.getInstance().getSent();
-      case Folders.TRASH -> DataModel.getInstance().getTrash();
-      default -> throw new IllegalStateException("Unexpected value: " + currentFolder);
+    case Folders.INBOX -> DataModel.getInstance().getInbox();
+    case Folders.SENT -> DataModel.getInstance().getSent();
+    case Folders.TRASH -> DataModel.getInstance().getTrash();
+    default -> throw new IllegalStateException("Unexpected value: " + currentFolder);
     };
     if (text.isBlank()) {
       return;
     }
 
-    var filtered = FuzzySearch.extractTop(
-        text, emails, email -> email.getSubject() + " " + email.getSender() + " " + email.getBody(), 5);
+    var filtered = FuzzySearch.extractTop(text, emails,
+        email -> email.getSubject() + " " + email.getSender() + " " + email.getBody(), 5);
     DataModel.getInstance()
-        .setFilteredEmails(
-            filtered.stream().map(BoundExtractedResult::getReferent).collect(Collectors.toList()));
+        .setFilteredEmails(filtered.stream().map(BoundExtractedResult::getReferent).collect(Collectors.toList()));
   }
 
   private void learnWord(String trim) {
@@ -163,7 +158,7 @@ public class FXMLListEmailController extends AnchorPane {
     }
 
     autoCompletionBinding = TextFields.bindAutoCompletion(searchField, suggestions);
-    
+
     // Set autocompletation popup width
     autoCompletionBinding.getAutoCompletionPopup().prefWidthProperty().bind(searchField.widthProperty());
   }

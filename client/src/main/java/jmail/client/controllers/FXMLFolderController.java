@@ -75,6 +75,12 @@ public class FXMLFolderController extends AnchorPane {
 
     // Set graphic for each item
     listFolder.setCellFactory(new FolderCellFactory());
+
+    // Update connection status
+    var fontIcon = new FontIcon("mdi2w-web-box");
+    fontIcon.setIconColor(Paint.valueOf(ColorPalette.GREEN.getHexValue()));
+    connectionLabel.setGraphic(fontIcon);
+    connectionLabel.setText("Connected");
   }
 
   private void initListeners() {
@@ -93,9 +99,6 @@ public class FXMLFolderController extends AnchorPane {
     });
 
     // Update connection status
-    var fontIcon = new FontIcon("mdi2w-web-box");
-    fontIcon.setIconColor(Paint.valueOf(ColorPalette.GREEN.getHexValue()));
-    connectionLabel.setGraphic(fontIcon);
     DataModel.getInstance()
         .isServerStatusConnected()
         .addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
@@ -105,8 +108,8 @@ public class FXMLFolderController extends AnchorPane {
                   ? Paint.valueOf(ColorPalette.GREEN.getHexValue())
                   : Paint.valueOf(ColorPalette.RED.getHexValue()));
           connectionLabel.setGraphic(newFontIcon);
+          connectionLabel.setText(newValue ? "Connected" : "Disconnected");
         }));
-
   }
 
   @FXML
