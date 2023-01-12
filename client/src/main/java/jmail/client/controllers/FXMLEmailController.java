@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
-
+import java.util.stream.Collectors;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -54,15 +54,13 @@ public class FXMLEmailController extends AnchorPane {
   @FXML private Button replyAllButton;
   @FXML private Button forwardButton;
   @FXML private Button sendButton;
-  // @FXML private Label currentMailField;
+  @FXML private Button backButton;
 
+  // Email layout
   @FXML private AnchorPane emailPane;
   @FXML private VBox topPane;
   @FXML private ScrollPane bottomPane;
   @FXML private AnchorPane scrollContentPane;
-
-  
-  
   
   // Edit layout
   @FXML private TextField subjectField;
@@ -188,17 +186,20 @@ public class FXMLEmailController extends AnchorPane {
     forwardButton.setDisable(isEditing);
     replyAllButton.setDisable(isEditing);
     sendButton.setDisable(!isEditing);
+    backButton.setDisable(isEditing);
   }
 
   @FXML
   public void buttonReply(ActionEvent e) {
+
     DataModel.getInstance().getCurrentEmail().ifPresentOrElse(email -> {
       DataModel.getInstance().setEditingMode(true);
-      Calendar today = Calendar.getInstance();
       
+      var subject = "RE: " + email.getSubject();
+      var body = email.getSender() + " wrote: " + email.getBody();
 
-      var newEmail = new Email(UUID.randomUUID().toString(), email.getSubject(), email.getBody(),
-          DataModel.getInstance().getCurrentUser().getEmail(), List.of(email.getSender()), today.getTime(), false);
+      var newEmail = new Email(UUID.randomUUID().toString(), subject, body,
+          DataModel.getInstance().getCurrentUser().getEmail(), List.of(email.getSender()), Calendar.getInstance().getTime(), false);
 
       DataModel.getInstance().setCurrentEmail(newEmail);
       LOGGER.info("ReplyButton: {}", newEmail);
@@ -206,14 +207,38 @@ public class FXMLEmailController extends AnchorPane {
   }
 
   @FXML
+  public void buttonReplyAll(ActionEvent actionEvent) {
+
+    DataModel.getInstance().getCurrentEmail().ifPresentOrElse(email -> {
+      DataModel.getInstance().setEditingMode(true);
+
+      var userEmail = DataModel.getInstance().getCurrentUser().getEmail();
+      
+      var subject = "RE: " + email.getSubject();
+      var body = email.getSender() + " wrote: " + email.getBody();
+      var recipients = email.getRecipients().stream().filter(recipient -> !recipient.equals(userEmail)).collect(Collectors.toList());
+      recipients.add(email.getSender());
+
+      var newEmail = new Email(UUID.randomUUID().toString(), subject, body, userEmail, recipients, Calendar.getInstance().getTime(), false);
+
+      DataModel.getInstance().setCurrentEmail(newEmail);
+      LOGGER.info("ReplyButton: {}", newEmail);
+    }, () -> LOGGER.info("ReplyButton: No email selected"));
+
+  }
+
+
+  @FXML
   public void buttonFwd(ActionEvent e) {
     DataModel.getInstance().getCurrentEmail().ifPresentOrElse(email -> {
-      var newRecipients = email.getRecipients();
-      Calendar today = Calendar.getInstance();
-      
 
-      var newEmail = new Email(UUID.randomUUID().toString(), email.getSubject(), email.getBody(),
-          DataModel.getInstance().getCurrentUser().getEmail(), newRecipients, today.getTime(), false);
+      DataModel.getInstance().setEditingMode(true);
+      
+      var subject = "RE: " + email.getSubject();
+      var body = "Forwarded message from " + email.getSender() + ":\n" + email.getBody();
+
+      var newEmail = new Email(UUID.randomUUID().toString(), subject, body,
+          DataModel.getInstance().getCurrentUser().getEmail(), new ArrayList<>(), Calendar.getInstance().getTime(), false);
 
       DataModel.getInstance().setCurrentEmail(newEmail);
       LOGGER.info("FwdButton: {}", newEmail);
@@ -245,7 +270,6 @@ public class FXMLEmailController extends AnchorPane {
       }
 
       Calendar today = Calendar.getInstance();
-      
 
       // Create a new email in order to add a new Object without reference to list
       var newEmail = new Email(UUID.randomUUID().toString(), subjectField.getText(), bodyField.getText(),
@@ -256,10 +280,6 @@ public class FXMLEmailController extends AnchorPane {
       DataModel.getInstance().setCurrentEmail(null);
       DataModel.getInstance().setEditingMode(false);
     }, () -> LOGGER.error("No email to send"));
-  }
-
-  @FXML
-  public void buttonReplyAll(ActionEvent actionEvent) {
   }
 
   @FXML
