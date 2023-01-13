@@ -42,7 +42,7 @@ public class FXMLFolderController extends AnchorPane {
 
     public FXMLFolderController() {
         // Load
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("folder.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.getResource("folder.fxml"));
 
         loader.setController(this);
         try {
@@ -110,12 +110,6 @@ public class FXMLFolderController extends AnchorPane {
     }
 
     @FXML public void buttonNewMail(ActionEvent e) {
-
-        CustomDialog dialog = new CustomDialog(Main.primaryStage);
-        dialog.showAndWait().ifPresent(conn -> {
-            System.out.println("Open connection!");
-            // connection.setValue(conn);
-        });
 
         // TODO: Remove this
         DataModel.getInstance().setEditingMode(true);

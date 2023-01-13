@@ -60,6 +60,7 @@ public class ClientHandler implements Runnable {
             sendResponse(ServerResponseStatuses.ERROR, e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
+            sendResponse(ServerResponseStatuses.ERROR, e.getMessage());
         }
     }
 

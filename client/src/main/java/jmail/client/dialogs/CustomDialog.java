@@ -2,6 +2,11 @@ package jmail.client.dialogs;
 
 import java.io.IOException;
 import java.util.Objects;
+
+import org.kordamp.ikonli.javafx.FontIcon;
+
+import io.github.mimoguz.custom_window.DwmAttribute;
+import io.github.mimoguz.custom_window.StageOps;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,39 +14,76 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.Window;
+import jmail.client.Main;
+import jmail.lib.constants.ColorPalette;
 
 public class CustomDialog extends Dialog<String> {
 
-    @FXML private ButtonType connectButtonType;
+    private ButtonType noBtn;
+    private ButtonType okBtn;
 
-    public CustomDialog(Window owner) {
+    @FXML private Label messageLabel;
+    @FXML private Label icon;
+    @FXML private Label titleLabel;
+
+    public CustomDialog(Stage owner, String mode, String title, String message) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dialog.fxml"));
-            var path = getClass().getResource("/dialog.fxml");
-            loader.setLocation(path);
+            FXMLLoader loader = new FXMLLoader(Main.getResource("dialog.fxml"));
             loader.setController(this);
 
             DialogPane dialogPane = loader.load();
-            // dialogPane.lookupButton(connectButtonType).addEventFilter(ActionEvent.ANY, this::onConnect);
-
             initOwner(owner);
-            initModality(Modality.APPLICATION_MODAL);
+            initModality(Modality.WINDOW_MODAL);
 
-            setResizable(true);
-            setTitle("Свързване с база данни");
+            FontIcon fontIcon = null;
+            String color = "";
+            switch (mode) {
+                case "error" -> {
+                  fontIcon = new FontIcon("mdi2c-close-circle-outline");
+                  fontIcon.setIconColor(Paint.valueOf(ColorPalette.RED.getHexValue()));
+                  color =  "#FF5555";
+                  okBtn = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+                  dialogPane.getButtonTypes().add(okBtn);
+                }
+                case "info" -> {
+                  fontIcon = new FontIcon("mdi2a-alert-circle-outline");
+                  fontIcon.setIconColor(Paint.valueOf(ColorPalette.BLUE.getHexValue()));
+                  color =  "#1273DE";
+                  okBtn = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+                  dialogPane.getButtonTypes().add(okBtn);
+                }
+                case "confirm" -> {
+                  fontIcon = new FontIcon("mdi2c-check-circle-outline");
+                  fontIcon.setIconColor(Paint.valueOf(ColorPalette.GREEN.getHexValue()));
+                  color =  "#39864F";
+                  noBtn = new ButtonType("Cancel");
+                  dialogPane.getButtonTypes().add(noBtn);
+                  okBtn = new ButtonType("Confirm");
+                  dialogPane.getButtonTypes().add(okBtn);
+
+                }
+            }
+            icon.setGraphic(fontIcon);
+            titleLabel.setText(title);
+            messageLabel.setText(message);
+            
+            titleLabel.setStyle(titleLabel.getStyle() + "; -fx-text-fill: " + color + ";");
+
             setDialogPane(dialogPane);
             setResultConverter(buttonType -> {
-                if (!Objects.equals(ButtonBar.ButtonData.OK_DONE, buttonType.getButtonData())) {
-                    return null;
-                }
-
-                return "";
+              if (buttonType.getText().equals("Confirm") || buttonType.getText().equals("OK")) {
+                return "yes";          
+              }    
+              return null;
             });
 
             setOnShowing(dialogEvent -> Platform.runLater(() -> {
-                // usernameField.requestFocus();
+              messageLabel.requestFocus();
             }));
         } catch (IOException e) {
             throw new RuntimeException(e);

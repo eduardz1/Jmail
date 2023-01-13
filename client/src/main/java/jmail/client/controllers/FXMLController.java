@@ -10,6 +10,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import jmail.client.Main;
+import jmail.client.dialogs.CustomDialog;
 import jmail.client.models.client.MailClient;
 import jmail.client.models.model.DataModel;
 import jmail.client.models.responses.ListEmailResponse;
@@ -137,12 +139,6 @@ public class FXMLController {
     }
 
     public void sendEmail(Email email) {
-        var valid = ValidatorHelper.isEmailValid(email);
-        if (!valid.getKey()) {
-            LOGGER.error("Email not valid: {}", valid.getValue());
-            return;
-        }
-
         var params = new CommandSendEmail.CommandSendEmailParameter(email);
         var command = new CommandSendEmail(params);
 
@@ -158,7 +154,8 @@ public class FXMLController {
                                 listEmails(Folders.INBOX);
                                 LOGGER.info("Email sent: {}", response);
                             } else {
-                                LOGGER.error("Error sending email: {}", response);
+                               showError("Send failed!", "Something went wrong. \nPlease retry later");
+                               LOGGER.error("Error sending email: {}", response);
                             }
                         },
                         ServerResponse.class);
@@ -189,6 +186,7 @@ public class FXMLController {
                                 }
                                 LOGGER.info("DeleteMailResponse: {}", response);
                             } else {
+                              showError("Delete failed!", "Something went wrong. \nPlease retry later");
                                 LOGGER.error("Error deleting email: {}", response);
                             }
                         },
@@ -271,5 +269,9 @@ public class FXMLController {
                             }
                         },
                         ServerResponse.class);
+    }
+
+    private void showError(String title, String content) {
+        new CustomDialog(Main.primaryStage, "error", title, content).showAndWait();
     }
 }

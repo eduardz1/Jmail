@@ -3,6 +3,7 @@ package jmail.client;
 import io.github.mimoguz.custom_window.DwmAttribute;
 import io.github.mimoguz.custom_window.StageOps;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -39,6 +40,10 @@ public class Main extends Application {
                 e.printStackTrace();
             }
         });
+    }
+
+    public static URL getResource(String fxml) {
+        return Main.class.getResource(fxml);
     }
 
     private static void changeSceneImpl(String fxml) throws IOException {
