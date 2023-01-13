@@ -1,12 +1,9 @@
 package jmail.client.dialogs;
 
 import java.io.IOException;
-import java.util.Objects;
 
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import io.github.mimoguz.custom_window.DwmAttribute;
-import io.github.mimoguz.custom_window.StageOps;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import jmail.client.Main;
 import jmail.lib.constants.ColorPalette;
 

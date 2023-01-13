@@ -16,9 +16,7 @@ public class CommandHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandHandler.class.getName());
     private final Command internalCommand;
-    private final PrintWriter
-            writer; // TODO Cambiare assolutamente con qualcosa di meno specifico per gestire le risposte
-    // da inviare al client
+    private final PrintWriter responseWriter;
 
     /* For reference, in case we need to change signature of the methods:
      *
@@ -35,9 +33,9 @@ public class CommandHandler {
             CommandActions.RESTORE, this::restoreEmail,
             CommandActions.PING, this::sendOk);
 
-    public CommandHandler(Command cmd, PrintWriter writer) {
+    public CommandHandler(Command cmd, PrintWriter responseWriter) {
         internalCommand = cmd;
-        this.writer = writer;
+        this.responseWriter = responseWriter;
     }
 
     public void executeAction() {
@@ -51,20 +49,20 @@ public class CommandHandler {
     private void sendOk(String msg) {
         try {
             var resp = ServerResponse.createOkResponse(msg);
-            writer.println(JsonHelper.toJson(resp));
+            responseWriter.println(JsonHelper.toJson(resp));
         } catch (JsonProcessingException ex) {
             LOGGER.error("Cannot serialize server response: " + ex.getLocalizedMessage());
-            writer.println("{\"status\": \"error\", \"message\":\"Unable to get response from server\"}");
+            responseWriter.println("{\"status\": \"error\", \"message\":\"Unable to get response from server\"}");
         }
     }
 
     private void sendError(String msg) {
         try {
             var resp = ServerResponse.createErrorResponse(msg);
-            writer.println(JsonHelper.toJson(resp));
+            responseWriter.println(JsonHelper.toJson(resp));
         } catch (JsonProcessingException ex) {
             LOGGER.error("Cannot serialize server response: " + ex.getLocalizedMessage());
-            writer.println("{\"status\": \"error\", \"message\":\"Unable to get response from server\"}");
+            responseWriter.println("{\"status\": \"error\", \"message\":\"Unable to get response from server\"}");
         }
     }
 
@@ -111,7 +109,7 @@ public class CommandHandler {
             var action = ActionCommandFactory.getActionCommand(internalCommand);
             var response = action.executeAndGetResult();
 
-            writer.println(JsonHelper.toJson(response));
+            responseWriter.println(JsonHelper.toJson(response));
         } catch (ActionExecutionException ex) {
             System.out.println(ex.getInnerMessage());
             var msg = "Cannot execute list mail action: " + ex.getMessage();
@@ -167,7 +165,7 @@ public class CommandHandler {
         try {
             var action = ActionCommandFactory.getActionCommand(internalCommand);
             var res = action.executeAndGetResult();
-            writer.println(JsonHelper.toJson(res));
+            responseWriter.println(JsonHelper.toJson(res));
         } catch (ActionExecutionException ex) {
             System.out.println(ex.getInnerMessage());
             var msg = "Cannot execute login action: " + ex.getMessage();

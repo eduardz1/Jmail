@@ -11,6 +11,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Paint;
 import jmail.client.Main;
+import jmail.client.dialogs.CustomDialog;
 import jmail.client.models.client.MailClient;
 import jmail.client.models.model.DataModel;
 import jmail.client.models.responses.LoginResponse;
@@ -19,8 +20,12 @@ import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.commands.CommandLogin;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FXMLLogin {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FXMLLogin.class.getName());
 
     @FXML private TextField UsernameField;
 
@@ -43,7 +48,7 @@ public class FXMLLogin {
                             newValue
                                     ? Paint.valueOf(ColorPalette.GREEN.getHexValue())
                                     : Paint.valueOf(ColorPalette.RED.getHexValue()));
-                    connectionLabel.setGraphic(newFontIcon); // TODO: Should stay in view? Boh
+                    connectionLabel.setGraphic(newFontIcon);
                     connectionLabel.setText(newValue ? "connected" : "not connected");
                 }));
     }
@@ -67,7 +72,7 @@ public class FXMLLogin {
                             if (response.getStatus().equals(ServerResponseStatuses.OK)) {
                                 var resp = (LoginResponse) response;
                                 DataModel.getInstance().setCurrentUser(resp.getUser());
-                                System.out.println("Login successful"); // TODO: use LOGGER here
+                                LOGGER.info("Login successful");
                                 try {
                                     SystemIOHelper.createUserFolderIfNotExists(
                                             resp.getUser().getEmail());
@@ -76,8 +81,7 @@ public class FXMLLogin {
                                 }
                                 Main.changeScene("client.fxml");
                             } else {
-                                Main.showNotConnectServerErrorDialog();
-                            }
+                                new CustomDialog(Main.primaryStage, "error", "Cannot login!", "Something went wrong!\nPlease retry later").showAndWait();                            }
                         },
                         LoginResponse.class);
     }

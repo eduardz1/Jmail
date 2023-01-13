@@ -27,11 +27,6 @@ public class MailClient {
      */
     protected MailClient() {
         threadPool = Executors.newFixedThreadPool(10);
-        // FIXME: Utilizzare un custom executor ci sta portando problemi, i thread non vengono chiusi
-        // e i messaggi non vengono più inviati
-
-        //    threadPool = new ThreadPoolExecutor(10, 10, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
-        //    threadPool.allowCoreThreadTimeOut(true);
     }
 
     public Socket connect(String address, int port) {
@@ -80,10 +75,6 @@ public class MailClient {
                 /*
                  * Wait for response
                  */
-
-                // Set a timeout for 5seconds
-                // FIXME: Non funziona, il thread non viene chiuso, va in errore il pianeta e mi sminchia tutto in debug
-                // connection.setSoTimeout(5000);
 
                 // Read response
                 String response = reader.readLine();

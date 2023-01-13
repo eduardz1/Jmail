@@ -13,7 +13,6 @@ import lombok.NonNull;
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Email {
-    // TODO: final id
     private String id;
     private String subject;
     private String body;

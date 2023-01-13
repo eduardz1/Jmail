@@ -30,7 +30,6 @@ public class DataModel {
     private final ObservableList<Email> currentFilteredEmails; // Used for filtering emails to show bby search
     private final ObjectProperty<Email> currentEmail;
 
-    // TODO: Preferiti, bozze, etichette
     private final SimpleBooleanProperty serverStatusConnected;
     private final SimpleBooleanProperty editingMode;
     private final SimpleLongProperty newEmailCount;

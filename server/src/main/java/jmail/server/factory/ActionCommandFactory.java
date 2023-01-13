@@ -14,7 +14,7 @@ public class ActionCommandFactory {
       case CommandActions.RESTORE -> new ActionRestoreEmail((CommandRestoreEmail) cmd);
       case CommandActions.SEND -> new ActionSendEmail((CommandSendEmail) cmd);
       case CommandActions.LOGIN -> new ActionLogin((CommandLogin) cmd);
-      default -> null; // TODO: eccezione corretta
+      default -> null;
     };
   }
 }

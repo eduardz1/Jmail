@@ -88,15 +88,6 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public static void showNotConnectServerErrorDialog() {
-        // FIXME: Orribile, da correggere con un dialog
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText("Server not available");
-        alert.setContentText("Server is currently not available. Please try again later.");
-        alert.showAndWait();
-    }
-
     public void startCheckThread() {
         //        scheduler.scheduleAtFixedRate(Main::sendPingForConnectionCheck, 0, 15, TimeUnit.SECONDS);
     }

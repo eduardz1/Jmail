@@ -60,9 +60,6 @@ public class SystemIOHelper {
         return Files.readString(path);
     }
 
-    // FIXME: non penso che dovremmo tenere due funzioni che come unica cosa
-    // mascherano la option utilizzata che tra l'altro può avere solo due valori
-
     public static void deleteFile(Path path) throws IOException {
         Files.delete(path);
     }
@@ -106,7 +103,6 @@ public class SystemIOHelper {
             var json = readJSONFile(getUserDirectory(email).resolve("user.json"));
             user = JsonHelper.fromJson(json, User.class);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return user;

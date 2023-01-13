@@ -20,7 +20,6 @@ import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.handlers.LockHandler;
 import jmail.lib.helpers.JsonHelper;
 import jmail.lib.helpers.SystemIOHelper;
-import jmail.lib.helpers.ValidatorHelper;
 import jmail.lib.models.Email;
 import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.CommandDeleteEmail;
@@ -45,9 +44,6 @@ public class FXMLController {
     @FXML private SplitPane root;
 
     Map<String, Path> paths;
-
-    // TODO: Qualcosa viene aggiornata e causa un eccezione sul thread UI, ma non ho
-    // capito cosa, fixare
 
     public void initialize() {
 

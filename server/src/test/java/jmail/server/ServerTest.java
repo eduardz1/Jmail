@@ -55,7 +55,7 @@ class ServerTest {
         save(mario);
     }
 
-    public void save(User user) { // FIXME: dont know if it's the best way to do it
+    public void save(User user) {
         try {
             SystemIOHelper.createUserFolderIfNotExists(user.getEmail());
             SystemIOHelper.writeJSONFile(
