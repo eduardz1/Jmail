@@ -33,11 +33,9 @@ public class FXMLFolderController extends AnchorPane {
      * Folder views
      */
     @FXML private Button newMailButton;
-
     @FXML private ListView<String> listFolder;
-
     @FXML private Label currentUserName;
-
+    @FXML private Label currentUserEmail;
     @FXML private Label connectionLabel;
 
     public FXMLFolderController() {
@@ -89,6 +87,10 @@ public class FXMLFolderController extends AnchorPane {
         currentUserName
                 .textProperty()
                 .bind(DataModel.getInstance().getCurrentUserProperty().map(u -> u == null ? "" : u.getName()));
+
+        currentUserEmail
+                .textProperty()
+                  .bind(DataModel.getInstance().getCurrentUserProperty().map(u -> u == null ? "" : u.getEmail()));
 
         // Update currentFolder model based on selected item
         listFolder.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {

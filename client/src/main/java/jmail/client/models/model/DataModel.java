@@ -1,8 +1,11 @@
 package jmail.client.models.model;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -17,6 +20,8 @@ import javafx.collections.ObservableList;
 import jmail.lib.constants.*;
 import jmail.lib.models.Email;
 import jmail.lib.models.User;
+import me.xdrop.fuzzywuzzy.FuzzySearch;
+import me.xdrop.fuzzywuzzy.model.BoundExtractedResult;
 
 public class DataModel {
 
@@ -34,6 +39,8 @@ public class DataModel {
     private final SimpleBooleanProperty editingMode;
     private final SimpleLongProperty newEmailCount;
 
+    private final SimpleStringProperty searchFilter;
+
     private DataModel() {
         currentUser = new SimpleObjectProperty<>();
         currentFolder = new SimpleStringProperty();
@@ -47,6 +54,8 @@ public class DataModel {
         serverStatusConnected = new SimpleBooleanProperty();
         editingMode = new SimpleBooleanProperty();
         newEmailCount = new SimpleLongProperty();
+
+        searchFilter = new SimpleStringProperty();
     }
 
     public static DataModel getInstance() {
@@ -162,14 +171,32 @@ public class DataModel {
     }
 
     public void syncFilteredEmails() {
-        // TODO: implement search filter logic
+        var emails = switch (currentFolder.get()) {
+            case Folders.INBOX -> inbox;
+            case Folders.SENT -> sent;
+            case Folders.TRASH -> trash;
+            default -> throw new IllegalStateException("Unexpected value: " + currentFolder.get());
+        };
 
-        switch (currentFolder.get()) {
-            case Folders.INBOX -> currentFilteredEmails.setAll(inbox);
-            case Folders.SENT -> currentFilteredEmails.setAll(sent);
-            case Folders.TRASH -> currentFilteredEmails.setAll(trash);
+        if (searchFilter.get() == null || searchFilter.get().isEmpty()) {
+            currentFilteredEmails.setAll(emails);
+        } else {
+            var filter = searchFilter.get().toLowerCase();
+
+            // Search by subject or body or sender
+            var filteredEmails = emails.stream()
+                    .filter(email -> email.getSubject().toLowerCase().contains(filter) || 
+                                      email.getBody().toLowerCase().contains(filter) || 
+                                      email.getSender().toLowerCase().contains(filter))
+                    .sorted(Comparator.comparing(Email::getDate).reversed())
+                    .collect(Collectors.toList());
+
+            // TODO: Non capisco come funziona questa libreria, non ordina le cose correttamente e mette sempre il limit dei risultati, mettendo al top le ricerche più coerenti
+             // Ma non sono sicuro che sia cosi
+            //  var filteredResult = FuzzySearch.extractTop(filter, emails, email -> email.getSubject() + " " + email.getSender() + " " + email.getBody(), 5);
+            // var filteredEmails = filteredResult.stream().map(BoundExtractedResult::getReferent).collect(Collectors.toList());
+            currentFilteredEmails.setAll(filteredEmails);
         }
-
         syncNewEmailCount();
     }
 
@@ -203,5 +230,18 @@ public class DataModel {
 
     public void setNewEmailCount(Long newEmailCount) {
         this.newEmailCount.set(newEmailCount);
+    }
+
+    public String getSearchFilter() {
+        return searchFilter.get();
+    }
+
+    public ObservableStringValue getSearchFilterProperty() {
+        return searchFilter;
+    }
+
+    public void setSearchFilter(String searchFilter) {
+        this.searchFilter.set(searchFilter);
+        syncFilteredEmails();
     }
 }

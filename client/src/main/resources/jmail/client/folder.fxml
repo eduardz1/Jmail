@@ -25,7 +25,7 @@
                 <Label fx:id="currentUserName" prefHeight="25.0"
                     prefWidth="132.0" styleClass="f20,fwb" />
                 <Label fx:id="currentUserEmail" prefHeight="25.0"
-                    prefWidth="285.0" styleClass="fc999" text="emmedeveloper@gmail.com" />
+                    prefWidth="285.0" styleClass="fc999" />
             </VBox>
             <Region HBox.hgrow="ALWAYS" />
             <VBox>

@@ -54,8 +54,8 @@ public class FXMLLogin {
     }
 
     @FXML public void buttonLogin(javafx.event.ActionEvent e) {
-        // login(UsernameField.getText(), PasswordField.getText());
-        login("emmedeveloper@gmail.com", "emme"); // TODO: Remove this
+        login(UsernameField.getText(), PasswordField.getText());
+        // login("emmedeveloper@gmail.com", "emme"); // TODO: Remove this
     }
 
     public void login(String username, String password) {

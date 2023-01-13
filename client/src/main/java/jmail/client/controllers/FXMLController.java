@@ -8,6 +8,8 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import jmail.client.Main;
@@ -217,8 +219,7 @@ public class FXMLController {
         listEmails(Folders.TRASH);
         // Make sure that the lastUnixTimeEmailCheck is updated, so scheduler start
         // after first check
-        // scheduler.scheduleAtFixedRate(() -> listEmails(Folders.INBOX), 20, 20,
-        // TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(() -> listEmails(Folders.INBOX), 20, 15, TimeUnit.SECONDS);
     }
 
     public void addEmail(String folder, Email... emails) {

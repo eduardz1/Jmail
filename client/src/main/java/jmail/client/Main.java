@@ -7,6 +7,8 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -53,7 +55,7 @@ public class Main extends Application {
         primaryStage.setMaximized(true);
         primaryStage.setWidth(Screen.getPrimary().getBounds().getWidth());
         primaryStage.setHeight(Screen.getPrimary().getBounds().getHeight());
-        primaryStage.setResizable(true);
+        primaryStage.setResizable(false);
         // primaryStage needs to be unshown and shown again
     }
 
@@ -89,7 +91,7 @@ public class Main extends Application {
     }
 
     public void startCheckThread() {
-        //        scheduler.scheduleAtFixedRate(Main::sendPingForConnectionCheck, 0, 15, TimeUnit.SECONDS);
+      scheduler.scheduleAtFixedRate(Main::sendPingForConnectionCheck, 0, 15, TimeUnit.SECONDS);
     }
 
     public static void sendPingForConnectionCheck() {

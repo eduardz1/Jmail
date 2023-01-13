@@ -61,7 +61,15 @@ public class CustomDialog extends Dialog<String> {
                   dialogPane.getButtonTypes().add(noBtn);
                   okBtn = new ButtonType("Confirm");
                   dialogPane.getButtonTypes().add(okBtn);
-
+                }
+                case "warning" -> {
+                  fontIcon = new FontIcon("mdi2a-alert-circle-outline");
+                  fontIcon.setIconColor(Paint.valueOf(ColorPalette.YELLOW.getHexValue()));
+                  color =  "#FFB86C";
+                  noBtn = new ButtonType("Cancel");
+                  dialogPane.getButtonTypes().add(noBtn);
+                  okBtn = new ButtonType("Confirm");
+                  dialogPane.getButtonTypes().add(okBtn);
                 }
             }
             icon.setGraphic(fontIcon);
