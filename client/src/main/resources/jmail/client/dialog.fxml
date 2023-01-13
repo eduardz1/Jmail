@@ -7,28 +7,28 @@
 <?import java.net.*?>
 
 <DialogPane xmlns="http://javafx.com/javafx"
-    xmlns:fx="http://javafx.com/fxml" prefWidth="400" style="-fx-background: #333"
-    >
+    xmlns:fx="http://javafx.com/fxml" prefWidth="400"
+    style="-fx-background: #333">
     <stylesheets>
-      <URL
-          value="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
-      <URL
-          value="@../../../../../../client/src/main/resources/jmail/client/style.css" />
-  </stylesheets>
+        <URL
+            value="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
+        <URL
+            value="@../../../../../../client/src/main/resources/jmail/client/style.css" />
+    </stylesheets>
 
     <content>
         <VBox spacing="16.0" style="-fx-padding: 24;">
-          <HBox spacing="12.0">
-            <Label fx:id="icon" styleClass="f20"/>
-            <Label fx:id="titleLabel" text="Email inviata con successo" styleClass="f20"/>
-          </HBox>
-          <Label  fx:id="messageLabel" text = "Messaggione molto lungo" wrapText="true" styleClass="f16"/>
+            <HBox spacing="12.0">
+                <Label fx:id="icon" styleClass="f20" />
+                <Label fx:id="titleLabel" text="Email inviata con successo"
+                    styleClass="f20" />
+            </HBox>
+            <Label fx:id="messageLabel" text="Messaggione molto lungo"
+                wrapText="true" styleClass="f16" />
         </VBox>
     </content>
 
-    <!-- <buttonTypes>
-        <ButtonType fx:id="noBtn" text="No" buttonData="CANCEL_CLOSE" />
-        <ButtonType fx:id="okBtn" text="Yes" buttonData="OK_DONE" />
-    </buttonTypes> -->
+    <!-- <buttonTypes> <ButtonType fx:id="noBtn" text="No" buttonData="CANCEL_CLOSE" 
+        /> <ButtonType fx:id="okBtn" text="Yes" buttonData="OK_DONE" /> </buttonTypes> -->
 
 </DialogPane>

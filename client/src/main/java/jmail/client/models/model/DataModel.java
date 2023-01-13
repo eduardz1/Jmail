@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -20,8 +19,6 @@ import javafx.collections.ObservableList;
 import jmail.lib.constants.*;
 import jmail.lib.models.Email;
 import jmail.lib.models.User;
-import me.xdrop.fuzzywuzzy.FuzzySearch;
-import me.xdrop.fuzzywuzzy.model.BoundExtractedResult;
 
 public class DataModel {
 
@@ -171,12 +168,13 @@ public class DataModel {
     }
 
     public void syncFilteredEmails() {
-        var emails = switch (currentFolder.get()) {
-            case Folders.INBOX -> inbox;
-            case Folders.SENT -> sent;
-            case Folders.TRASH -> trash;
-            default -> throw new IllegalStateException("Unexpected value: " + currentFolder.get());
-        };
+        var emails =
+                switch (currentFolder.get()) {
+                    case Folders.INBOX -> inbox;
+                    case Folders.SENT -> sent;
+                    case Folders.TRASH -> trash;
+                    default -> throw new IllegalStateException("Unexpected value: " + currentFolder.get());
+                };
 
         if (searchFilter.get() == null || searchFilter.get().isEmpty()) {
             currentFilteredEmails.setAll(emails);
@@ -185,16 +183,19 @@ public class DataModel {
 
             // Search by subject or body or sender
             var filteredEmails = emails.stream()
-                    .filter(email -> email.getSubject().toLowerCase().contains(filter) || 
-                                      email.getBody().toLowerCase().contains(filter) || 
-                                      email.getSender().toLowerCase().contains(filter))
+                    .filter(email -> email.getSubject().toLowerCase().contains(filter)
+                            || email.getBody().toLowerCase().contains(filter)
+                            || email.getSender().toLowerCase().contains(filter))
                     .sorted(Comparator.comparing(Email::getDate).reversed())
                     .collect(Collectors.toList());
 
-            // TODO: Non capisco come funziona questa libreria, non ordina le cose correttamente e mette sempre il limit dei risultati, mettendo al top le ricerche più coerenti
-             // Ma non sono sicuro che sia cosi
-            //  var filteredResult = FuzzySearch.extractTop(filter, emails, email -> email.getSubject() + " " + email.getSender() + " " + email.getBody(), 5);
-            // var filteredEmails = filteredResult.stream().map(BoundExtractedResult::getReferent).collect(Collectors.toList());
+            // TODO: Non capisco come funziona questa libreria, non ordina le cose correttamente e mette sempre il limit
+            // dei risultati, mettendo al top le ricerche più coerenti
+            // Ma non sono sicuro che sia cosi
+            //  var filteredResult = FuzzySearch.extractTop(filter, emails, email -> email.getSubject() + " " +
+            // email.getSender() + " " + email.getBody(), 5);
+            // var filteredEmails =
+            // filteredResult.stream().map(BoundExtractedResult::getReferent).collect(Collectors.toList());
             currentFilteredEmails.setAll(filteredEmails);
         }
         syncNewEmailCount();

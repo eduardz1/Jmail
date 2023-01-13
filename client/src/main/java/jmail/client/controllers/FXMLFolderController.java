@@ -14,7 +14,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Paint;
 import jmail.client.Main;
-import jmail.client.dialogs.CustomDialog;
 import jmail.client.factory.FolderCellFactory;
 import jmail.client.models.model.DataModel;
 import jmail.lib.constants.ColorPalette;
@@ -33,9 +32,13 @@ public class FXMLFolderController extends AnchorPane {
      * Folder views
      */
     @FXML private Button newMailButton;
+
     @FXML private ListView<String> listFolder;
+
     @FXML private Label currentUserName;
+
     @FXML private Label currentUserEmail;
+
     @FXML private Label connectionLabel;
 
     public FXMLFolderController() {
@@ -90,7 +93,7 @@ public class FXMLFolderController extends AnchorPane {
 
         currentUserEmail
                 .textProperty()
-                  .bind(DataModel.getInstance().getCurrentUserProperty().map(u -> u == null ? "" : u.getEmail()));
+                .bind(DataModel.getInstance().getCurrentUserProperty().map(u -> u == null ? "" : u.getEmail()));
 
         // Update currentFolder model based on selected item
         listFolder.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {

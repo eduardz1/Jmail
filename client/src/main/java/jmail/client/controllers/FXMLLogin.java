@@ -81,7 +81,13 @@ public class FXMLLogin {
                                 }
                                 Main.changeScene("client.fxml");
                             } else {
-                                new CustomDialog(Main.primaryStage, "error", "Cannot login!", "Something went wrong!\nPlease retry later").showAndWait();                            }
+                                new CustomDialog(
+                                                Main.primaryStage,
+                                                "error",
+                                                "Cannot login!",
+                                                "Something went wrong!\nPlease retry later")
+                                        .showAndWait();
+                            }
                         },
                         LoginResponse.class);
     }

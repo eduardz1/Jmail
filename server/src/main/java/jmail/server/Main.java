@@ -12,7 +12,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import jmail.server.controllers.FXMLMainController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

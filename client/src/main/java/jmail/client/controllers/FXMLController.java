@@ -9,7 +9,6 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import jmail.client.Main;
@@ -152,8 +151,8 @@ public class FXMLController {
                                 listEmails(Folders.INBOX);
                                 LOGGER.info("Email sent: {}", response);
                             } else {
-                               showError("Send failed!", "Something went wrong. \nPlease retry later");
-                               LOGGER.error("Error sending email: {}", response);
+                                showError("Send failed!", "Something went wrong. \nPlease retry later");
+                                LOGGER.error("Error sending email: {}", response);
                             }
                         },
                         ServerResponse.class);
@@ -184,7 +183,7 @@ public class FXMLController {
                                 }
                                 LOGGER.info("DeleteMailResponse: {}", response);
                             } else {
-                              showError("Delete failed!", "Something went wrong. \nPlease retry later");
+                                showError("Delete failed!", "Something went wrong. \nPlease retry later");
                                 LOGGER.error("Error deleting email: {}", response);
                             }
                         },
