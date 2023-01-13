@@ -8,26 +8,28 @@
 <?import java.net.*?>
 
 <fx:root type="javafx.scene.control.ListCell"
-  xmlns="http://javafx.com/javafx"
-  xmlns:fx="http://javafx.com/fxml">
-  <stylesheets>
-    <URL value="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
-    <URL value="@../../../../../../client/src/main/resources/jmail/client/style.css" />
-  </stylesheets>
-  <graphic>
-    <HBox spacing="8.0" styleClass="p8">
-      <children>
-        <Label fx:id="iconLabel" styleClass="f20"/>
-        <VBox>
-          <children>
-            <Region VBox.vgrow="ALWAYS"/>
-            <Label fx:id="folderLabel" styleClass="f16,fwb"/>
-            <Region VBox.vgrow="ALWAYS"/>
-          </children>
-        </VBox>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Label fx:id="counterLabel" styleClass="badge" text="20" visible="false"/>
-      </children>
-    </HBox>
-  </graphic>
+    xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <stylesheets>
+        <URL
+            value="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
+        <URL
+            value="@../../../../../../client/src/main/resources/jmail/client/style.css" />
+    </stylesheets>
+    <graphic>
+        <HBox spacing="8.0" styleClass="p8">
+            <children>
+                <Label fx:id="iconLabel" styleClass="f20" />
+                <VBox>
+                    <children>
+                        <Region VBox.vgrow="ALWAYS" />
+                        <Label fx:id="folderLabel" styleClass="f16,fwb" />
+                        <Region VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="counterLabel" styleClass="badge" text="20"
+                    visible="false" />
+            </children>
+        </HBox>
+    </graphic>
 </fx:root>

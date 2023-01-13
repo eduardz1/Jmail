@@ -1,7 +1,6 @@
 package jmail.server.models.actions;
 
 import java.io.IOException;
-
 import jmail.lib.constants.Folders;
 import jmail.lib.handlers.LockHandler;
 import jmail.lib.helpers.SystemIOHelper;

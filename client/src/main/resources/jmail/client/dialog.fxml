@@ -1,0 +1,51 @@
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml" prefWidth="500">
+
+    <content>
+        <GridPane hgap="5" vgap="5">
+            <Label text="Адрес на хост:" GridPane.columnIndex="0"
+                GridPane.rowIndex="0" />
+            <TextField fx:id="hostnameTextField"
+                GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <Label text="База данни:" GridPane.columnIndex="0"
+                GridPane.rowIndex="1" />
+            <TextField fx:id="databaseTextField"
+                GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+            <Label text="Потребителско име:" GridPane.columnIndex="0"
+                GridPane.rowIndex="2" />
+            <TextField fx:id="usernameTextField" prefWidth="200"
+                GridPane.columnIndex="1" GridPane.rowIndex="2"
+                GridPane.fillWidth="false" />
+
+            <Label text="Парола:" GridPane.columnIndex="0"
+                GridPane.rowIndex="3" />
+            <TextField fx:id="passwordField" prefWidth="200"
+                GridPane.columnIndex="1" GridPane.rowIndex="3"
+                GridPane.fillWidth="false" />
+
+            <columnConstraints>
+                <ColumnConstraints />
+                <ColumnConstraints hgrow="ALWAYS" />
+            </columnConstraints>
+        </GridPane>
+    </content>
+
+    <buttonTypes>
+        <ButtonType fx:id="connectButtonType" text="Свързване"
+            buttonData="OK_DONE" />
+        <ButtonType text="Затвори" buttonData="CANCEL_CLOSE" />
+    </buttonTypes>
+
+</DialogPane>

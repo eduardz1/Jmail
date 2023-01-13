@@ -7,11 +7,10 @@ import jmail.client.views.FolderCell;
 
 public class FolderCellFactory implements Callback<ListView<String>, ListCell<String>> {
 
-  public FolderCellFactory() {
-  }
+    public FolderCellFactory() {}
 
-  @Override
-  public ListCell<String> call(ListView<String> param) {
-    return new FolderCell();  
-  }
+    @Override
+    public ListCell<String> call(ListView<String> param) {
+        return new FolderCell();
+    }
 }

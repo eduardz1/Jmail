@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
 import jmail.lib.constants.Folders;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.handlers.LockHandler;

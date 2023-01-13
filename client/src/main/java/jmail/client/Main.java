@@ -23,7 +23,7 @@ import jmail.lib.models.commands.CommandPing;
 
 public class Main extends Application {
 
-    private static Stage primaryStage;
+    public static Stage primaryStage;
     private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     public static void main(String[] args) {

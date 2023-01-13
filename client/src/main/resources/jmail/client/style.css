@@ -14,9 +14,8 @@
   -fx-font-size: 20px;
 }
 
-
 .fwb {
-  -fx-font-weight: bold; 
+  -fx-font-weight: bold;
 }
 
 .fc666 {
@@ -37,12 +36,12 @@
   -fx-padding: 8px;
   -fx-background-color: teal;
   -fx-background-radius: 50px;
-  -fx-font-weight: bold; 
+  -fx-font-weight: bold;
   -fx-text-fill: #fff;
   -fx-border-insets: 4px;
 }
 
-.p8{
+.p8 {
   -fx-padding: 8px;
 }
 
@@ -84,5 +83,5 @@
 .radius {
   -fx-background-radius: 13;
   -fx-border-radius: 13;
-  -fx-background-color :transparent;
+  -fx-background-color: transparent;
 }

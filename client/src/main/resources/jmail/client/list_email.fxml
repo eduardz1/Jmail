@@ -4,27 +4,39 @@
 <?import org.kordamp.ikonli.javafx.*?>
 <?import java.net.*?>
 
-<AnchorPane minHeight="0.0" minWidth="200.0" prefHeight="555.0" prefWidth="213.0" stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css"
-  xmlns="http://javafx.com/javafx/17.0.2-ea"
-  xmlns:fx="http://javafx.com/fxml/1" fx:id="root">
-  <stylesheets>
-    <URL value="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
-    <URL value="@../../../../../../client/src/main/resources/jmail/client/style.css" />
-  </stylesheets>
-  <VBox AnchorPane.leftAnchor="8.0"  AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="8.0" prefHeight="96.0" style="-fx-padding: 8;" spacing="8.0">
-    <Label fx:id="currentFolder" styleClass="f20, fwb" style="-fx-padding: 8 0 0 8;"/>
-    <Region VBox.vgrow="ALWAYS"/>
-    <HBox spacing="8.0">
-      <TextField fx:id="searchField" minHeight="24.0" prefHeight="24.0" HBox.hgrow="ALWAYS" promptText="search" />
-      <Button fx:id="searchButton" minWidth="48.0" mnemonicParsing="false" onAction="#buttonSearch" prefHeight="48.0" prefWidth="48.0">
-        <graphic>
-          <FontIcon iconColor="#afb1b3" iconLiteral="mdi2m-magnify" iconSize="20" />
-        </graphic>
-      </Button>
+<AnchorPane minHeight="0.0" minWidth="200.0"
+    prefHeight="555.0" prefWidth="213.0"
+    stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css"
+    xmlns="http://javafx.com/javafx/17.0.2-ea"
+    xmlns:fx="http://javafx.com/fxml/1" fx:id="root">
+    <stylesheets>
+        <URL
+            value="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
+        <URL
+            value="@../../../../../../client/src/main/resources/jmail/client/style.css" />
+    </stylesheets>
+    <VBox AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="0.0"
+        AnchorPane.rightAnchor="8.0" prefHeight="96.0" style="-fx-padding: 8;"
+        spacing="8.0">
+        <Label fx:id="currentFolder" styleClass="f20, fwb"
+            style="-fx-padding: 8 0 0 8;" />
+        <Region VBox.vgrow="ALWAYS" />
+        <HBox spacing="8.0">
+            <TextField fx:id="searchField" minHeight="24.0"
+                prefHeight="24.0" HBox.hgrow="ALWAYS" promptText="search" />
+            <Button fx:id="searchButton" minWidth="48.0"
+                mnemonicParsing="false" onAction="#buttonSearch" prefHeight="48.0"
+                prefWidth="48.0">
+                <graphic>
+                    <FontIcon iconColor="#afb1b3" iconLiteral="mdi2m-magnify"
+                        iconSize="20" />
+                </graphic>
+            </Button>
+        </HBox>
+    </VBox>
+    <HBox AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="96.0"
+        AnchorPane.rightAnchor="8.0" AnchorPane.bottomAnchor="8.0">
+        <ListView fx:id="listEmails" HBox.hgrow="ALWAYS" />
     </HBox>
-  </VBox>
-  <HBox AnchorPane.leftAnchor="8.0"  AnchorPane.topAnchor="96.0" AnchorPane.rightAnchor="8.0" AnchorPane.bottomAnchor="8.0">
-    <ListView fx:id="listEmails" HBox.hgrow="ALWAYS" />
-  </HBox>
-  
+
 </AnchorPane>

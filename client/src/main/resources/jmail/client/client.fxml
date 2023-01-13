@@ -9,14 +9,14 @@
 
 <SplitPane
     dividerPositions="0.1961839530332681, 0.5004892367906066"
-    minHeight="200.0" minWidth="630.0" prefHeight="561.0"
-    prefWidth="762.0" snapToPixel="false"
+    minHeight="200.0" minWidth="630.0" prefHeight="561.0" prefWidth="762.0"
+    snapToPixel="false"
     stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css"
     xmlns="http://javafx.com/javafx/17.0.2-ea"
-    xmlns:fx="http://javafx.com/fxml/1"
-    fx:id="root"
+    xmlns:fx="http://javafx.com/fxml/1" fx:id="root"
     fx:controller="jmail.client.controllers.FXMLController">
     <FXMLFolderController fx:id="folderController"></FXMLFolderController>
-    <FXMLListEmailController fx:id="listEmailController"></FXMLListEmailController>
+    <FXMLListEmailController
+        fx:id="listEmailController"></FXMLListEmailController>
     <FXMLEmailController fx:id="emailController"></FXMLEmailController>
 </SplitPane>
