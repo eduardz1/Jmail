@@ -882,13 +882,7 @@
   -fx-effect: null;
 }
 
-.auto-complete-popup
-  .list-view
-  .virtual-flow
-  .clipped-container
-  .sheet
-  .list-cell {
-  /* TODO: fix */
+.auto-complete-popup .list-view .virtual-flow .clipped-container .sheet .list-cell {
   -fx-background-radius: 0;
   -fx-border-radius: 0;
   border-radius: 0;

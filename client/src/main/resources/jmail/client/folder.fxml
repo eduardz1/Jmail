@@ -4,8 +4,8 @@
 <?import org.kordamp.ikonli.javafx.*?>
 <?import java.net.*?>
 
-<AnchorPane minHeight="0.0" minWidth="170.0"
-    prefHeight="766.0" prefWidth="184.0"
+<AnchorPane minHeight="480.0" minWidth="91.0"
+    prefHeight="768.0" prefWidth="146.0"
     stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css"
     xmlns="http://javafx.com/javafx/17.0.2-ea"
     xmlns:fx="http://javafx.com/fxml/1" fx:id="root">

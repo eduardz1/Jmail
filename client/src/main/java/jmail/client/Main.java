@@ -49,11 +49,13 @@ public class Main extends Application {
     private static void changeSceneImpl(String fxml) throws IOException {
         Parent pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxml)));
         primaryStage.getScene().setRoot(pane);
-        // primaryStage.sizeToScene();
-        primaryStage.setMaximized(true);
-        primaryStage.setWidth(Screen.getPrimary().getBounds().getWidth());
-        primaryStage.setHeight(Screen.getPrimary().getBounds().getHeight());
-        primaryStage.setResizable(false);
+         primaryStage.sizeToScene();
+
+         // FIXME: non ho capito tutto sto casino, tanto dobbiamo avere tre client aperti più la finestra del server
+        // primaryStage.setMaximized(true);
+//        primaryStage.setWidth(Screen.getPrimary().getBounds().getWidth());
+//        primaryStage.setHeight(Screen.getPrimary().getBounds().getHeight());
+        // primaryStage.setResizable(false);
         // primaryStage needs to be unshown and shown again
     }
 
@@ -84,7 +86,7 @@ public class Main extends Application {
             }
         });
 
-        primaryStage.setResizable(false);
+        // primaryStage.setResizable(false);
         primaryStage.show();
     }
 
