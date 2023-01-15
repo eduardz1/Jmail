@@ -176,8 +176,7 @@ public class FXMLController {
                                 }
                                 DataModel.getInstance().removeCurrentEmail();
                                 try {
-                                    SystemIOHelper.deleteFile(
-                                            SystemIOHelper.getInboxEmailPath(command.getUserEmail(), params.emailID()));
+                                    SystemIOHelper.deleteFile(paths.get(folder).resolve(emailID));
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }

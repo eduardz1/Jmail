@@ -14,7 +14,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import jmail.client.models.client.MailClient;
 import jmail.lib.constants.ServerResponseStatuses;
@@ -36,7 +35,6 @@ public class Main extends Application {
             try {
                 changeSceneImpl(fxml);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         });
@@ -50,13 +48,6 @@ public class Main extends Application {
         Parent pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxml)));
         primaryStage.getScene().setRoot(pane);
          primaryStage.sizeToScene();
-
-         // FIXME: non ho capito tutto sto casino, tanto dobbiamo avere tre client aperti più la finestra del server
-        // primaryStage.setMaximized(true);
-//        primaryStage.setWidth(Screen.getPrimary().getBounds().getWidth());
-//        primaryStage.setHeight(Screen.getPrimary().getBounds().getHeight());
-        // primaryStage.setResizable(false);
-        // primaryStage needs to be unshown and shown again
     }
 
     @Override
