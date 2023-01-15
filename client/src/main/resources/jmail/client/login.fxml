@@ -5,9 +5,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity"
     minHeight="-Infinity" minWidth="-Infinity" prefHeight="121.0"
-    prefWidth="300.0"
-    stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css"
-    xmlns="http://javafx.com/javafx/17.0.2-ea"
+    prefWidth="300.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
     xmlns:fx="http://javafx.com/fxml/1"
     fx:controller="jmail.client.controllers.FXMLLogin">
     <TextField fx:id="UsernameField" layoutX="16.0"

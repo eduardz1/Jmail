@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import jmail.client.Main;
 import jmail.lib.constants.ColorPalette;
@@ -21,6 +22,7 @@ public class CustomDialog extends Dialog<String> {
 
     private ButtonType noBtn;
     private ButtonType okBtn;
+    private Stage stage;
 
     @FXML private Label messageLabel;
 
@@ -33,10 +35,13 @@ public class CustomDialog extends Dialog<String> {
             FXMLLoader loader = new FXMLLoader(Main.getResource("dialog.fxml"));
             loader.setController(this);
 
+            stage = owner;
+
             DialogPane dialogPane = loader.load();
             initOwner(owner);
             initModality(Modality.WINDOW_MODAL);
-            
+            initStyle(StageStyle.TRANSPARENT);
+
             FontIcon fontIcon = null;
             String color = "";
             switch (mode) {
@@ -80,7 +85,7 @@ public class CustomDialog extends Dialog<String> {
             titleLabel.setStyle(titleLabel.getStyle() + "; -fx-text-fill: " + color + ";");
 
             setDialogPane(dialogPane);
-            
+
             setResultConverter(buttonType -> {
                 if (buttonType.getText().equals("Confirm")
                         || buttonType.getText().equals("OK")) {
@@ -98,7 +103,7 @@ public class CustomDialog extends Dialog<String> {
     }
 
     @FXML private void initialize() {
-      Window window = getDialogPane().getScene().getWindow();
-      window.setOnCloseRequest(event -> window.hide());
+        Window window = getDialogPane().getScene().getWindow();
+        window.setOnCloseRequest(event -> window.hide());
     }
 }

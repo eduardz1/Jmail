@@ -6,15 +6,8 @@
 
 <AnchorPane minHeight="480.0" minWidth="91.0"
     prefHeight="768.0" prefWidth="146.0"
-    stylesheets="@../../../../../../lib/src/main/resources/styles/dark-mode.css"
     xmlns="http://javafx.com/javafx/17.0.2-ea"
     xmlns:fx="http://javafx.com/fxml/1" fx:id="root">
-    <stylesheets>
-        <URL
-            value="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
-        <URL
-            value="@../../../../../../client/src/main/resources/jmail/client/style.css" />
-    </stylesheets>
     <VBox AnchorPane.leftAnchor="8" AnchorPane.rightAnchor="8"
         spacing="8.0" style="-fx-padding: 8;" prefHeight="96.0">
         <Label fx:id="connectionLabel" prefHeight="18.0"

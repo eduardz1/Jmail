@@ -40,14 +40,14 @@ public class Main extends Application {
         });
     }
 
-    public static URL getResource(String fxml) {
-        return Main.class.getResource(fxml);
+    public static URL getResource(String resource) {
+        return Main.class.getResource(resource);
     }
 
     private static void changeSceneImpl(String fxml) throws IOException {
         Parent pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxml)));
         primaryStage.getScene().setRoot(pane);
-         primaryStage.sizeToScene();
+        primaryStage.sizeToScene();
     }
 
     @Override
@@ -59,6 +59,7 @@ public class Main extends Application {
         Parent root = loader.load();
 
         Scene scene = new Scene(root);
+        addCss(scene);
 
         primaryStage.setTitle("JMAIL");
         primaryStage.getIcons().add(new Image("icon.png"));
@@ -98,5 +99,12 @@ public class Main extends Application {
                             }
                         },
                         ServerResponse.class);
+    }
+
+    private void addCss(Scene scene) {
+        scene.getStylesheets()
+                .add(SystemIOHelper.getResource("styles/style.css").toExternalForm());
+        scene.getStylesheets()
+                .add(SystemIOHelper.getResource("styles/dark-mode.css").toExternalForm());
     }
 }

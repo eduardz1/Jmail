@@ -4,14 +4,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import java.net.URL?>
 <DialogPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml" prefWidth="400"
-            style="-fx-background: #333">
-    <stylesheets>
-        <URL
-            value="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
-        <URL
-            value="@../../../../../../client/src/main/resources/jmail/client/style.css" />
-    </stylesheets>
+    xmlns:fx="http://javafx.com/fxml" prefWidth="400"
+    style="-fx-background: #333">
 
     <content>
         <VBox spacing="16.0" style="-fx-padding: 24;">
