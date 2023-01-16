@@ -48,6 +48,7 @@ public class Main extends Application {
         Parent pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxml)));
         primaryStage.getScene().setRoot(pane);
         primaryStage.sizeToScene();
+        primaryStage.setResizable(true);
     }
 
     @Override
@@ -78,7 +79,7 @@ public class Main extends Application {
             }
         });
 
-        // primaryStage.setResizable(false);
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
