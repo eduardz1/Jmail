@@ -220,7 +220,7 @@ public class FXMLController {
         listEmails(Folders.TRASH);
         // Make sure that the lastUnixTimeEmailCheck is updated, so scheduler start
         // after first check
-        scheduler.scheduleAtFixedRate(() -> listEmails(Folders.INBOX), 20, 15, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(() -> listEmails(Folders.INBOX), 5, 3, TimeUnit.SECONDS);
     }
 
     public void addEmail(String folder, Email... emails) {
