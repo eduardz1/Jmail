@@ -13,12 +13,9 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import jmail.lib.helpers.SystemIOHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Main extends Application {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class.getName());
 
     public static void main(String... args) throws IOException {
 

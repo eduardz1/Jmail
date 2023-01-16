@@ -22,7 +22,6 @@ public class CustomDialog extends Dialog<String> {
 
     private ButtonType noBtn;
     private ButtonType okBtn;
-    private Stage stage;
 
     @FXML private Label messageLabel;
 
@@ -34,8 +33,6 @@ public class CustomDialog extends Dialog<String> {
         try {
             FXMLLoader loader = new FXMLLoader(Main.getResource("dialog.fxml"));
             loader.setController(this);
-
-            stage = owner;
 
             DialogPane dialogPane = loader.load();
             initOwner(owner);
