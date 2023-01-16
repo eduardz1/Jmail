@@ -57,12 +57,6 @@ spotless {
         indentWithSpaces()
     }
 
-    format 'css', {
-        target 'src/**/*.css'
-        toggleOffOn()
-        prettier()
-    }
-
     format 'xml', {
         target 'src/**/*.xml', 'src/**/*.fxml'
         eclipseWtp('xml')
