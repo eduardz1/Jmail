@@ -1,7 +1,6 @@
 package jmail.client.models.model;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -193,10 +192,11 @@ public class DataModel {
             // TODO: Non capisco come funziona questa libreria, non ordina le cose correttamente e mette sempre il limit
             // dei risultati, mettendo al top le ricerche più coerenti
             // Ma non sono sicuro che sia cosi
-             var filteredResult = FuzzySearch.extractTop(filter, emails, email -> email.getSubject() + " " +
-            email.getSender() + " " + email.getBody(), 5);
-            var filteredEmails =
-            filteredResult.stream().map(BoundExtractedResult::getReferent).collect(Collectors.toList());
+            var filteredResult = FuzzySearch.extractTop(
+                    filter, emails, email -> email.getSubject() + " " + email.getSender() + " " + email.getBody(), 5);
+            var filteredEmails = filteredResult.stream()
+                    .map(BoundExtractedResult::getReferent)
+                    .collect(Collectors.toList());
             currentFilteredEmails.setAll(filteredEmails);
         }
         syncNewEmailCount();
