@@ -14,7 +14,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import jmail.client.models.client.MailClient;
 import jmail.lib.constants.ServerResponseStatuses;
@@ -36,27 +35,19 @@ public class Main extends Application {
             try {
                 changeSceneImpl(fxml);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         });
     }
 
-    public static URL getResource(String fxml) {
-        return Main.class.getResource(fxml);
+    public static URL getResource(String resource) {
+        return Main.class.getResource(resource);
     }
 
     private static void changeSceneImpl(String fxml) throws IOException {
         Parent pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxml)));
         primaryStage.getScene().setRoot(pane);
-         primaryStage.sizeToScene();
-
-         // FIXME: non ho capito tutto sto casino, tanto dobbiamo avere tre client aperti più la finestra del server
-        // primaryStage.setMaximized(true);
-//        primaryStage.setWidth(Screen.getPrimary().getBounds().getWidth());
-//        primaryStage.setHeight(Screen.getPrimary().getBounds().getHeight());
-        // primaryStage.setResizable(false);
-        // primaryStage needs to be unshown and shown again
+        primaryStage.sizeToScene();
     }
 
     @Override
@@ -68,6 +59,7 @@ public class Main extends Application {
         Parent root = loader.load();
 
         Scene scene = new Scene(root);
+        addCss(scene);
 
         primaryStage.setTitle("JMAIL");
         primaryStage.getIcons().add(new Image("icon.png"));
@@ -95,6 +87,8 @@ public class Main extends Application {
     }
 
     public static void sendPingForConnectionCheck() {
+        // La gestione dell'aggiornamento dello stato della connessione è dentro il
+        // mailclient
         var pingCmd = new CommandPing();
         MailClient.getInstance()
                 .sendCommand(
@@ -107,5 +101,12 @@ public class Main extends Application {
                             }
                         },
                         ServerResponse.class);
+    }
+
+    private void addCss(Scene scene) {
+        scene.getStylesheets()
+                .add(SystemIOHelper.getResource("styles/style.css").toExternalForm());
+        scene.getStylesheets()
+                .add(SystemIOHelper.getResource("styles/dark-mode.css").toExternalForm());
     }
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javafx.application.Platform;
@@ -69,30 +70,19 @@ public class MailClient {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                     PrintWriter writer = new PrintWriter(connection.getOutputStream(), true)) {
 
+                connection.setSoTimeout(3000);
+
                 // Send command
                 writer.println(JsonHelper.toJson(cmd));
 
-                /*
-                 * Wait for response
-                 */
-                // TODO: Fix timeout, seems to be not working prperly for exceptions in the thread
-                // final Boolean[] read = new Boolean[] {false};
-                // new java.util.Timer().schedule(new java.util.TimerTask() {
-                //   @Override
-                //   public void run() {
-                //     if (!read[0]) {
-                //       throw new RuntimeException("Timeout");
-                //     }
-                //   }
-                // }, 5000);
-
                 // Read response
                 String response = reader.readLine();
-                // read[0] = true;
                 var resp = JsonHelper.fromJson(response, responseClass);
                 Platform.runLater(() -> responseFunc.run(resp));
             } catch (JsonProcessingException e) {
                 errorMessages = "Error while parsing response";
+            } catch (SocketTimeoutException e) {
+                errorMessages = "Timeout";
             } catch (IOException e) {
                 errorMessages = "Error while reading response";
             } catch (Exception e) {

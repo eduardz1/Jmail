@@ -26,6 +26,7 @@ public class ActionDeleteMail implements ActionCommand {
         }
         var handler = LockHandler.getInstance();
         var lock = handler.getWriteLock(userEmail);
+        var locked = false;
 
         try {
             var fromPath =
@@ -36,6 +37,7 @@ public class ActionDeleteMail implements ActionCommand {
                         default -> throw new ActionExecutionException("Cannot delete mail: invalid from");
                     };
             lock.lock();
+            locked = true;
             if (hardDelete) {
                 SystemIOHelper.deleteFile(fromPath);
             } else {
@@ -44,7 +46,7 @@ public class ActionDeleteMail implements ActionCommand {
         } catch (IOException e) {
             throw new ActionExecutionException(e, "Cannot delete email: internal error");
         } finally {
-            lock.unlock();
+            if (locked) lock.unlock();
             handler.removeLock(userEmail);
         }
     }

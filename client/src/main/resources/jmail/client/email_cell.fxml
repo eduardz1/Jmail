@@ -8,12 +8,6 @@
 
 <fx:root type="javafx.scene.control.ListCell"
     xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
-    <stylesheets>
-        <URL
-            value="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
-        <URL
-            value="@../../../../../../client/src/main/resources/jmail/client/style.css" />
-    </stylesheets>
     <graphic>
         <HBox spacing="8.0" styleClass="cell-separator">
             <children>

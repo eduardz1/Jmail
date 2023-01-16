@@ -11,12 +11,6 @@
 <AnchorPane fx:id="root" minHeight="480.0" minWidth="274.0"
     prefHeight="768.0" prefWidth="439.0"
     xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
-    <stylesheets>
-        <URL
-            value="@../../../../../../lib/src/main/resources/styles/dark-mode.css" />
-        <URL
-            value="@../../../../../../client/src/main/resources/jmail/client/style.css" />
-    </stylesheets>
     <AnchorPane fx:id="emailPane">
         <children>
             <VBox fx:id="topPane" prefHeight="96.0" style="-fx-padding: 8;">

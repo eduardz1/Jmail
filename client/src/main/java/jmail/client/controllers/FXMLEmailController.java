@@ -298,7 +298,7 @@ public class FXMLEmailController extends AnchorPane {
                                 if (hardDelete) {
                                     new CustomDialog(
                                                     Main.primaryStage,
-                                                    "confirm",
+                                                    "warning",
                                                     "Delete email",
                                                     "Are you sure you want to delete this email?")
                                             .showAndWait()

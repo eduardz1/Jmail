@@ -3,6 +3,7 @@ package jmail.lib.helpers;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,12 +13,10 @@ import jmail.lib.models.User;
 
 public class SystemIOHelper {
 
-    private static final String emailpath = "email";
     private static final String userpath = "users";
 
     public static void createBaseFoldersIfNotExists() throws IOException {
         Files.createDirectories(Paths.get(userpath));
-        Files.createDirectories(Paths.get(emailpath));
     }
 
     public static void createUserFolderIfNotExists(String userEmail) throws IOException {
@@ -106,5 +105,9 @@ public class SystemIOHelper {
             e.printStackTrace();
         }
         return user;
+    }
+
+    public static URL getResource(String path) {
+        return SystemIOHelper.class.getClassLoader().getResource(path);
     }
 }
