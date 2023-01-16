@@ -9,6 +9,8 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import jmail.client.Main;
@@ -132,7 +134,7 @@ public class FXMLController {
                         ListEmailResponse.class);
 
         lock.unlock();
-        LockHandler.getInstance().getReadLock(folder);
+        LockHandler.getInstance().removeLock(folder);
     }
 
     public void sendEmail(Email email) {
@@ -190,6 +192,7 @@ public class FXMLController {
     }
 
     public void synchronizeEmails() {
+      // Gestione della cache
         for (String folder : paths.keySet()) {
             var mails = new ArrayList<Email>();
             var files = (new File(paths.get(folder).toUri())).listFiles();
@@ -267,6 +270,7 @@ public class FXMLController {
     }
 
     private void showError(String title, String content) {
-        new CustomDialog(Main.primaryStage, "error", title, content).showAndWait();
+      Platform.runLater(() -> new CustomDialog(Main.primaryStage, "error", title, content).showAndWait());
+        // new CustomDialog(Main.primaryStage, "error", title, content).showAndWait();
     }
 }

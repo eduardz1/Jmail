@@ -46,6 +46,8 @@ public class ClientHandler implements Runnable {
                 var userEmail = cmd.getUserEmail();
                 if (SystemIOHelper.userExists(userEmail)) {
                     SystemIOHelper.createUserFolderIfNotExists(userEmail);
+                } else {
+                    throw new NotAuthorizedException("User not found");
                 }
             }
 

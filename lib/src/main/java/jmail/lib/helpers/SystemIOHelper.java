@@ -13,12 +13,10 @@ import jmail.lib.models.User;
 
 public class SystemIOHelper {
 
-    private static final String emailpath = "email";
     private static final String userpath = "users";
 
     public static void createBaseFoldersIfNotExists() throws IOException {
         Files.createDirectories(Paths.get(userpath));
-        Files.createDirectories(Paths.get(emailpath));
     }
 
     public static void createUserFolderIfNotExists(String userEmail) throws IOException {

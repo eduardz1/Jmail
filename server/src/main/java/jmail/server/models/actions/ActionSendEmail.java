@@ -44,19 +44,19 @@ public class ActionSendEmail implements ActionCommand {
 
         // Lock user folder that send email
         var handler = LockHandler.getInstance();
-        var userLock = handler.getWriteLock(userEmail);
+        var senderLock = handler.getWriteLock(userEmail);
 
         var sent = SystemIOHelper.getUserSent(userEmail);
-        Path sentPath;
+        Path sentEmailPath;
         var fileName = email.fileID();
 
         try {
-            userLock.lock();
+            senderLock.lock();
             var jsonEmail = JsonHelper.toJson(email);
             SystemIOHelper.writeJSONFile(sent, fileName, jsonEmail);
-            sentPath = SystemIOHelper.getSentEmailPath(userEmail, fileName);
+            sentEmailPath = SystemIOHelper.getSentEmailPath(userEmail, fileName); // Get path to email file sent, used above to copy to inbox
         } catch (IOException e) {
-            userLock.unlock();
+            senderLock.unlock();
             handler.removeLock(userEmail);
             throw new ActionExecutionException(e, "Cannot send email: internal error");
         }
@@ -66,7 +66,7 @@ public class ActionSendEmail implements ActionCommand {
             var receiverLock = handler.getWriteLock(receiver);
             try {
                 receiverLock.lock();
-                SystemIOHelper.copyFile(sentPath, SystemIOHelper.getInboxEmailPath(receiver, fileName));
+                SystemIOHelper.copyFile(sentEmailPath, SystemIOHelper.getInboxEmailPath(receiver, fileName));
             } catch (IOException e) {
                 throw new ActionExecutionException(e, "Cannot send email: internal error");
             } finally {
@@ -76,7 +76,7 @@ public class ActionSendEmail implements ActionCommand {
         }
 
         // Release lock if no errors occured
-        userLock.unlock();
+        senderLock.unlock();
         handler.removeLock(userEmail);
     }
 }

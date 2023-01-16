@@ -93,15 +93,18 @@ public class FXMLMainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        codeArea.richChanges()
+      // Colora il messaggio arrivato dal log  
+      codeArea.richChanges()
                 .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
                 .subscribe(change -> codeArea.setStyleSpans(0, computeHighlighting(codeArea.getText())));
 
+        // Aggiunge il messaggio al log
         ObservableStreamAppender.getObservable()
                 .addListener((observable, oldValue, newValue) ->
                         Platform.runLater(() -> codeArea.appendText(newValue + '\n')));
     }
 
+    // Formatta il colore 
     private StyleSpans<Collection<String>> computeHighlighting(String text) {
         Matcher matcher = PATTERN.matcher(text);
         int lastKwEnd = 0;
