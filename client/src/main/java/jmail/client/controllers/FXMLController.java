@@ -159,6 +159,7 @@ public class FXMLController {
                         ServerResponse.class);
     }
 
+
     public void deleteEmail(String emailID, String folder, Boolean hardDelete) {
         var params = new CommandDeleteEmailParameter(emailID, folder, hardDelete);
         var command = new CommandDeleteEmail(params);
@@ -270,6 +271,5 @@ public class FXMLController {
 
     private void showError(String title, String content) {
         Platform.runLater(() -> new CustomDialog(Main.primaryStage, "error", title, content).showAndWait());
-        // new CustomDialog(Main.primaryStage, "error", title, content).showAndWait();
     }
 }
