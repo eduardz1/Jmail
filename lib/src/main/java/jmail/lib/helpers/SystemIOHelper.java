@@ -3,29 +3,29 @@ package jmail.lib.helpers;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import jmail.lib.constants.Folders;
 import jmail.lib.models.User;
 
 public class SystemIOHelper {
 
-    private static final String emailpath = "email";
     private static final String userpath = "users";
 
     public static void createBaseFoldersIfNotExists() throws IOException {
         Files.createDirectories(Paths.get(userpath));
-        Files.createDirectories(Paths.get(emailpath));
     }
 
     public static void createUserFolderIfNotExists(String userEmail) throws IOException {
         Path user = getUserDirectory(userEmail);
         Files.createDirectories(user);
 
-        Files.createDirectories(Paths.get(user + "/" + "sent"));
-        Files.createDirectories(Paths.get(user + "/" + "inbox"));
-        Files.createDirectories(Paths.get(user + "/" + "deleted"));
+        Files.createDirectories(Paths.get(user + "/" + Folders.SENT));
+        Files.createDirectories(Paths.get(user + "/" + Folders.INBOX));
+        Files.createDirectories(Paths.get(user + "/" + Folders.TRASH));
     }
 
     public static Path getUserDirectory(String userEmail) {
@@ -34,15 +34,15 @@ public class SystemIOHelper {
     }
 
     public static Path getUserTrash(String userEmail) {
-        return getUserSpecificPath(userEmail, "deleted");
+        return getUserSpecificPath(userEmail, Folders.TRASH);
     }
 
     public static Path getUserSent(String userEmail) {
-        return getUserSpecificPath(userEmail, "sent");
+        return getUserSpecificPath(userEmail, Folders.SENT);
     }
 
     public static Path getUserInbox(String userEmail) {
-        return getUserSpecificPath(userEmail, "inbox");
+        return getUserSpecificPath(userEmail, Folders.INBOX);
     }
 
     private static Path getUserSpecificPath(String userEmail, String folder) {
@@ -58,9 +58,6 @@ public class SystemIOHelper {
     public static String readJSONFile(Path path) throws IOException {
         return Files.readString(path);
     }
-
-    // FIXME: non penso che dovremmo tenere due funzioni che come unica cosa
-    // mascherano la option utilizzata che tra l'altro può avere solo due valori
 
     public static void deleteFile(Path path) throws IOException {
         Files.delete(path);
@@ -105,9 +102,12 @@ public class SystemIOHelper {
             var json = readJSONFile(getUserDirectory(email).resolve("user.json"));
             user = JsonHelper.fromJson(json, User.class);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return user;
+    }
+
+    public static URL getResource(String path) {
+        return SystemIOHelper.class.getClassLoader().getResource(path);
     }
 }

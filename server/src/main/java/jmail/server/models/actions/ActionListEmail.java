@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import jmail.lib.constants.Folders;
 import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.handlers.LockHandler;
 import jmail.lib.helpers.JsonHelper;
@@ -43,9 +44,9 @@ public class ActionListEmail implements ActionCommand {
 
         var path =
                 switch (folder) {
-                    case "inbox" -> SystemIOHelper.getUserInbox(userEmail);
-                    case "sent" -> SystemIOHelper.getUserSent(userEmail);
-                    case "trash" -> SystemIOHelper.getUserTrash(userEmail);
+                    case Folders.INBOX -> SystemIOHelper.getUserInbox(userEmail);
+                    case Folders.SENT -> SystemIOHelper.getUserSent(userEmail);
+                    case Folders.TRASH -> SystemIOHelper.getUserTrash(userEmail);
                     default -> throw new ActionExecutionException("Invalid folder");
                 };
 

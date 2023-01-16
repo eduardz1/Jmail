@@ -3,15 +3,16 @@ package jmail.client;
 import io.github.mimoguz.custom_window.DwmAttribute;
 import io.github.mimoguz.custom_window.StageOps;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import jmail.client.models.client.MailClient;
@@ -22,7 +23,7 @@ import jmail.lib.models.commands.CommandPing;
 
 public class Main extends Application {
 
-    private static Stage primaryStage;
+    public static Stage primaryStage;
     private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     public static void main(String[] args) {
@@ -34,18 +35,20 @@ public class Main extends Application {
             try {
                 changeSceneImpl(fxml);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         });
+    }
+
+    public static URL getResource(String resource) {
+        return Main.class.getResource(resource);
     }
 
     private static void changeSceneImpl(String fxml) throws IOException {
         Parent pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxml)));
         primaryStage.getScene().setRoot(pane);
         primaryStage.sizeToScene();
-        primaryStage.setResizable(true); // FIXME: setting has no effect, I'm missing something don't know what, maybe
-        // primaryStage needs to be unshown and shown again
+        primaryStage.setResizable(true);
     }
 
     @Override
@@ -57,6 +60,7 @@ public class Main extends Application {
         Parent root = loader.load();
 
         Scene scene = new Scene(root);
+        addCss(scene);
 
         primaryStage.setTitle("JMAIL");
         primaryStage.getIcons().add(new Image("icon.png"));
@@ -79,20 +83,13 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public static void showNotConnectServerErrorDialog() {
-        // FIXME: Orribile, da correggere con un dialog
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText("Server not available");
-        alert.setContentText("Server is currently not available. Please try again later.");
-        alert.showAndWait();
-    }
-
     public void startCheckThread() {
-        //        scheduler.scheduleAtFixedRate(Main::sendPingForConnectionCheck, 0, 15, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(Main::sendPingForConnectionCheck, 0, 15, TimeUnit.SECONDS);
     }
 
     public static void sendPingForConnectionCheck() {
+        // La gestione dell'aggiornamento dello stato della connessione è dentro il
+        // mailclient
         var pingCmd = new CommandPing();
         MailClient.getInstance()
                 .sendCommand(
@@ -105,5 +102,12 @@ public class Main extends Application {
                             }
                         },
                         ServerResponse.class);
+    }
+
+    private void addCss(Scene scene) {
+        scene.getStylesheets()
+                .add(SystemIOHelper.getResource("styles/style.css").toExternalForm());
+        scene.getStylesheets()
+                .add(SystemIOHelper.getResource("styles/dark-mode.css").toExternalForm());
     }
 }

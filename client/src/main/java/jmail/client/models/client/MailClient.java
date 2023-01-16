@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javafx.application.Platform;
@@ -16,7 +17,7 @@ import jmail.lib.models.ServerResponse;
 import jmail.lib.models.commands.Command;
 
 public class MailClient {
-    //  private final ThreadPoolExecutor threadPool;
+    // private final ThreadPoolExecutor threadPool;
     private final ExecutorService threadPool;
     static final MailClient instance = new MailClient();
 
@@ -27,11 +28,6 @@ public class MailClient {
      */
     protected MailClient() {
         threadPool = Executors.newFixedThreadPool(10);
-        // FIXME: Utilizzare un custom executor ci sta portando problemi, i thread non vengono chiusi
-        // e i messaggi non vengono più inviati
-
-        //    threadPool = new ThreadPoolExecutor(10, 10, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
-        //    threadPool.allowCoreThreadTimeOut(true);
     }
 
     public Socket connect(String address, int port) {
@@ -74,16 +70,10 @@ public class MailClient {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                     PrintWriter writer = new PrintWriter(connection.getOutputStream(), true)) {
 
+                connection.setSoTimeout(3000);
+
                 // Send command
                 writer.println(JsonHelper.toJson(cmd));
-
-                /*
-                 * Wait for response
-                 */
-
-                // Set a timeout for 5seconds
-                // FIXME: Non funziona, il thread non viene chiuso, va in errore il pianeta e mi sminchia tutto in debug
-                // connection.setSoTimeout(5000);
 
                 // Read response
                 String response = reader.readLine();
@@ -91,6 +81,8 @@ public class MailClient {
                 Platform.runLater(() -> responseFunc.run(resp));
             } catch (JsonProcessingException e) {
                 errorMessages = "Error while parsing response";
+            } catch (SocketTimeoutException e) {
+                errorMessages = "Timeout";
             } catch (IOException e) {
                 errorMessages = "Error while reading response";
             } catch (Exception e) {

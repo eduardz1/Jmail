@@ -46,6 +46,8 @@ public class ClientHandler implements Runnable {
                 var userEmail = cmd.getUserEmail();
                 if (SystemIOHelper.userExists(userEmail)) {
                     SystemIOHelper.createUserFolderIfNotExists(userEmail);
+                } else {
+                    throw new NotAuthorizedException("User not found");
                 }
             }
 
@@ -60,6 +62,7 @@ public class ClientHandler implements Runnable {
             sendResponse(ServerResponseStatuses.ERROR, e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
+            sendResponse(ServerResponseStatuses.ERROR, e.getMessage());
         }
     }
 

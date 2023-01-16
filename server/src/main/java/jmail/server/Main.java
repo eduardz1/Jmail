@@ -12,13 +12,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import jmail.server.controllers.FXMLMainController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jmail.lib.helpers.SystemIOHelper;
 
 public class Main extends Application {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class.getName());
 
     public static void main(String... args) throws IOException {
 
@@ -36,8 +32,8 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("server.fxml"));
         Parent root = loader.load();
 
-        FXMLMainController mainController = loader.getController();
         Scene newScene = new Scene(root);
+        addCss(newScene);
 
         primaryStage.setScene(newScene);
 
@@ -56,4 +52,11 @@ public class Main extends Application {
 
     @Override
     public void stop() {}
+
+    private void addCss(Scene scene) {
+        scene.getStylesheets()
+                .add(SystemIOHelper.getResource("styles/style.css").toExternalForm());
+        scene.getStylesheets()
+                .add(SystemIOHelper.getResource("styles/dark-mode.css").toExternalForm());
+    }
 }

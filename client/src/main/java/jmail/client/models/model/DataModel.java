@@ -3,23 +3,29 @@ package jmail.client.models.model;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableLongValue;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.beans.value.ObservableStringValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import jmail.lib.constants.*;
 import jmail.lib.models.Email;
 import jmail.lib.models.User;
+import me.xdrop.fuzzywuzzy.FuzzySearch;
+import me.xdrop.fuzzywuzzy.model.BoundExtractedResult;
 
 public class DataModel {
 
     private static final DataModel instance = new DataModel();
     private final ObjectProperty<User> currentUser;
-    private final SimpleStringProperty currentFolder; // TODO: Enum: inbox, sent, trash
+    private final SimpleStringProperty currentFolder;
     private final ObservableList<Email> inbox;
     private final ObservableList<Email> sent;
     private final ObservableList<Email> trash;
@@ -27,8 +33,11 @@ public class DataModel {
     private final ObservableList<Email> currentFilteredEmails; // Used for filtering emails to show bby search
     private final ObjectProperty<Email> currentEmail;
 
-    // TODO: Preferiti, bozze, etichette
     private final SimpleBooleanProperty serverStatusConnected;
+    private final SimpleBooleanProperty editingMode;
+    private final SimpleLongProperty newEmailCount;
+
+    private final SimpleStringProperty searchFilter;
 
     private DataModel() {
         currentUser = new SimpleObjectProperty<>();
@@ -41,6 +50,10 @@ public class DataModel {
 
         currentEmail = new SimpleObjectProperty<>();
         serverStatusConnected = new SimpleBooleanProperty();
+        editingMode = new SimpleBooleanProperty();
+        newEmailCount = new SimpleLongProperty();
+
+        searchFilter = new SimpleStringProperty();
     }
 
     public static DataModel getInstance() {
@@ -122,9 +135,9 @@ public class DataModel {
 
     public void removeCurrentEmail() {
         switch (currentFolder.get()) {
-            case "inbox" -> inbox.remove(currentEmail.get());
-            case "sent" -> sent.remove(currentEmail.get());
-            case "trash" -> trash.remove(currentEmail.get());
+            case Folders.INBOX -> inbox.remove(currentEmail.get());
+            case Folders.SENT -> sent.remove(currentEmail.get());
+            case Folders.TRASH -> trash.remove(currentEmail.get());
         }
         syncFilteredEmails();
         currentEmail.set(null);
@@ -137,7 +150,7 @@ public class DataModel {
         }
 
         // Make sure the email in sent/trash folder are marked as read
-        if (folder.equals("sent") || folder.equals("trash")) {
+        if (folder.equals(Folders.SENT) || folder.equals(Folders.TRASH)) {
             for (Email email : emails) {
                 email.setRead(true);
             }
@@ -145,26 +158,92 @@ public class DataModel {
 
         // append array to start of list
         switch (folder) {
-            case "inbox" -> inbox.addAll(0, Arrays.asList(emails));
-            case "sent" -> sent.addAll(0, Arrays.asList(emails));
-            case "trash" -> trash.addAll(0, Arrays.asList(emails));
+            case Folders.INBOX -> inbox.addAll(0, Arrays.asList(emails));
+            case Folders.SENT -> sent.addAll(0, Arrays.asList(emails));
+            case Folders.TRASH -> trash.addAll(0, Arrays.asList(emails));
         }
 
         if (folder.equalsIgnoreCase(getCurrentFolder())) {
             syncFilteredEmails();
-        }
+        } else syncNewEmailCount();
     }
 
     public void syncFilteredEmails() {
-        // TODO: implement search filter logic
-        switch (currentFolder.get()) {
-            case "inbox" -> currentFilteredEmails.setAll(inbox);
-            case "sent" -> currentFilteredEmails.setAll(sent);
-            case "trash" -> currentFilteredEmails.setAll(trash);
+        var emails =
+                switch (currentFolder.get()) {
+                    case Folders.INBOX -> inbox;
+                    case Folders.SENT -> sent;
+                    case Folders.TRASH -> trash;
+                    default -> throw new IllegalStateException("Unexpected value: " + currentFolder.get());
+                };
+
+        if (searchFilter.get() == null || searchFilter.get().isEmpty()) {
+            currentFilteredEmails.setAll(emails);
+        } else {
+            var filter = searchFilter.get().toLowerCase();
+
+            // Search by subject or body or sender
+            // var filteredEmails = emails.stream()
+            //         .filter(email -> email.getSubject().toLowerCase().contains(filter)
+            //                 || email.getBody().toLowerCase().contains(filter)
+            //                 || email.getSender().toLowerCase().contains(filter))
+            //         .sorted(Comparator.comparing(Email::getDate).reversed())
+            //         .collect(Collectors.toList());
+            // TODO: Non capisco come funziona questa libreria, non ordina le cose correttamente e mette sempre il limit
+            // dei risultati, mettendo al top le ricerche più coerenti
+            // Ma non sono sicuro che sia cosi
+            var filteredResult = FuzzySearch.extractTop(
+                    filter, emails, email -> email.getSubject() + " " + email.getSender() + " " + email.getBody(), 5);
+            var filteredEmails = filteredResult.stream()
+                    .map(BoundExtractedResult::getReferent)
+                    .collect(Collectors.toList());
+            currentFilteredEmails.setAll(filteredEmails);
         }
+        syncNewEmailCount();
+    }
+
+    public void syncNewEmailCount() {
+        setNewEmailCount(inbox.stream().filter(email -> !email.getRead()).count());
     }
 
     public void setFilteredEmails(List<Email> collect) {
         currentFilteredEmails.setAll(collect);
+    }
+
+    public boolean isEditingMode() {
+        return editingMode.get();
+    }
+
+    public ObservableBooleanValue isEditingModeProperty() {
+        return editingMode;
+    }
+
+    public void setEditingMode(boolean editingMode) {
+        this.editingMode.set(editingMode);
+    }
+
+    public long getNewEmailCount() {
+        return newEmailCount.get();
+    }
+
+    public ObservableLongValue getNewEmailCountProperty() {
+        return newEmailCount;
+    }
+
+    public void setNewEmailCount(Long newEmailCount) {
+        this.newEmailCount.set(newEmailCount);
+    }
+
+    public String getSearchFilter() {
+        return searchFilter.get();
+    }
+
+    public ObservableStringValue getSearchFilterProperty() {
+        return searchFilter;
+    }
+
+    public void setSearchFilter(String searchFilter) {
+        this.searchFilter.set(searchFilter);
+        syncFilteredEmails();
     }
 }
