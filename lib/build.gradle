@@ -59,6 +59,7 @@ spotless {
 
     format 'css', {
         target 'src/**/*.css'
+        toggleOffOn()
         prettier()
     }
 
