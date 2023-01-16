@@ -23,84 +23,90 @@ import jmail.lib.models.commands.CommandPing;
 
 public class Main extends Application {
 
-  public static Stage primaryStage;
-  private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    public static Stage primaryStage;
+    private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
-  public static void main(String[] args) {
-    launch(args);
-  }
+    public static void main(String[] args) {
+        launch(args);
+    }
 
-  public static void changeScene(String fxml) {
-    Platform.runLater(() -> {
-      try {
-        changeSceneImpl(fxml);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    });
-  }
+    public static void changeScene(String fxml) {
+        Platform.runLater(() -> {
+            try {
+                changeSceneImpl(fxml);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
-  public static URL getResource(String resource) {
-    return Main.class.getResource(resource);
-  }
+    public static URL getResource(String resource) {
+        return Main.class.getResource(resource);
+    }
 
-  private static void changeSceneImpl(String fxml) throws IOException {
-    Parent pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxml)));
-    primaryStage.getScene().setRoot(pane);
-    primaryStage.sizeToScene();
-  }
+    private static void changeSceneImpl(String fxml) throws IOException {
+        Parent pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxml)));
+        primaryStage.getScene().setRoot(pane);
+        primaryStage.sizeToScene();
+    }
 
-  @Override
-  public void start(Stage primaryStage) throws Exception {
-    Main.primaryStage = primaryStage;
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Main.primaryStage = primaryStage;
 
-    FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
 
-    Parent root = loader.load();
+        Parent root = loader.load();
 
-    Scene scene = new Scene(root);
-    addCss(scene);
+        Scene scene = new Scene(root);
+        addCss(scene);
 
-    primaryStage.setTitle("JMAIL");
-    primaryStage.getIcons().add(new Image("icon.png"));
-    primaryStage.setScene(scene);
+        primaryStage.setTitle("JMAIL");
+        primaryStage.getIcons().add(new Image("icon.png"));
+        primaryStage.setScene(scene);
 
-    Platform.runLater(() -> {
-      final var handle = StageOps.findWindowHandle(primaryStage);
-      // Forces Dark Mode on Windows11
-      StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
-      startCheckThread();
+        Platform.runLater(() -> {
+            final var handle = StageOps.findWindowHandle(primaryStage);
+            // Forces Dark Mode on Windows11
+            StageOps.dwmSetBooleanValue(handle, DwmAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, true);
+            startCheckThread();
 
-      try {
-        SystemIOHelper.createBaseFoldersIfNotExists();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    });
+            try {
+                SystemIOHelper.createBaseFoldersIfNotExists();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
-    // primaryStage.setResizable(false);
-    primaryStage.show();
-  }
+        // primaryStage.setResizable(false);
+        primaryStage.show();
+    }
 
-  public void startCheckThread() {
-    scheduler.scheduleAtFixedRate(Main::sendPingForConnectionCheck, 0, 15, TimeUnit.SECONDS);
-  }
+    public void startCheckThread() {
+        scheduler.scheduleAtFixedRate(Main::sendPingForConnectionCheck, 0, 15, TimeUnit.SECONDS);
+    }
 
-  public static void sendPingForConnectionCheck() {
-    // La gestione dell'aggiornamento dello stato della connessione è dentro il
-    // mailclient
-    var pingCmd = new CommandPing();
-    MailClient.getInstance().sendCommand(pingCmd, response -> {
-      if (response.getStatus().equals(ServerResponseStatuses.OK)) {
-        System.out.println("Server is connected");
-      } else {
-        System.out.println("Server is not connected");
-      }
-    }, ServerResponse.class);
-  }
+    public static void sendPingForConnectionCheck() {
+        // La gestione dell'aggiornamento dello stato della connessione è dentro il
+        // mailclient
+        var pingCmd = new CommandPing();
+        MailClient.getInstance()
+                .sendCommand(
+                        pingCmd,
+                        response -> {
+                            if (response.getStatus().equals(ServerResponseStatuses.OK)) {
+                                System.out.println("Server is connected");
+                            } else {
+                                System.out.println("Server is not connected");
+                            }
+                        },
+                        ServerResponse.class);
+    }
 
-  private void addCss(Scene scene) {
-    scene.getStylesheets().add(SystemIOHelper.getResource("styles/style.css").toExternalForm());
-    scene.getStylesheets().add(SystemIOHelper.getResource("styles/dark-mode.css").toExternalForm());
-  }
+    private void addCss(Scene scene) {
+        scene.getStylesheets()
+                .add(SystemIOHelper.getResource("styles/style.css").toExternalForm());
+        scene.getStylesheets()
+                .add(SystemIOHelper.getResource("styles/dark-mode.css").toExternalForm());
+    }
 }

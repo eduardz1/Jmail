@@ -93,8 +93,8 @@ public class FXMLMainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-      // Colora il messaggio arrivato dal log  
-      codeArea.richChanges()
+        // Colora il messaggio arrivato dal log
+        codeArea.richChanges()
                 .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
                 .subscribe(change -> codeArea.setStyleSpans(0, computeHighlighting(codeArea.getText())));
 
@@ -104,7 +104,7 @@ public class FXMLMainController implements Initializable {
                         Platform.runLater(() -> codeArea.appendText(newValue + '\n')));
     }
 
-    // Formatta il colore 
+    // Formatta il colore
     private StyleSpans<Collection<String>> computeHighlighting(String text) {
         Matcher matcher = PATTERN.matcher(text);
         int lastKwEnd = 0;

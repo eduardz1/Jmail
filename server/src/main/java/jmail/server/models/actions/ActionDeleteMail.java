@@ -46,7 +46,7 @@ public class ActionDeleteMail implements ActionCommand {
         } catch (IOException e) {
             throw new ActionExecutionException(e, "Cannot delete email: internal error");
         } finally {
-          if (locked) lock.unlock();
+            if (locked) lock.unlock();
             handler.removeLock(userEmail);
         }
     }

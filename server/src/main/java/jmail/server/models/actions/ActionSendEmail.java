@@ -54,7 +54,8 @@ public class ActionSendEmail implements ActionCommand {
             senderLock.lock();
             var jsonEmail = JsonHelper.toJson(email);
             SystemIOHelper.writeJSONFile(sent, fileName, jsonEmail);
-            sentEmailPath = SystemIOHelper.getSentEmailPath(userEmail, fileName); // Get path to email file sent, used above to copy to inbox
+            sentEmailPath = SystemIOHelper.getSentEmailPath(
+                    userEmail, fileName); // Get path to email file sent, used above to copy to inbox
         } catch (IOException e) {
             senderLock.unlock();
             handler.removeLock(userEmail);
