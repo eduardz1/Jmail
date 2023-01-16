@@ -51,6 +51,7 @@
   -fx-min-height: 25;
   min-height: 25;
   -fx-pref-height: 25;
+  -fx-prompt-text-field: #252525
 }
 
 .text-field:hover {
@@ -882,12 +883,7 @@
   -fx-effect: null;
 }
 
-.auto-complete-popup
-  .list-view
-  .virtual-flow
-  .clipped-container
-  .sheet
-  .list-cell {
+.auto-complete-popup .list-view .virtual-flow .clipped-container .sheet .list-cell {
   -fx-background-radius: 0;
   -fx-border-radius: 0;
   border-radius: 0;

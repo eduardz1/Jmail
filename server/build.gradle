@@ -65,6 +65,7 @@ spotless {
     format 'css', {
         target 'src/**/*.css'
         prettier()
+        spotlessOffOn()
     }
 
     format 'xml', {
