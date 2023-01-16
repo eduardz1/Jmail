@@ -2,7 +2,6 @@ package jmail.client.controllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.UUID;
 import javafx.application.Platform;
@@ -22,7 +21,6 @@ import jmail.lib.models.Email;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 public class FXMLFolderController extends AnchorPane {
-
 
     @FXML public AnchorPane root;
 
@@ -119,7 +117,12 @@ public class FXMLFolderController extends AnchorPane {
         // var n = new Email(
         //         UUID.randomUUID().toString(),
         //         "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
-        //         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        //         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+        // industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
+        // scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
+        // electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of
+        // Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like
+        // Aldus PageMaker including versions of Lorem Ipsum.",
         //         DataModel.getInstance().getCurrentUser().getEmail(),
         //         Arrays.asList("emmedeveloper@gmail.com"),
         //         Calendar.getInstance().getTime(),
@@ -128,13 +131,13 @@ public class FXMLFolderController extends AnchorPane {
 
         DataModel.getInstance().setEditingMode(true);
         var newEmail = new Email(
-            UUID.randomUUID().toString(),
-            "",
-            "",
-            DataModel.getInstance().getCurrentUser().getEmail(),
-            new ArrayList<>(),
-            Calendar.getInstance().getTime(),
-            false);
+                UUID.randomUUID().toString(),
+                "",
+                "",
+                DataModel.getInstance().getCurrentUser().getEmail(),
+                new ArrayList<>(),
+                Calendar.getInstance().getTime(),
+                false);
 
         DataModel.getInstance().setCurrentEmail(newEmail);
         // LOGGER.info("NewMailButton: {}", newEmail);

@@ -3,7 +3,6 @@ package jmail.client.controllers;
 import com.google.common.hash.Hashing;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -21,10 +20,8 @@ import jmail.lib.constants.ServerResponseStatuses;
 import jmail.lib.helpers.SystemIOHelper;
 import jmail.lib.models.commands.CommandLogin;
 import org.kordamp.ikonli.javafx.FontIcon;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class FXMLLogin {
 

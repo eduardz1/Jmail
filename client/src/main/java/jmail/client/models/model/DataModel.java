@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -54,7 +53,6 @@ public class DataModel {
         newEmailCount = new SimpleLongProperty();
 
         searchFilter = new SimpleStringProperty();
-
     }
 
     public static DataModel getInstance() {

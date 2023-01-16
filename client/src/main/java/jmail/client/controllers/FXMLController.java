@@ -159,7 +159,6 @@ public class FXMLController {
                         ServerResponse.class);
     }
 
-
     public void deleteEmail(String emailID, String folder, Boolean hardDelete) {
         var params = new CommandDeleteEmailParameter(emailID, folder, hardDelete);
         var command = new CommandDeleteEmail(params);
