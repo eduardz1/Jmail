@@ -32,7 +32,7 @@ public class ActionListEmail implements ActionCommand {
         var userEmail = command.getUserEmail();
 
         if (userEmail == null || userEmail.isEmpty()) {
-            throw new ActionExecutionException("Cannot send mail: user invalid");
+            throw new ActionExecutionException("User invalid");
         }
 
         // If shouldCheckUnixTime is false means that user needs to load all emails
@@ -63,7 +63,7 @@ public class ActionListEmail implements ActionCommand {
                 } catch (IOException e) {
                     userLock.unlock();
                     handler.removeLock(userEmail); // Release lock before throwing exception
-                    throw new ActionExecutionException(e, "Cannot get emails: internal error");
+                    throw new ActionExecutionException(e, "Internal error");
                 }
             }
         }

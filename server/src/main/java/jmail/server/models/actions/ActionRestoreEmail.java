@@ -22,7 +22,7 @@ public class ActionRestoreEmail implements ActionCommand {
         var emailID = params.emailID();
 
         if (userEmail == null || userEmail.isEmpty()) {
-            throw new ActionExecutionException("Cannot restore mail: user invalid");
+            throw new ActionExecutionException("User invalid");
         }
 
         var handler = LockHandler.getInstance();
@@ -33,7 +33,7 @@ public class ActionRestoreEmail implements ActionCommand {
                     SystemIOHelper.getDeletedEmailPath(userEmail, emailID),
                     SystemIOHelper.getInboxEmailPath(userEmail, emailID));
         } catch (IOException e) {
-            throw new ActionExecutionException(e, "Cannot restore email: internal error");
+            throw new ActionExecutionException(e, "Internal error");
         } finally {
             lock.unlock();
             handler.removeLock(userEmail);
