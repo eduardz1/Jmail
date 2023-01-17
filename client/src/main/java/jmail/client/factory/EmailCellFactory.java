@@ -8,7 +8,7 @@ import jmail.lib.models.Email;
 
 public class EmailCellFactory implements Callback<ListView<Email>, ListCell<Email>> {
 
-    private ListView<Email> parent;
+    private final ListView<Email> parent;
 
     public EmailCellFactory(ListView<Email> listEmails) {
         parent = listEmails;

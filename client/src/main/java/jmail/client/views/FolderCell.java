@@ -51,7 +51,6 @@ public class FolderCell extends ListCell<String> {
     }
 
     private void initListeners() {
-
         itemProperty().addListener((obs, oldValue, newValue) -> {
 
             // Empty cell

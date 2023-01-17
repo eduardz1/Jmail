@@ -84,13 +84,6 @@ public class SystemIOHelper {
         return Path.of(getUserSent(userEmail) + "/" + emailID);
     }
 
-    // TODO: take a look at this method later
-    //    public static Boolean userExists(String userEmail) {
-    //        Path user = Paths.get(emailpath);
-    //        File f = new File(Paths.get(String.format("%s\\%s.dat", user, userEmail)).toUri());
-    //        return f.exists() && !f.isDirectory();
-    //    }
-
     public static Boolean userExists(String userEmail) {
         File f = new File(getUserDirectory(userEmail).toUri());
         return f.exists() && f.isDirectory();

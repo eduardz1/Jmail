@@ -35,13 +35,6 @@ public class FXMLLogin {
 
     @FXML private Label connectionLabel;
 
-    public FXMLLogin() {
-        // String css = Main.getResource("style.css").toExternalForm();
-        // var scene = Main.primaryStage.getScene();
-        // scene.getStylesheets().clear();
-        // scene.getStylesheets().add(css);
-    }
-
     public void initialize() {
         var fontIcon = new FontIcon("mdi2w-web-box");
         fontIcon.setIconColor(Paint.valueOf(ColorPalette.GREEN.getHexValue()));
@@ -62,7 +55,6 @@ public class FXMLLogin {
 
     @FXML public void buttonLogin(javafx.event.ActionEvent e) {
         login(UsernameField.getText(), PasswordField.getText());
-        // login("emmedeveloper@gmail.com", "emme"); // TODO: Remove this
     }
 
     public void login(String username, String password) {
