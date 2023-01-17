@@ -1,14 +1,12 @@
 package jmail.server;
 
+import com.google.common.hash.Hashing;
 import io.github.mimoguz.custom_window.DwmAttribute;
 import io.github.mimoguz.custom_window.StageOps;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Properties;
-
-import com.google.common.hash.Hashing;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -67,7 +65,7 @@ public class Main extends Application {
     }
 
     public static void createUserForTest() {
-      var edu1 = new User();
+        var edu1 = new User();
         edu1.setEmail("occhipinti.eduard@gmail.com");
         edu1.setName("Eduard");
         edu1.setSurname("Occhipinti");
@@ -110,12 +108,12 @@ public class Main extends Application {
     }
 
     private static void save(User user) {
-      try {
-          SystemIOHelper.createUserFolderIfNotExists(user.getEmail());
-          SystemIOHelper.writeJSONFile(
-                  SystemIOHelper.getUserDirectory(user.getEmail()), "user.json", JsonHelper.toJson(user));
-      } catch (IOException e) {
-          e.printStackTrace();
-      }
-  }
+        try {
+            SystemIOHelper.createUserFolderIfNotExists(user.getEmail());
+            SystemIOHelper.writeJSONFile(
+                    SystemIOHelper.getUserDirectory(user.getEmail()), "user.json", JsonHelper.toJson(user));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
