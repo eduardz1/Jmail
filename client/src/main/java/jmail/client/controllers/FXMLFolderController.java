@@ -92,9 +92,11 @@ public class FXMLFolderController extends AnchorPane {
                 .bind(DataModel.getInstance().getCurrentUserProperty().map(u -> u == null ? "" : u.getEmail()));
 
         // Update currentFolder model based on selected item
-        listFolder.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            DataModel.getInstance().setCurrentFolder(newValue.toLowerCase());
-        });
+        listFolder
+                .getSelectionModel()
+                .selectedItemProperty()
+                .addListener((observable, oldValue, newValue) ->
+                        DataModel.getInstance().setCurrentFolder(newValue.toLowerCase()));
 
         // Update connection status
         DataModel.getInstance()

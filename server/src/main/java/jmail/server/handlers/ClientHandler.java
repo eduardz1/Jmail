@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 public class ClientHandler implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientHandler.class.getName());
     private final Socket internalSocket;
-    private BufferedReader reader;
     private PrintWriter writer;
 
     public ClientHandler(Socket clientSocket) {
@@ -29,7 +28,7 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         try {
-            reader = new BufferedReader(new InputStreamReader(internalSocket.getInputStream()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(internalSocket.getInputStream()));
             writer = new PrintWriter(internalSocket.getOutputStream(), true);
             String request = reader.readLine();
             LOGGER.info("Message received from client: " + request);

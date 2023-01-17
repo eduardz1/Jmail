@@ -3,11 +3,7 @@ package jmail.client.controllers;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -109,7 +105,6 @@ public class FXMLEmailController extends AnchorPane {
     }
 
     private void initListeners() {
-
         DataModel.getInstance()
                 .getCurrentEmailProperty()
                 .addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
@@ -122,10 +117,7 @@ public class FXMLEmailController extends AnchorPane {
                     } else {
 
                         var recsText =
-                                switch (newValue.getRecipients().size()) {
-                                    case 0 -> "";
-                                    default -> String.join(";", newValue.getRecipients());
-                                };
+                                newValue.getRecipients().size() == 0 ? "" : String.join(";", newValue.getRecipients());
 
                         // Edit mode
                         subjectField.setText(newValue.getSubject());
@@ -139,27 +131,31 @@ public class FXMLEmailController extends AnchorPane {
                         toLabel.setText(recsText);
 
                         // Check if date is today and set the date format accordingly
-                        Calendar today = Calendar.getInstance();
-
-                        Calendar date = Calendar.getInstance();
-                        date.setTime(newValue.getDate());
-                        DateFormat df;
-                        if (date.get(Calendar.YEAR) == today.get(Calendar.YEAR)
-                                && date.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
-                            df = new SimpleDateFormat("HH:mm");
-                        } else {
-                            df = new SimpleDateFormat("dd MMM yy, HH:mm");
-                        }
-                        dateLabel.setText(df.format(newValue.getDate()));
+                        setDateFormat(newValue, dateLabel);
 
                         emailPane.setVisible(true);
                         logoPane.setVisible(false);
                     }
                 }));
 
-        DataModel.getInstance().isEditingModeProperty().addListener((observable, oldValue, isEditing) -> {
-            updateLayout(isEditing);
-        });
+        DataModel.getInstance()
+                .isEditingModeProperty()
+                .addListener((observable, oldValue, isEditing) -> updateLayout(isEditing));
+    }
+
+    public static void setDateFormat(Email newValue, Label dateLabel) {
+        Calendar today = Calendar.getInstance();
+
+        Calendar date = Calendar.getInstance();
+        date.setTime(newValue.getDate());
+        DateFormat df;
+        if (date.get(Calendar.YEAR) == today.get(Calendar.YEAR)
+                && date.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
+            df = new SimpleDateFormat("HH:mm");
+        } else {
+            df = new SimpleDateFormat("dd MMM yy, HH:mm");
+        }
+        dateLabel.setText(df.format(newValue.getDate()));
     }
 
     private void initView() {
@@ -176,7 +172,7 @@ public class FXMLEmailController extends AnchorPane {
 
         // Set the logo
         Platform.runLater(() -> {
-            Image image = new Image(getClass().getResourceAsStream("/logo-transaprent.png"));
+            Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/logo-transaprent.png")));
             var logo = new ImageView(image);
             logo.setImage(image);
             logo.fitHeightProperty().bind(logoPane.heightProperty().divide(2.5));
@@ -200,7 +196,6 @@ public class FXMLEmailController extends AnchorPane {
     }
 
     @FXML public void buttonReply(ActionEvent e) {
-
         DataModel.getInstance()
                 .getCurrentEmail()
                 .ifPresentOrElse(
@@ -208,7 +203,8 @@ public class FXMLEmailController extends AnchorPane {
                             DataModel.getInstance().setEditingMode(true);
 
                             var subject = "RE: " + email.getSubject();
-                            var body = email.getSender() + " wrote: " + email.getBody();
+                            var body = email.getSender() + " wrote: " + email.getBody()
+                                    + "\n----------------------------------------\n";
 
                             var newEmail = new Email(
                                     UUID.randomUUID().toString(),
@@ -226,7 +222,6 @@ public class FXMLEmailController extends AnchorPane {
     }
 
     @FXML public void buttonReplyAll(ActionEvent actionEvent) {
-
         DataModel.getInstance()
                 .getCurrentEmail()
                 .ifPresentOrElse(
@@ -237,7 +232,8 @@ public class FXMLEmailController extends AnchorPane {
                                     DataModel.getInstance().getCurrentUser().getEmail();
 
                             var subject = "RE: " + email.getSubject();
-                            var body = email.getSender() + " wrote: " + email.getBody();
+                            var body = email.getSender() + " wrote: " + email.getBody()
+                                    + "\n----------------------------------------\n";
                             var recipients = email.getRecipients().stream()
                                     .filter(recipient -> !recipient.equals(userEmail))
                                     .collect(Collectors.toList());
@@ -304,10 +300,10 @@ public class FXMLEmailController extends AnchorPane {
                                             .showAndWait()
                                             .ifPresent(response -> {
                                                 if (response.equals("yes")) {
-                                                    mainController.deleteEmail(email.fileID(), currFolder, hardDelete);
+                                                    mainController.deleteEmail(email.fileID(), currFolder, true);
                                                 }
                                             });
-                                } else mainController.deleteEmail(email.fileID(), currFolder, hardDelete);
+                                } else mainController.deleteEmail(email.fileID(), currFolder, false);
                             }
                         },
                         () -> LOGGER.info("TrashButton: no email selected"));

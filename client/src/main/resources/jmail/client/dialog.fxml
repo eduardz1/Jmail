@@ -18,8 +18,4 @@
                 wrapText="true" styleClass="f16" />
         </VBox>
     </content>
-
-    <!-- <buttonTypes> <ButtonType fx:id="noBtn" text="No" buttonData="CANCEL_CLOSE" 
-        /> <ButtonType fx:id="okBtn" text="Yes" buttonData="OK_DONE" /> </buttonTypes> -->
-
 </DialogPane>

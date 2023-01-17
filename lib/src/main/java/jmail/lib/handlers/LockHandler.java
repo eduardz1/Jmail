@@ -7,7 +7,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class LockHandler {
     private static final LockHandler instance = new LockHandler();
-    /** La chiave del lock è l'uuid del'utente TODO: Documentare */
+
+    /** Key is user's UUID */
     private final ConcurrentHashMap<String, CountableLock> lockMap;
 
     private LockHandler() {
@@ -15,15 +16,6 @@ public class LockHandler {
     }
 
     public static LockHandler getInstance() {
-        // https://errorprone.info/bugpattern/DoubleCheckedLocking
-        // https://www.infoworld.com/article/2075306/can-double-checked-locking-be-fixed-.html
-        //    if (instance == null) {
-        //      synchronized (LockHandler.class) {
-        //        if (instance == null) {
-        //          instance = new LockHandler();
-        //        }
-        //      }
-        //    }
         return instance;
     }
 

@@ -135,9 +135,9 @@ public class FXMLListEmailController extends AnchorPane {
         });
 
         // Quando viene modificato la cartella corrente, viene aggiornato il testo
-        DataModel.getInstance().getCurrentFolderProperty().addListener((observable, oldValue, newValue) -> {
-            currentFolder.textProperty().set(newValue.toUpperCase());
-        });
+        DataModel.getInstance().getCurrentFolderProperty().addListener((observable, oldValue, newValue) -> currentFolder
+                .textProperty()
+                .set(newValue.toUpperCase()));
     }
 
     public void initViews() {

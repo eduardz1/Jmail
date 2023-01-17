@@ -20,9 +20,6 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 public class CustomDialog extends Dialog<String> {
 
-    private ButtonType noBtn;
-    private ButtonType okBtn;
-
     @FXML private Label messageLabel;
 
     @FXML private Label icon;
@@ -41,38 +38,40 @@ public class CustomDialog extends Dialog<String> {
 
             FontIcon fontIcon = null;
             String color = "";
+            ButtonType okButton;
+            ButtonType noButton;
             switch (mode) {
                 case "error" -> {
                     fontIcon = new FontIcon("mdi2c-close-circle-outline");
                     fontIcon.setIconColor(Paint.valueOf(ColorPalette.RED.getHexValue()));
                     color = "#FF5555";
-                    okBtn = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-                    dialogPane.getButtonTypes().add(okBtn);
+                    okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+                    dialogPane.getButtonTypes().add(okButton);
                 }
                 case "info" -> {
                     fontIcon = new FontIcon("mdi2a-alert-circle-outline");
                     fontIcon.setIconColor(Paint.valueOf(ColorPalette.BLUE.getHexValue()));
                     color = "#1273DE";
-                    okBtn = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-                    dialogPane.getButtonTypes().add(okBtn);
+                    okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+                    dialogPane.getButtonTypes().add(okButton);
                 }
                 case "confirm" -> {
                     fontIcon = new FontIcon("mdi2c-check-circle-outline");
                     fontIcon.setIconColor(Paint.valueOf(ColorPalette.GREEN.getHexValue()));
                     color = "#39864F";
-                    noBtn = new ButtonType("Cancel");
-                    dialogPane.getButtonTypes().add(noBtn);
-                    okBtn = new ButtonType("Confirm");
-                    dialogPane.getButtonTypes().add(okBtn);
+                    noButton = new ButtonType("Cancel");
+                    dialogPane.getButtonTypes().add(noButton);
+                    okButton = new ButtonType("Confirm");
+                    dialogPane.getButtonTypes().add(okButton);
                 }
                 case "warning" -> {
                     fontIcon = new FontIcon("mdi2a-alert-circle-outline");
                     fontIcon.setIconColor(Paint.valueOf(ColorPalette.YELLOW.getHexValue()));
                     color = "#FFB86C";
-                    noBtn = new ButtonType("Cancel");
-                    dialogPane.getButtonTypes().add(noBtn);
-                    okBtn = new ButtonType("Confirm");
-                    dialogPane.getButtonTypes().add(okBtn);
+                    noButton = new ButtonType("Cancel");
+                    dialogPane.getButtonTypes().add(noButton);
+                    okButton = new ButtonType("Confirm");
+                    dialogPane.getButtonTypes().add(okButton);
                 }
             }
             icon.setGraphic(fontIcon);
@@ -91,9 +90,7 @@ public class CustomDialog extends Dialog<String> {
                 return "no";
             });
 
-            setOnShowing(dialogEvent -> Platform.runLater(() -> {
-                messageLabel.requestFocus();
-            }));
+            setOnShowing(dialogEvent -> Platform.runLater(() -> messageLabel.requestFocus()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

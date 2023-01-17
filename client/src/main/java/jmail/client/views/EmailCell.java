@@ -1,9 +1,6 @@
 package jmail.client.views;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
@@ -11,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.Region;
 import jmail.client.Main;
+import jmail.client.controllers.FXMLEmailController;
 import jmail.lib.models.Email;
 
 public class EmailCell extends ListCell<Email> {
@@ -63,18 +61,7 @@ public class EmailCell extends ListCell<Email> {
             fromLabel.setText(newValue.getSender());
             subjectLabel.setText(newValue.getSubject());
 
-            Calendar today = Calendar.getInstance();
-
-            Calendar date = Calendar.getInstance();
-            date.setTime(newValue.getDate());
-            DateFormat df;
-            if (date.get(Calendar.YEAR) == today.get(Calendar.YEAR)
-                    && date.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
-                df = new SimpleDateFormat("HH:mm");
-            } else {
-                df = new SimpleDateFormat("dd MMM yy, HH:mm");
-            }
-            dateLabel.setText(df.format(newValue.getDate()));
+            FXMLEmailController.setDateFormat(newValue, dateLabel);
 
             bodyLabel.setText(newValue.getBody());
             readMarker.setStyle("-fx-background-color:" + (newValue.getRead() ? "#00000000;" : "#009688FF;"));
