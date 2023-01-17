@@ -116,7 +116,8 @@ public class FXMLEmailController extends AnchorPane {
                         logoPane.setVisible(true);
                     } else {
 
-                        var recsText = newValue.getRecipients().size() == 0 ? "" : String.join(";", newValue.getRecipients());
+                        var recsText =
+                                newValue.getRecipients().size() == 0 ? "" : String.join(";", newValue.getRecipients());
 
                         // Edit mode
                         subjectField.setText(newValue.getSubject());
@@ -137,7 +138,9 @@ public class FXMLEmailController extends AnchorPane {
                     }
                 }));
 
-        DataModel.getInstance().isEditingModeProperty().addListener((observable, oldValue, isEditing) -> updateLayout(isEditing));
+        DataModel.getInstance()
+                .isEditingModeProperty()
+                .addListener((observable, oldValue, isEditing) -> updateLayout(isEditing));
     }
 
     public static void setDateFormat(Email newValue, Label dateLabel) {
@@ -200,7 +203,8 @@ public class FXMLEmailController extends AnchorPane {
                             DataModel.getInstance().setEditingMode(true);
 
                             var subject = "RE: " + email.getSubject();
-                            var body = email.getSender() + " wrote: " + email.getBody() + "\n----------------------------------------\n";
+                            var body = email.getSender() + " wrote: " + email.getBody()
+                                    + "\n----------------------------------------\n";
 
                             var newEmail = new Email(
                                     UUID.randomUUID().toString(),
@@ -228,7 +232,8 @@ public class FXMLEmailController extends AnchorPane {
                                     DataModel.getInstance().getCurrentUser().getEmail();
 
                             var subject = "RE: " + email.getSubject();
-                            var body = email.getSender() + " wrote: " + email.getBody() + "\n----------------------------------------\n";
+                            var body = email.getSender() + " wrote: " + email.getBody()
+                                    + "\n----------------------------------------\n";
                             var recipients = email.getRecipients().stream()
                                     .filter(recipient -> !recipient.equals(userEmail))
                                     .collect(Collectors.toList());
