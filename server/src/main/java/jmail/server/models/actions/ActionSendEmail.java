@@ -22,12 +22,11 @@ public class ActionSendEmail implements ActionCommand {
         var userEmail = command.getUserEmail();
 
         if (userEmail == null || userEmail.isEmpty()) {
-            throw new ActionExecutionException("Cannot send mail: user invalid");
+            throw new ActionExecutionException("User invalid");
         }
 
         // Check recipients and compose errorMessage, if some error will occure
         StringBuilder errorMessage = new StringBuilder();
-        errorMessage.append("Cannot send email: \n");
         var email = params.email();
 
         var areAllRecipientsValid = email.getRecipients().stream().allMatch(user -> {
@@ -59,7 +58,7 @@ public class ActionSendEmail implements ActionCommand {
         } catch (IOException e) {
             senderLock.unlock();
             handler.removeLock(userEmail);
-            throw new ActionExecutionException(e, "Cannot send email: internal error");
+            throw new ActionExecutionException(e, "Internal error");
         }
 
         // All recs valid, send email
@@ -69,7 +68,7 @@ public class ActionSendEmail implements ActionCommand {
                 receiverLock.lock();
                 SystemIOHelper.copyFile(sentEmailPath, SystemIOHelper.getInboxEmailPath(receiver, fileName));
             } catch (IOException e) {
-                throw new ActionExecutionException(e, "Cannot send email: internal error");
+                throw new ActionExecutionException(e, "Internal error");
             } finally {
                 receiverLock.unlock();
                 handler.removeLock(receiver);
