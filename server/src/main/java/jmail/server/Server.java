@@ -33,6 +33,8 @@ public class Server extends Thread {
     try {
       internalServerSocket = new ServerSocket(port);
       SystemIOHelper.createBaseFoldersIfNotExists();
+      LOGGER.info("Server started!");
+      Main.createUserForTest();
 
     } catch (IOException e) {
       LOGGER.error("SocketServer exception on starting: " + e.getLocalizedMessage());

@@ -152,7 +152,7 @@ public class FXMLController {
                                 listEmails(Folders.INBOX);
                                 LOGGER.info("Email sent: {}", response);
                             } else {
-                                showError("Send failed!", "Something went wrong. \nPlease retry later");
+                                showError("Send failed!", "Something went wrong. \nPlease retry later\n\nInfo: " + response.getMessage());
                                 LOGGER.error("Error sending email: {}", response);
                             }
                         },
@@ -183,7 +183,7 @@ public class FXMLController {
                                 }
                                 LOGGER.info("DeleteMailResponse: {}", response);
                             } else {
-                                showError("Delete failed!", "Something went wrong. \nPlease retry later");
+                                showError("Delete failed!", "Something went wrong. \nPlease retry later\n\nInfo: " + response.getMessage());
                                 LOGGER.error("Error deleting email: {}", response);
                             }
                         },
