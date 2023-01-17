@@ -22,7 +22,7 @@ public class ActionDeleteMail implements ActionCommand {
         var hardDelete = command.getParameter().hardDelete();
 
         if (userEmail == null || userEmail.isEmpty()) {
-            throw new ActionExecutionException("Cannot delete mail: user invalid");
+            throw new ActionExecutionException("User invalid");
         }
         var handler = LockHandler.getInstance();
         var lock = handler.getWriteLock(userEmail);
@@ -34,7 +34,7 @@ public class ActionDeleteMail implements ActionCommand {
                         case Folders.INBOX -> SystemIOHelper.getInboxEmailPath(userEmail, emailID);
                         case Folders.SENT -> SystemIOHelper.getSentEmailPath(userEmail, emailID);
                         case Folders.TRASH -> SystemIOHelper.getDeletedEmailPath(userEmail, emailID);
-                        default -> throw new ActionExecutionException("Cannot delete mail: invalid from");
+                        default -> throw new ActionExecutionException("Invalid from");
                     };
             lock.lock();
             locked = true;
@@ -44,7 +44,7 @@ public class ActionDeleteMail implements ActionCommand {
                 SystemIOHelper.moveFile(fromPath, SystemIOHelper.getDeletedEmailPath(userEmail, emailID));
             }
         } catch (IOException e) {
-            throw new ActionExecutionException(e, "Cannot delete email: internal error");
+            throw new ActionExecutionException(e, "Internal error");
         } finally {
             if (locked) lock.unlock();
             handler.removeLock(userEmail);

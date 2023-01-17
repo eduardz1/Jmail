@@ -25,7 +25,7 @@ public class ActionReadEmail implements ActionCommand {
         var emailID = params.emailID();
 
         if (userEmail == null || userEmail.isEmpty()) {
-            throw new ActionExecutionException("Cannot read mail: user invalid");
+            throw new ActionExecutionException("User invalid");
         }
 
         var handler = LockHandler.getInstance();
@@ -49,7 +49,7 @@ public class ActionReadEmail implements ActionCommand {
             }
 
         } catch (IOException e) {
-            throw new ActionExecutionException(e, "Cannot read email: internal error");
+            throw new ActionExecutionException(e, "Internal error");
         } finally {
             lock.unlock();
             handler.removeLock(userEmail);
