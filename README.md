@@ -1,5 +1,23 @@
 # Progetto di laboratorio di Programmazione III
 
+## Running
+
+To run a server needs to be started, to start it simply type in a terminal window
+
+```bash
+.\gradlew server:run
+```
+
+Afterwards n-many clients can be started, each from a separate terminal window. To start a client simply type
+
+```bash
+.\gradlew client:run
+```
+
+emails and passwords used for testing can be found in the server's [Main.java](server/src/main/java/jmail/server/Main.java).
+
+## Original Text
+
 Si sviluppi un’applicazione Java che implementi un servizio di posta elettronica organizzato con un mail server che gestisce le caselle di posta elettronica degli utenti e i mail client necessari per permettere agli utenti di accedere alle proprie caselle di posta.
 
 - Il mail server gestisce una lista di caselle di posta elettronica e ne mantiene la persistenza utilizzando file (txt o binari, a vostra scelta, non si possono usare database) per memorizzare i messaggi in modo permanente.
